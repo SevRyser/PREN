@@ -1,0 +1,808 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"accel.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.global	Offset
+  24              		.section	.bss.Offset,"aw",%nobits
+  25              		.align	2
+  28              	Offset:
+  29 0000 00000000 		.space	6
+  29      0000
+  30              		.section	.text.accelResetData,"ax",%progbits
+  31              		.align	1
+  32              		.global	accelResetData
+  33              		.syntax unified
+  34              		.thumb
+  35              		.thumb_func
+  36              		.fpu fpv4-sp-d16
+  38              	accelResetData:
+  39              	.LFB125:
+  40              		.file 1 "../Sources/sensors/accel.c"
+   1:../Sources/sensors/accel.c **** /**
+   2:../Sources/sensors/accel.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/sensors/accel.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/sensors/accel.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/sensors/accel.c ****  *
+   6:../Sources/sensors/accel.c ****  * \brief         Driver for the color sensor TCS34725
+   7:../Sources/sensors/accel.c ****  * \file
+   8:../Sources/sensors/accel.c ****  * \author        Christian Jost, christian.jost@hslu.ch
+   9:../Sources/sensors/accel.c ****  * \date          24.04.20018
+  10:../Sources/sensors/accel.c ****  *
+  11:../Sources/sensors/accel.c ****  * $Id: colSens.c 116 2018-05-11 14:30:59Z zajost $
+  12:../Sources/sensors/accel.c ****  *
+  13:../Sources/sensors/accel.c ****  *--------------------------------------------------------------------
+  14:../Sources/sensors/accel.c ****  */
+  15:../Sources/sensors/accel.c **** 
+  16:../Sources/sensors/accel.c **** #include "platform.h"
+  17:../Sources/sensors/accel.c **** #include "string.h"
+  18:../Sources/sensors/accel.c **** #include "i2c.h"
+  19:../Sources/sensors/accel.c **** #include "util.h"
+  20:../Sources/sensors/accel.c **** #include "accel.h"
+  21:../Sources/sensors/accel.c **** #include "term.h"
+  22:../Sources/sensors/accel.c **** 
+  23:../Sources/sensors/accel.c **** static tCommandLineHandler clh;
+  24:../Sources/sensors/accel.c **** 
+  25:../Sources/sensors/accel.c **** #define I2C_ACCELSENS_ADR                 0x6B
+  26:../Sources/sensors/accel.c **** // LSM6DS3 register definitions
+  27:../Sources/sensors/accel.c **** #define FIFO_CTRL1                     0x06
+  28:../Sources/sensors/accel.c **** #define FIFO_CTRL2                     0x07
+  29:../Sources/sensors/accel.c **** #define FIFO_CTRL3                     0x08
+  30:../Sources/sensors/accel.c **** #define FIFO_CTRL4                     0x09
+  31:../Sources/sensors/accel.c **** #define FIFO_CTRL5                     0x0A
+  32:../Sources/sensors/accel.c **** 
+  33:../Sources/sensors/accel.c **** #define CTRL1_XL                       0x10
+  34:../Sources/sensors/accel.c **** #define CTRL2_G                        0x11
+  35:../Sources/sensors/accel.c **** #define CTRL3_C                        0x12
+  36:../Sources/sensors/accel.c **** #define CTRL4_C                        0x13
+  37:../Sources/sensors/accel.c **** #define CTRL5_C                        0x14
+  38:../Sources/sensors/accel.c **** #define CTRL6_C                        0x15
+  39:../Sources/sensors/accel.c **** #define CTRL7_G                        0x16
+  40:../Sources/sensors/accel.c **** #define CTRL8_XL                       0x17
+  41:../Sources/sensors/accel.c **** #define CTRL9_XL                       0x18
+  42:../Sources/sensors/accel.c **** #define CTRL10_C                       0x19
+  43:../Sources/sensors/accel.c **** 
+  44:../Sources/sensors/accel.c **** #define WHO_AM_I                       0x0F
+  45:../Sources/sensors/accel.c **** 
+  46:../Sources/sensors/accel.c **** tSensAccel Offset = {0,0,0};
+  47:../Sources/sensors/accel.c **** 
+  48:../Sources/sensors/accel.c **** 
+  49:../Sources/sensors/accel.c **** void accelResetData(void)
+  50:../Sources/sensors/accel.c **** {
+  41              		.loc 1 50 0
+  42              		.cfi_startproc
+  43              		@ args = 0, pretend = 0, frame = 8
+  44              		@ frame_needed = 1, uses_anonymous_args = 0
+  45 0000 80B5     		push	{r7, lr}
+  46              		.cfi_def_cfa_offset 8
+  47              		.cfi_offset 7, -8
+  48              		.cfi_offset 14, -4
+  49 0002 82B0     		sub	sp, sp, #8
+  50              		.cfi_def_cfa_offset 16
+  51 0004 00AF     		add	r7, sp, #0
+  52              		.cfi_def_cfa_register 7
+  51:../Sources/sensors/accel.c ****   tSensAccel accel_data;
+  52:../Sources/sensors/accel.c ****   accelRead(&accel_data);
+  53              		.loc 1 52 0
+  54 0006 3B46     		mov	r3, r7
+  55 0008 1846     		mov	r0, r3
+  56 000a FFF7FEFF 		bl	accelRead
+  53:../Sources/sensors/accel.c ****   Offset.accel_x = 0 - accel_data.accel_x;
+  57              		.loc 1 53 0
+  58 000e B7F90030 		ldrsh	r3, [r7]
+  59 0012 9BB2     		uxth	r3, r3
+  60 0014 5B42     		negs	r3, r3
+  61 0016 9BB2     		uxth	r3, r3
+  62 0018 1AB2     		sxth	r2, r3
+  63 001a 0B4B     		ldr	r3, .L2
+  64 001c 1A80     		strh	r2, [r3]	@ movhi
+  54:../Sources/sensors/accel.c ****   Offset.accel_y = 0 - accel_data.accel_y;
+  65              		.loc 1 54 0
+  66 001e B7F90230 		ldrsh	r3, [r7, #2]
+  67 0022 9BB2     		uxth	r3, r3
+  68 0024 5B42     		negs	r3, r3
+  69 0026 9BB2     		uxth	r3, r3
+  70 0028 1AB2     		sxth	r2, r3
+  71 002a 074B     		ldr	r3, .L2
+  72 002c 5A80     		strh	r2, [r3, #2]	@ movhi
+  55:../Sources/sensors/accel.c ****   Offset.accel_z = 1000 - accel_data.accel_z;
+  73              		.loc 1 55 0
+  74 002e B7F90430 		ldrsh	r3, [r7, #4]
+  75 0032 9BB2     		uxth	r3, r3
+  76 0034 C3F57A73 		rsb	r3, r3, #1000
+  77 0038 9BB2     		uxth	r3, r3
+  78 003a 1AB2     		sxth	r2, r3
+  79 003c 024B     		ldr	r3, .L2
+  80 003e 9A80     		strh	r2, [r3, #4]	@ movhi
+  56:../Sources/sensors/accel.c **** }
+  81              		.loc 1 56 0
+  82 0040 00BF     		nop
+  83 0042 0837     		adds	r7, r7, #8
+  84              		.cfi_def_cfa_offset 8
+  85 0044 BD46     		mov	sp, r7
+  86              		.cfi_def_cfa_register 13
+  87              		@ sp needed
+  88 0046 80BD     		pop	{r7, pc}
+  89              	.L3:
+  90              		.align	2
+  91              	.L2:
+  92 0048 00000000 		.word	Offset
+  93              		.cfi_endproc
+  94              	.LFE125:
+  96              		.section	.text.accelReadRaw,"ax",%progbits
+  97              		.align	1
+  98              		.global	accelReadRaw
+  99              		.syntax unified
+ 100              		.thumb
+ 101              		.thumb_func
+ 102              		.fpu fpv4-sp-d16
+ 104              	accelReadRaw:
+ 105              	.LFB126:
+  57:../Sources/sensors/accel.c **** 
+  58:../Sources/sensors/accel.c **** /**
+  59:../Sources/sensors/accel.c ****  * Reads the raw color data from the color sensor.
+  60:../Sources/sensors/accel.c ****  *
+  61:../Sources/sensors/accel.c ****  * @param[out] col
+  62:../Sources/sensors/accel.c ****  *   a pointer to a tRegColor struct which will contains the color read out of the sensor
+  63:../Sources/sensors/accel.c ****  * @return
+  64:../Sources/sensors/accel.c ****  *   the error code or EC_SUCCESS if no error has occurred
+  65:../Sources/sensors/accel.c ****  */
+  66:../Sources/sensors/accel.c **** tError accelReadRaw(tSensAccel *data)
+  67:../Sources/sensors/accel.c **** {
+ 106              		.loc 1 67 0
+ 107              		.cfi_startproc
+ 108              		@ args = 0, pretend = 0, frame = 16
+ 109              		@ frame_needed = 1, uses_anonymous_args = 0
+ 110 0000 80B5     		push	{r7, lr}
+ 111              		.cfi_def_cfa_offset 8
+ 112              		.cfi_offset 7, -8
+ 113              		.cfi_offset 14, -4
+ 114 0002 84B0     		sub	sp, sp, #16
+ 115              		.cfi_def_cfa_offset 24
+ 116 0004 00AF     		add	r7, sp, #0
+ 117              		.cfi_def_cfa_register 7
+ 118 0006 7860     		str	r0, [r7, #4]
+  68:../Sources/sensors/accel.c ****   tError result;
+  69:../Sources/sensors/accel.c **** 
+  70:../Sources/sensors/accel.c ****   // _todo ML#10.09 Implement the function colSensReadRawColor(...)
+  71:../Sources/sensors/accel.c ****   uint8_t cmd = 0x28;
+ 119              		.loc 1 71 0
+ 120 0008 2823     		movs	r3, #40
+ 121 000a FB73     		strb	r3, [r7, #15]
+  72:../Sources/sensors/accel.c ****   result = i2cReadCmdData(I2C_ACCELSENS_ADR, cmd, data->data,
+ 122              		.loc 1 72 0
+ 123 000c 7A68     		ldr	r2, [r7, #4]
+ 124 000e F97B     		ldrb	r1, [r7, #15]	@ zero_extendqisi2
+ 125 0010 0623     		movs	r3, #6
+ 126 0012 6B20     		movs	r0, #107
+ 127 0014 FFF7FEFF 		bl	i2cReadCmdData
+ 128 0018 0346     		mov	r3, r0
+ 129 001a BB73     		strb	r3, [r7, #14]
+  73:../Sources/sensors/accel.c ****       sizeof(tSensAccel));
+  74:../Sources/sensors/accel.c **** 
+  75:../Sources/sensors/accel.c ****   return result;
+ 130              		.loc 1 75 0
+ 131 001c BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+  76:../Sources/sensors/accel.c **** }
+ 132              		.loc 1 76 0
+ 133 001e 1846     		mov	r0, r3
+ 134 0020 1037     		adds	r7, r7, #16
+ 135              		.cfi_def_cfa_offset 8
+ 136 0022 BD46     		mov	sp, r7
+ 137              		.cfi_def_cfa_register 13
+ 138              		@ sp needed
+ 139 0024 80BD     		pop	{r7, pc}
+ 140              		.cfi_endproc
+ 141              	.LFE126:
+ 143              		.section	.text.accelRead,"ax",%progbits
+ 144              		.align	1
+ 145              		.global	accelRead
+ 146              		.syntax unified
+ 147              		.thumb
+ 148              		.thumb_func
+ 149              		.fpu fpv4-sp-d16
+ 151              	accelRead:
+ 152              	.LFB127:
+  77:../Sources/sensors/accel.c **** 
+  78:../Sources/sensors/accel.c **** tError accelRead(tSensAccel *data)
+  79:../Sources/sensors/accel.c **** {
+ 153              		.loc 1 79 0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 16
+ 156              		@ frame_needed = 1, uses_anonymous_args = 0
+ 157 0000 80B5     		push	{r7, lr}
+ 158              		.cfi_def_cfa_offset 8
+ 159              		.cfi_offset 7, -8
+ 160              		.cfi_offset 14, -4
+ 161 0002 84B0     		sub	sp, sp, #16
+ 162              		.cfi_def_cfa_offset 24
+ 163 0004 00AF     		add	r7, sp, #0
+ 164              		.cfi_def_cfa_register 7
+ 165 0006 7860     		str	r0, [r7, #4]
+  80:../Sources/sensors/accel.c ****   tError result;
+  81:../Sources/sensors/accel.c ****   tSensAccel accel_raw_data;
+  82:../Sources/sensors/accel.c ****   accelReadRaw(&accel_raw_data);
+ 166              		.loc 1 82 0
+ 167 0008 07F10803 		add	r3, r7, #8
+ 168 000c 1846     		mov	r0, r3
+ 169 000e FFF7FEFF 		bl	accelReadRaw
+  83:../Sources/sensors/accel.c ****   data->accel_x = (ACCEL_RANGE * accel_raw_data.accel_x / REGISTER_RANGE)
+ 170              		.loc 1 83 0
+ 171 0012 B7F90830 		ldrsh	r3, [r7, #8]
+ 172 0016 1A46     		mov	r2, r3
+ 173 0018 4FF4FA63 		mov	r3, #2000
+ 174 001c 03FB02F3 		mul	r3, r3, r2
+ 175 0020 224A     		ldr	r2, .L8
+ 176 0022 82FB0312 		smull	r1, r2, r2, r3
+ 177 0026 1A44     		add	r2, r2, r3
+ 178 0028 9213     		asrs	r2, r2, #14
+ 179 002a DB17     		asrs	r3, r3, #31
+ 180 002c D31A     		subs	r3, r2, r3
+  84:../Sources/sensors/accel.c ****       + Offset.accel_x;
+ 181              		.loc 1 84 0
+ 182 002e 9AB2     		uxth	r2, r3
+ 183 0030 1F4B     		ldr	r3, .L8+4
+ 184 0032 B3F90030 		ldrsh	r3, [r3]
+ 185 0036 9BB2     		uxth	r3, r3
+ 186 0038 1344     		add	r3, r3, r2
+ 187 003a 9BB2     		uxth	r3, r3
+ 188 003c 1AB2     		sxth	r2, r3
+  83:../Sources/sensors/accel.c ****   data->accel_x = (ACCEL_RANGE * accel_raw_data.accel_x / REGISTER_RANGE)
+ 189              		.loc 1 83 0
+ 190 003e 7B68     		ldr	r3, [r7, #4]
+ 191 0040 1A80     		strh	r2, [r3]	@ movhi
+  85:../Sources/sensors/accel.c ****   data->accel_y = (ACCEL_RANGE * accel_raw_data.accel_y / REGISTER_RANGE)
+ 192              		.loc 1 85 0
+ 193 0042 B7F90A30 		ldrsh	r3, [r7, #10]
+ 194 0046 1A46     		mov	r2, r3
+ 195 0048 4FF4FA63 		mov	r3, #2000
+ 196 004c 03FB02F3 		mul	r3, r3, r2
+ 197 0050 164A     		ldr	r2, .L8
+ 198 0052 82FB0312 		smull	r1, r2, r2, r3
+ 199 0056 1A44     		add	r2, r2, r3
+ 200 0058 9213     		asrs	r2, r2, #14
+ 201 005a DB17     		asrs	r3, r3, #31
+ 202 005c D31A     		subs	r3, r2, r3
+  86:../Sources/sensors/accel.c ****       + Offset.accel_y;
+ 203              		.loc 1 86 0
+ 204 005e 9AB2     		uxth	r2, r3
+ 205 0060 134B     		ldr	r3, .L8+4
+ 206 0062 B3F90230 		ldrsh	r3, [r3, #2]
+ 207 0066 9BB2     		uxth	r3, r3
+ 208 0068 1344     		add	r3, r3, r2
+ 209 006a 9BB2     		uxth	r3, r3
+ 210 006c 1AB2     		sxth	r2, r3
+  85:../Sources/sensors/accel.c ****   data->accel_y = (ACCEL_RANGE * accel_raw_data.accel_y / REGISTER_RANGE)
+ 211              		.loc 1 85 0
+ 212 006e 7B68     		ldr	r3, [r7, #4]
+ 213 0070 5A80     		strh	r2, [r3, #2]	@ movhi
+  87:../Sources/sensors/accel.c ****   data->accel_z = (ACCEL_RANGE * accel_raw_data.accel_z / REGISTER_RANGE)
+ 214              		.loc 1 87 0
+ 215 0072 B7F90C30 		ldrsh	r3, [r7, #12]
+ 216 0076 1A46     		mov	r2, r3
+ 217 0078 4FF4FA63 		mov	r3, #2000
+ 218 007c 03FB02F3 		mul	r3, r3, r2
+ 219 0080 0A4A     		ldr	r2, .L8
+ 220 0082 82FB0312 		smull	r1, r2, r2, r3
+ 221 0086 1A44     		add	r2, r2, r3
+ 222 0088 9213     		asrs	r2, r2, #14
+ 223 008a DB17     		asrs	r3, r3, #31
+ 224 008c D31A     		subs	r3, r2, r3
+  88:../Sources/sensors/accel.c ****       + Offset.accel_z;
+ 225              		.loc 1 88 0
+ 226 008e 9AB2     		uxth	r2, r3
+ 227 0090 074B     		ldr	r3, .L8+4
+ 228 0092 B3F90430 		ldrsh	r3, [r3, #4]
+ 229 0096 9BB2     		uxth	r3, r3
+ 230 0098 1344     		add	r3, r3, r2
+ 231 009a 9BB2     		uxth	r3, r3
+ 232 009c 1AB2     		sxth	r2, r3
+  87:../Sources/sensors/accel.c ****   data->accel_z = (ACCEL_RANGE * accel_raw_data.accel_z / REGISTER_RANGE)
+ 233              		.loc 1 87 0
+ 234 009e 7B68     		ldr	r3, [r7, #4]
+ 235 00a0 9A80     		strh	r2, [r3, #4]	@ movhi
+  89:../Sources/sensors/accel.c **** 
+  90:../Sources/sensors/accel.c ****   return EC_SUCCESS;
+ 236              		.loc 1 90 0
+ 237 00a2 0023     		movs	r3, #0
+  91:../Sources/sensors/accel.c **** }
+ 238              		.loc 1 91 0
+ 239 00a4 1846     		mov	r0, r3
+ 240 00a6 1037     		adds	r7, r7, #16
+ 241              		.cfi_def_cfa_offset 8
+ 242 00a8 BD46     		mov	sp, r7
+ 243              		.cfi_def_cfa_register 13
+ 244              		@ sp needed
+ 245 00aa 80BD     		pop	{r7, pc}
+ 246              	.L9:
+ 247              		.align	2
+ 248              	.L8:
+ 249 00ac 03000180 		.word	-2147418109
+ 250 00b0 00000000 		.word	Offset
+ 251              		.cfi_endproc
+ 252              	.LFE127:
+ 254              		.section	.text.gyroReadRaw,"ax",%progbits
+ 255              		.align	1
+ 256              		.global	gyroReadRaw
+ 257              		.syntax unified
+ 258              		.thumb
+ 259              		.thumb_func
+ 260              		.fpu fpv4-sp-d16
+ 262              	gyroReadRaw:
+ 263              	.LFB128:
+  92:../Sources/sensors/accel.c **** 
+  93:../Sources/sensors/accel.c **** tError gyroReadRaw(tSensGyro *data)
+  94:../Sources/sensors/accel.c **** {
+ 264              		.loc 1 94 0
+ 265              		.cfi_startproc
+ 266              		@ args = 0, pretend = 0, frame = 16
+ 267              		@ frame_needed = 1, uses_anonymous_args = 0
+ 268 0000 80B5     		push	{r7, lr}
+ 269              		.cfi_def_cfa_offset 8
+ 270              		.cfi_offset 7, -8
+ 271              		.cfi_offset 14, -4
+ 272 0002 84B0     		sub	sp, sp, #16
+ 273              		.cfi_def_cfa_offset 24
+ 274 0004 00AF     		add	r7, sp, #0
+ 275              		.cfi_def_cfa_register 7
+ 276 0006 7860     		str	r0, [r7, #4]
+  95:../Sources/sensors/accel.c ****   tError result;
+  96:../Sources/sensors/accel.c **** 
+  97:../Sources/sensors/accel.c ****   // _todo ML#10.09 Implement the function colSensReadRawColor(...)
+  98:../Sources/sensors/accel.c ****   uint8_t cmd = 0x22;
+ 277              		.loc 1 98 0
+ 278 0008 2223     		movs	r3, #34
+ 279 000a FB73     		strb	r3, [r7, #15]
+  99:../Sources/sensors/accel.c ****   result = i2cReadCmdData(I2C_ACCELSENS_ADR, cmd, data->data,
+ 280              		.loc 1 99 0
+ 281 000c 7A68     		ldr	r2, [r7, #4]
+ 282 000e F97B     		ldrb	r1, [r7, #15]	@ zero_extendqisi2
+ 283 0010 0623     		movs	r3, #6
+ 284 0012 6B20     		movs	r0, #107
+ 285 0014 FFF7FEFF 		bl	i2cReadCmdData
+ 286 0018 0346     		mov	r3, r0
+ 287 001a BB73     		strb	r3, [r7, #14]
+ 100:../Sources/sensors/accel.c ****       sizeof(tSensGyro));
+ 101:../Sources/sensors/accel.c **** 
+ 102:../Sources/sensors/accel.c ****   return result;
+ 288              		.loc 1 102 0
+ 289 001c BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+ 103:../Sources/sensors/accel.c **** }
+ 290              		.loc 1 103 0
+ 291 001e 1846     		mov	r0, r3
+ 292 0020 1037     		adds	r7, r7, #16
+ 293              		.cfi_def_cfa_offset 8
+ 294 0022 BD46     		mov	sp, r7
+ 295              		.cfi_def_cfa_register 13
+ 296              		@ sp needed
+ 297 0024 80BD     		pop	{r7, pc}
+ 298              		.cfi_endproc
+ 299              	.LFE128:
+ 301              		.section	.text.gyroRead,"ax",%progbits
+ 302              		.align	1
+ 303              		.global	gyroRead
+ 304              		.syntax unified
+ 305              		.thumb
+ 306              		.thumb_func
+ 307              		.fpu fpv4-sp-d16
+ 309              	gyroRead:
+ 310              	.LFB129:
+ 104:../Sources/sensors/accel.c **** tError gyroRead(tSensGyro *data)
+ 105:../Sources/sensors/accel.c **** {
+ 311              		.loc 1 105 0
+ 312              		.cfi_startproc
+ 313              		@ args = 0, pretend = 0, frame = 16
+ 314              		@ frame_needed = 1, uses_anonymous_args = 0
+ 315 0000 80B5     		push	{r7, lr}
+ 316              		.cfi_def_cfa_offset 8
+ 317              		.cfi_offset 7, -8
+ 318              		.cfi_offset 14, -4
+ 319 0002 84B0     		sub	sp, sp, #16
+ 320              		.cfi_def_cfa_offset 24
+ 321 0004 00AF     		add	r7, sp, #0
+ 322              		.cfi_def_cfa_register 7
+ 323 0006 7860     		str	r0, [r7, #4]
+ 106:../Sources/sensors/accel.c ****   tError result;
+ 107:../Sources/sensors/accel.c ****   tSensGyro gyro_raw_data;
+ 108:../Sources/sensors/accel.c ****   gyroReadRaw(&gyro_raw_data);
+ 324              		.loc 1 108 0
+ 325 0008 07F10803 		add	r3, r7, #8
+ 326 000c 1846     		mov	r0, r3
+ 327 000e FFF7FEFF 		bl	gyroReadRaw
+ 109:../Sources/sensors/accel.c ****   data->gyro_x = GYRO_RANGE * gyro_raw_data.gyro_x / REGISTER_RANGE;
+ 328              		.loc 1 109 0
+ 329 0012 B7F90830 		ldrsh	r3, [r7, #8]
+ 330 0016 1A46     		mov	r2, r3
+ 331 0018 184B     		ldr	r3, .L14
+ 332 001a 03FB02F3 		mul	r3, r3, r2
+ 333 001e 184A     		ldr	r2, .L14+4
+ 334 0020 82FB0312 		smull	r1, r2, r2, r3
+ 335 0024 1A44     		add	r2, r2, r3
+ 336 0026 9213     		asrs	r2, r2, #14
+ 337 0028 DB17     		asrs	r3, r3, #31
+ 338 002a D31A     		subs	r3, r2, r3
+ 339 002c 1AB2     		sxth	r2, r3
+ 340 002e 7B68     		ldr	r3, [r7, #4]
+ 341 0030 1A80     		strh	r2, [r3]	@ movhi
+ 110:../Sources/sensors/accel.c ****   data->gyro_y = GYRO_RANGE * gyro_raw_data.gyro_y / REGISTER_RANGE;
+ 342              		.loc 1 110 0
+ 343 0032 B7F90A30 		ldrsh	r3, [r7, #10]
+ 344 0036 1A46     		mov	r2, r3
+ 345 0038 104B     		ldr	r3, .L14
+ 346 003a 03FB02F3 		mul	r3, r3, r2
+ 347 003e 104A     		ldr	r2, .L14+4
+ 348 0040 82FB0312 		smull	r1, r2, r2, r3
+ 349 0044 1A44     		add	r2, r2, r3
+ 350 0046 9213     		asrs	r2, r2, #14
+ 351 0048 DB17     		asrs	r3, r3, #31
+ 352 004a D31A     		subs	r3, r2, r3
+ 353 004c 1AB2     		sxth	r2, r3
+ 354 004e 7B68     		ldr	r3, [r7, #4]
+ 355 0050 5A80     		strh	r2, [r3, #2]	@ movhi
+ 111:../Sources/sensors/accel.c ****   data->gyro_z = GYRO_RANGE * gyro_raw_data.gyro_z / REGISTER_RANGE;
+ 356              		.loc 1 111 0
+ 357 0052 B7F90C30 		ldrsh	r3, [r7, #12]
+ 358 0056 1A46     		mov	r2, r3
+ 359 0058 084B     		ldr	r3, .L14
+ 360 005a 03FB02F3 		mul	r3, r3, r2
+ 361 005e 084A     		ldr	r2, .L14+4
+ 362 0060 82FB0312 		smull	r1, r2, r2, r3
+ 363 0064 1A44     		add	r2, r2, r3
+ 364 0066 9213     		asrs	r2, r2, #14
+ 365 0068 DB17     		asrs	r3, r3, #31
+ 366 006a D31A     		subs	r3, r2, r3
+ 367 006c 1AB2     		sxth	r2, r3
+ 368 006e 7B68     		ldr	r3, [r7, #4]
+ 369 0070 9A80     		strh	r2, [r3, #4]	@ movhi
+ 112:../Sources/sensors/accel.c **** 
+ 113:../Sources/sensors/accel.c ****   return EC_SUCCESS;
+ 370              		.loc 1 113 0
+ 371 0072 0023     		movs	r3, #0
+ 114:../Sources/sensors/accel.c **** }
+ 372              		.loc 1 114 0
+ 373 0074 1846     		mov	r0, r3
+ 374 0076 1037     		adds	r7, r7, #16
+ 375              		.cfi_def_cfa_offset 8
+ 376 0078 BD46     		mov	sp, r7
+ 377              		.cfi_def_cfa_register 13
+ 378              		@ sp needed
+ 379 007a 80BD     		pop	{r7, pc}
+ 380              	.L15:
+ 381              		.align	2
+ 382              	.L14:
+ 383 007c 90D00300 		.word	250000
+ 384 0080 03000180 		.word	-2147418109
+ 385              		.cfi_endproc
+ 386              	.LFE129:
+ 388              		.section	.rodata
+ 389              		.align	2
+ 390              	.LC0:
+ 391 0000 616C6C00 		.ascii	"all\000"
+ 392              		.section	.text.accelParseCommand,"ax",%progbits
+ 393              		.align	1
+ 394              		.global	accelParseCommand
+ 395              		.syntax unified
+ 396              		.thumb
+ 397              		.thumb_func
+ 398              		.fpu fpv4-sp-d16
+ 400              	accelParseCommand:
+ 401              	.LFB130:
+ 115:../Sources/sensors/accel.c **** 
+ 116:../Sources/sensors/accel.c **** tError accelParseCommand(const unsigned char *cmd)
+ 117:../Sources/sensors/accel.c **** {
+ 402              		.loc 1 117 0
+ 403              		.cfi_startproc
+ 404              		@ args = 0, pretend = 0, frame = 16
+ 405              		@ frame_needed = 1, uses_anonymous_args = 0
+ 406 0000 80B5     		push	{r7, lr}
+ 407              		.cfi_def_cfa_offset 8
+ 408              		.cfi_offset 7, -8
+ 409              		.cfi_offset 14, -4
+ 410 0002 84B0     		sub	sp, sp, #16
+ 411              		.cfi_def_cfa_offset 24
+ 412 0004 00AF     		add	r7, sp, #0
+ 413              		.cfi_def_cfa_register 7
+ 414 0006 7860     		str	r0, [r7, #4]
+ 118:../Sources/sensors/accel.c ****   tError result = EC_INVALID_ARG;
+ 415              		.loc 1 118 0
+ 416 0008 0323     		movs	r3, #3
+ 417 000a FB73     		strb	r3, [r7, #15]
+ 119:../Sources/sensors/accel.c ****   if (strcmp(cmd, "all") == 0)
+ 418              		.loc 1 119 0
+ 419 000c 1549     		ldr	r1, .L19
+ 420 000e 7868     		ldr	r0, [r7, #4]
+ 421 0010 FFF7FEFF 		bl	strcmp
+ 422 0014 0346     		mov	r3, r0
+ 423 0016 002B     		cmp	r3, #0
+ 424 0018 1ED1     		bne	.L17
+ 425              	.LBB2:
+ 120:../Sources/sensors/accel.c ****   {
+ 121:../Sources/sensors/accel.c ****     tSensAccel accel_data;
+ 122:../Sources/sensors/accel.c ****     accelRead(&accel_data);
+ 426              		.loc 1 122 0
+ 427 001a 07F10803 		add	r3, r7, #8
+ 428 001e 1846     		mov	r0, r3
+ 429 0020 FFF7FEFF 		bl	accelRead
+ 123:../Sources/sensors/accel.c ****     termWriteNum16s(accel_data.accel_x);
+ 430              		.loc 1 123 0
+ 431 0024 B7F90830 		ldrsh	r3, [r7, #8]
+ 432 0028 1846     		mov	r0, r3
+ 433 002a FFF7FEFF 		bl	termWriteNum16s
+ 124:../Sources/sensors/accel.c ****     termWriteChar(',');
+ 434              		.loc 1 124 0
+ 435 002e 2C20     		movs	r0, #44
+ 436 0030 FFF7FEFF 		bl	termWriteChar
+ 125:../Sources/sensors/accel.c ****     termWriteNum16s(accel_data.accel_y);
+ 437              		.loc 1 125 0
+ 438 0034 B7F90A30 		ldrsh	r3, [r7, #10]
+ 439 0038 1846     		mov	r0, r3
+ 440 003a FFF7FEFF 		bl	termWriteNum16s
+ 126:../Sources/sensors/accel.c ****     termWriteChar(',');
+ 441              		.loc 1 126 0
+ 442 003e 2C20     		movs	r0, #44
+ 443 0040 FFF7FEFF 		bl	termWriteChar
+ 127:../Sources/sensors/accel.c ****     termWriteNum16s(accel_data.accel_z);
+ 444              		.loc 1 127 0
+ 445 0044 B7F90C30 		ldrsh	r3, [r7, #12]
+ 446 0048 1846     		mov	r0, r3
+ 447 004a FFF7FEFF 		bl	termWriteNum16s
+ 128:../Sources/sensors/accel.c ****     termWriteChar('\n');
+ 448              		.loc 1 128 0
+ 449 004e 0A20     		movs	r0, #10
+ 450 0050 FFF7FEFF 		bl	termWriteChar
+ 129:../Sources/sensors/accel.c ****     result = EC_SUCCESS;
+ 451              		.loc 1 129 0
+ 452 0054 0023     		movs	r3, #0
+ 453 0056 FB73     		strb	r3, [r7, #15]
+ 454              	.L17:
+ 455              	.LBE2:
+ 130:../Sources/sensors/accel.c ****   }
+ 131:../Sources/sensors/accel.c ****   return result;
+ 456              		.loc 1 131 0
+ 457 0058 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 132:../Sources/sensors/accel.c **** }
+ 458              		.loc 1 132 0
+ 459 005a 1846     		mov	r0, r3
+ 460 005c 1037     		adds	r7, r7, #16
+ 461              		.cfi_def_cfa_offset 8
+ 462 005e BD46     		mov	sp, r7
+ 463              		.cfi_def_cfa_register 13
+ 464              		@ sp needed
+ 465 0060 80BD     		pop	{r7, pc}
+ 466              	.L20:
+ 467 0062 00BF     		.align	2
+ 468              	.L19:
+ 469 0064 00000000 		.word	.LC0
+ 470              		.cfi_endproc
+ 471              	.LFE130:
+ 473              		.section	.rodata
+ 474              		.align	2
+ 475              	.LC1:
+ 476 0004 00       		.ascii	"\000"
+ 477 0005 000000   		.align	2
+ 478              	.LC2:
+ 479 0008 61636365 		.ascii	"accel\000"
+ 479      6C00
+ 480              		.section	.text.accelInit,"ax",%progbits
+ 481              		.align	1
+ 482              		.global	accelInit
+ 483              		.syntax unified
+ 484              		.thumb
+ 485              		.thumb_func
+ 486              		.fpu fpv4-sp-d16
+ 488              	accelInit:
+ 489              	.LFB131:
+ 133:../Sources/sensors/accel.c **** 
+ 134:../Sources/sensors/accel.c **** tError accelInit(void)
+ 135:../Sources/sensors/accel.c **** {
+ 490              		.loc 1 135 0
+ 491              		.cfi_startproc
+ 492              		@ args = 0, pretend = 0, frame = 8
+ 493              		@ frame_needed = 1, uses_anonymous_args = 0
+ 494 0000 80B5     		push	{r7, lr}
+ 495              		.cfi_def_cfa_offset 8
+ 496              		.cfi_offset 7, -8
+ 497              		.cfi_offset 14, -4
+ 498 0002 82B0     		sub	sp, sp, #8
+ 499              		.cfi_def_cfa_offset 16
+ 500 0004 00AF     		add	r7, sp, #0
+ 501              		.cfi_def_cfa_register 7
+ 136:../Sources/sensors/accel.c ****   tError result;
+ 137:../Sources/sensors/accel.c ****   //Who am I
+ 138:../Sources/sensors/accel.c ****   uint8_t cmd = WHO_AM_I;
+ 502              		.loc 1 138 0
+ 503 0006 0F23     		movs	r3, #15
+ 504 0008 FB71     		strb	r3, [r7, #7]
+ 139:../Sources/sensors/accel.c ****   uint8_t data;
+ 140:../Sources/sensors/accel.c ****   result = i2cReadCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 505              		.loc 1 140 0
+ 506 000a 7A1D     		adds	r2, r7, #5
+ 507 000c F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+ 508 000e 0123     		movs	r3, #1
+ 509 0010 6B20     		movs	r0, #107
+ 510 0012 FFF7FEFF 		bl	i2cReadCmdData
+ 511 0016 0346     		mov	r3, r0
+ 512 0018 BB71     		strb	r3, [r7, #6]
+ 141:../Sources/sensors/accel.c ****   // register terminal command line handler
+ 142:../Sources/sensors/accel.c ****   termRegisterCommandLineHandler(&clh, "accel", "", accelParseCommand);
+ 513              		.loc 1 142 0
+ 514 001a 154B     		ldr	r3, .L25
+ 515 001c 154A     		ldr	r2, .L25+4
+ 516 001e 1649     		ldr	r1, .L25+8
+ 517 0020 1648     		ldr	r0, .L25+12
+ 518 0022 FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 143:../Sources/sensors/accel.c ****   if (data == 0x69)
+ 519              		.loc 1 143 0
+ 520 0026 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 521 0028 692B     		cmp	r3, #105
+ 522 002a 1BD1     		bne	.L22
+ 144:../Sources/sensors/accel.c ****   {
+ 145:../Sources/sensors/accel.c ****     //Accelerometer ODR (output data rate) configuration setting
+ 146:../Sources/sensors/accel.c ****     cmd = CTRL1_XL;
+ 523              		.loc 1 146 0
+ 524 002c 1023     		movs	r3, #16
+ 525 002e FB71     		strb	r3, [r7, #7]
+ 147:../Sources/sensors/accel.c ****     data = 0x40;
+ 526              		.loc 1 147 0
+ 527 0030 4023     		movs	r3, #64
+ 528 0032 7B71     		strb	r3, [r7, #5]
+ 148:../Sources/sensors/accel.c ****     result = i2cWriteCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 529              		.loc 1 148 0
+ 530 0034 7A1D     		adds	r2, r7, #5
+ 531 0036 F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+ 532 0038 0123     		movs	r3, #1
+ 533 003a 6B20     		movs	r0, #107
+ 534 003c FFF7FEFF 		bl	i2cWriteCmdData
+ 535 0040 0346     		mov	r3, r0
+ 536 0042 BB71     		strb	r3, [r7, #6]
+ 149:../Sources/sensors/accel.c **** 
+ 150:../Sources/sensors/accel.c ****     //Gyroscope ODR (output data rate) configuration setting
+ 151:../Sources/sensors/accel.c ****     cmd = CTRL2_G;
+ 537              		.loc 1 151 0
+ 538 0044 1123     		movs	r3, #17
+ 539 0046 FB71     		strb	r3, [r7, #7]
+ 152:../Sources/sensors/accel.c ****     data = 0x40;
+ 540              		.loc 1 152 0
+ 541 0048 4023     		movs	r3, #64
+ 542 004a 7B71     		strb	r3, [r7, #5]
+ 153:../Sources/sensors/accel.c ****     result = i2cWriteCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 543              		.loc 1 153 0
+ 544 004c 7A1D     		adds	r2, r7, #5
+ 545 004e F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+ 546 0050 0123     		movs	r3, #1
+ 547 0052 6B20     		movs	r0, #107
+ 548 0054 FFF7FEFF 		bl	i2cWriteCmdData
+ 549 0058 0346     		mov	r3, r0
+ 550 005a BB71     		strb	r3, [r7, #6]
+ 154:../Sources/sensors/accel.c **** 
+ 155:../Sources/sensors/accel.c ****     accelResetData();
+ 551              		.loc 1 155 0
+ 552 005c FFF7FEFF 		bl	accelResetData
+ 156:../Sources/sensors/accel.c **** 
+ 157:../Sources/sensors/accel.c **** 
+ 158:../Sources/sensors/accel.c ****     return EC_SUCCESS;
+ 553              		.loc 1 158 0
+ 554 0060 0023     		movs	r3, #0
+ 555 0062 00E0     		b	.L24
+ 556              	.L22:
+ 159:../Sources/sensors/accel.c ****   }
+ 160:../Sources/sensors/accel.c **** 
+ 161:../Sources/sensors/accel.c ****   return EC_FAILED;
+ 557              		.loc 1 161 0
+ 558 0064 0123     		movs	r3, #1
+ 559              	.L24:
+ 162:../Sources/sensors/accel.c **** 
+ 163:../Sources/sensors/accel.c **** }
+ 560              		.loc 1 163 0 discriminator 1
+ 561 0066 1846     		mov	r0, r3
+ 562 0068 0837     		adds	r7, r7, #8
+ 563              		.cfi_def_cfa_offset 8
+ 564 006a BD46     		mov	sp, r7
+ 565              		.cfi_def_cfa_register 13
+ 566              		@ sp needed
+ 567 006c 80BD     		pop	{r7, pc}
+ 568              	.L26:
+ 569 006e 00BF     		.align	2
+ 570              	.L25:
+ 571 0070 00000000 		.word	accelParseCommand
+ 572 0074 04000000 		.word	.LC1
+ 573 0078 08000000 		.word	.LC2
+ 574 007c 00000000 		.word	clh
+ 575              		.cfi_endproc
+ 576              	.LFE131:
+ 578              		.text
+ 579              	.Letext0:
+ 580              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 581              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 582              		.file 4 "../Includes/core_cm4.h"
+ 583              		.file 5 "../Includes/system_MK22F51212.h"
+ 584              		.file 6 "../Includes/platform.h"
+ 585              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 586              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 587              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 588              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 589              		.file 11 "../Sources/sensors/accel.h"
+ 590              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 accel.c
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:28     .bss.Offset:00000000 Offset
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:25     .bss.Offset:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:31     .text.accelResetData:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:38     .text.accelResetData:00000000 accelResetData
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:151    .text.accelRead:00000000 accelRead
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:92     .text.accelResetData:00000048 $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:97     .text.accelReadRaw:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:104    .text.accelReadRaw:00000000 accelReadRaw
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:144    .text.accelRead:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:249    .text.accelRead:000000ac $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:255    .text.gyroReadRaw:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:262    .text.gyroReadRaw:00000000 gyroReadRaw
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:302    .text.gyroRead:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:309    .text.gyroRead:00000000 gyroRead
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:383    .text.gyroRead:0000007c $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:389    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:393    .text.accelParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:400    .text.accelParseCommand:00000000 accelParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:469    .text.accelParseCommand:00000064 $d
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:481    .text.accelInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:488    .text.accelInit:00000000 accelInit
+C:\Users\Blub\AppData\Local\Temp\ccgRnjM2.s:571    .text.accelInit:00000070 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.accel.h.14.19b5318ecce9016dbc420442e49f848c
+
+UNDEFINED SYMBOLS
+i2cReadCmdData
+strcmp
+termWriteNum16s
+termWriteChar
+termRegisterCommandLineHandler
+i2cWriteCmdData

@@ -1,0 +1,508 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"servo.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.servoOff,"ax",%progbits
+  24              		.align	1
+  25              		.global	servoOff
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	servoOff:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/drive/servo.c"
+   1:../Sources/drive/servo.c **** /*
+   2:../Sources/drive/servo.c ****  * servo.c
+   3:../Sources/drive/servo.c ****  *
+   4:../Sources/drive/servo.c ****  *  Created on: 13.03.2019
+   5:../Sources/drive/servo.c ****  *      Author: Blub
+   6:../Sources/drive/servo.c ****  */
+   7:../Sources/drive/servo.c **** #include <ftm0.h>
+   8:../Sources/drive/servo.c **** #include <string.h>
+   9:../Sources/drive/servo.c **** #include "platform.h"
+  10:../Sources/drive/servo.c **** #include "servo.h"
+  11:../Sources/drive/servo.c **** #include "term.h"
+  12:../Sources/drive/servo.c **** #include "util.h"
+  13:../Sources/drive/servo.c **** 
+  14:../Sources/drive/servo.c **** #define SERVO_PWM()           (PORTD_PCR7 = PORT_PCR_MUX(4))
+  15:../Sources/drive/servo.c **** #define SERVO_GPIO()          (PORTD_PCR7 = PORT_PCR_MUX(1))
+  16:../Sources/drive/servo.c **** 
+  17:../Sources/drive/servo.c **** static tCommandLineHandler clh;
+  18:../Sources/drive/servo.c **** 
+  19:../Sources/drive/servo.c **** void servoOff(void)
+  20:../Sources/drive/servo.c **** {
+  34              		.loc 1 20 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 00AF     		add	r7, sp, #0
+  43              		.cfi_def_cfa_register 7
+  21:../Sources/drive/servo.c ****   SERVO_GPIO();
+  44              		.loc 1 21 0
+  45 0004 074B     		ldr	r3, .L2
+  46 0006 4FF48072 		mov	r2, #256
+  47 000a DA61     		str	r2, [r3, #28]
+  22:../Sources/drive/servo.c ****   GPIOD_PCOR |= 1<<7;
+  48              		.loc 1 22 0
+  49 000c 064A     		ldr	r2, .L2+4
+  50 000e 064B     		ldr	r3, .L2+4
+  51 0010 9B68     		ldr	r3, [r3, #8]
+  52 0012 43F08003 		orr	r3, r3, #128
+  53 0016 9360     		str	r3, [r2, #8]
+  23:../Sources/drive/servo.c **** }
+  54              		.loc 1 23 0
+  55 0018 00BF     		nop
+  56 001a BD46     		mov	sp, r7
+  57              		.cfi_def_cfa_register 13
+  58              		@ sp needed
+  59 001c 5DF8047B 		ldr	r7, [sp], #4
+  60              		.cfi_restore 7
+  61              		.cfi_def_cfa_offset 0
+  62 0020 7047     		bx	lr
+  63              	.L3:
+  64 0022 00BF     		.align	2
+  65              	.L2:
+  66 0024 00C00440 		.word	1074053120
+  67 0028 C0F00F40 		.word	1074786496
+  68              		.cfi_endproc
+  69              	.LFE125:
+  71              		.section	.text.servoSet,"ax",%progbits
+  72              		.align	1
+  73              		.global	servoSet
+  74              		.syntax unified
+  75              		.thumb
+  76              		.thumb_func
+  77              		.fpu fpv4-sp-d16
+  79              	servoSet:
+  80              	.LFB126:
+  24:../Sources/drive/servo.c **** 
+  25:../Sources/drive/servo.c **** void servoSet(int16_t value)
+  26:../Sources/drive/servo.c **** {
+  81              		.loc 1 26 0
+  82              		.cfi_startproc
+  83              		@ args = 0, pretend = 0, frame = 16
+  84              		@ frame_needed = 1, uses_anonymous_args = 0
+  85              		@ link register save eliminated.
+  86 0000 80B4     		push	{r7}
+  87              		.cfi_def_cfa_offset 4
+  88              		.cfi_offset 7, -4
+  89 0002 85B0     		sub	sp, sp, #20
+  90              		.cfi_def_cfa_offset 24
+  91 0004 00AF     		add	r7, sp, #0
+  92              		.cfi_def_cfa_register 7
+  93 0006 0346     		mov	r3, r0
+  94 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  27:../Sources/drive/servo.c ****   SERVO_PWM();
+  95              		.loc 1 27 0
+  96 000a 104B     		ldr	r3, .L6
+  97 000c 4FF48062 		mov	r2, #1024
+  98 0010 DA61     		str	r2, [r3, #28]
+  28:../Sources/drive/servo.c ****   if (value > SERVO_MAX_VALUE) value = SERVO_MAX_VALUE;
+  99              		.loc 1 28 0
+ 100 0012 B7F90630 		ldrsh	r3, [r7, #6]
+ 101 0016 B3F5FA6F 		cmp	r3, #2000
+ 102 001a 02DD     		ble	.L5
+ 103              		.loc 1 28 0 is_stmt 0 discriminator 1
+ 104 001c 4FF4FA63 		mov	r3, #2000
+ 105 0020 FB80     		strh	r3, [r7, #6]	@ movhi
+ 106              	.L5:
+  29:../Sources/drive/servo.c **** 
+  30:../Sources/drive/servo.c ****   int16_t v = (uint16_t)(((FTM0_MODULO + 1) * ((uint32_t)value)) / SERVO_MAX_VALUE);
+ 107              		.loc 1 30 0 is_stmt 1
+ 108 0022 B7F90630 		ldrsh	r3, [r7, #6]
+ 109 0026 41F28932 		movw	r2, #5001
+ 110 002a 02FB03F3 		mul	r3, r2, r3
+ 111 002e 084A     		ldr	r2, .L6+4
+ 112 0030 A2FB0323 		umull	r2, r3, r2, r3
+ 113 0034 DB09     		lsrs	r3, r3, #7
+ 114 0036 FB81     		strh	r3, [r7, #14]	@ movhi
+  31:../Sources/drive/servo.c ****   FTM0_C7V = v;
+ 115              		.loc 1 31 0
+ 116 0038 064A     		ldr	r2, .L6+8
+ 117 003a B7F90E30 		ldrsh	r3, [r7, #14]
+ 118 003e 9364     		str	r3, [r2, #72]
+  32:../Sources/drive/servo.c **** }
+ 119              		.loc 1 32 0
+ 120 0040 00BF     		nop
+ 121 0042 1437     		adds	r7, r7, #20
+ 122              		.cfi_def_cfa_offset 4
+ 123 0044 BD46     		mov	sp, r7
+ 124              		.cfi_def_cfa_register 13
+ 125              		@ sp needed
+ 126 0046 5DF8047B 		ldr	r7, [sp], #4
+ 127              		.cfi_restore 7
+ 128              		.cfi_def_cfa_offset 0
+ 129 004a 7047     		bx	lr
+ 130              	.L7:
+ 131              		.align	2
+ 132              	.L6:
+ 133 004c 00C00440 		.word	1074053120
+ 134 0050 D34D6210 		.word	274877907
+ 135 0054 00800340 		.word	1073971200
+ 136              		.cfi_endproc
+ 137              	.LFE126:
+ 139              		.section	.rodata
+ 140              		.align	2
+ 141              	.LC0:
+ 142 0000 68656C70 		.ascii	"help\000"
+ 142      00
+ 143 0005 000000   		.align	2
+ 144              	.LC1:
+ 145 0008 20736572 		.ascii	" servo commands:\000"
+ 145      766F2063 
+ 145      6F6D6D61 
+ 145      6E64733A 
+ 145      00
+ 146 0019 000000   		.align	2
+ 147              	.LC2:
+ 148 001c 73657400 		.ascii	"set\000"
+ 149              		.align	2
+ 150              	.LC3:
+ 151 0020 3000     		.ascii	"0\000"
+ 152              		.section	.text.servoParseCommand,"ax",%progbits
+ 153              		.align	1
+ 154              		.global	servoParseCommand
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 158              		.fpu fpv4-sp-d16
+ 160              	servoParseCommand:
+ 161              	.LFB127:
+  33:../Sources/drive/servo.c **** 
+  34:../Sources/drive/servo.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  35:../Sources/drive/servo.c **** /**
+  36:../Sources/drive/servo.c ****  * This function parses one command line, executes the command and returns the status
+  37:../Sources/drive/servo.c ****  *
+  38:../Sources/drive/servo.c ****  * @param[in] cmd
+  39:../Sources/drive/servo.c ****  *   the null terminated string to parse
+  40:../Sources/drive/servo.c ****  * @returns
+  41:../Sources/drive/servo.c ****  *   EC_SUCCESS if there was a valid command
+  42:../Sources/drive/servo.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  43:../Sources/drive/servo.c ****  */
+  44:../Sources/drive/servo.c **** tError servoParseCommand(const unsigned char *cmd)
+  45:../Sources/drive/servo.c **** {
+ 162              		.loc 1 45 0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 16
+ 165              		@ frame_needed = 1, uses_anonymous_args = 0
+ 166 0000 80B5     		push	{r7, lr}
+ 167              		.cfi_def_cfa_offset 8
+ 168              		.cfi_offset 7, -8
+ 169              		.cfi_offset 14, -4
+ 170 0002 84B0     		sub	sp, sp, #16
+ 171              		.cfi_def_cfa_offset 24
+ 172 0004 00AF     		add	r7, sp, #0
+ 173              		.cfi_def_cfa_register 7
+ 174 0006 7860     		str	r0, [r7, #4]
+  46:../Sources/drive/servo.c ****   tError result = EC_INVALID_ARG;
+ 175              		.loc 1 46 0
+ 176 0008 0323     		movs	r3, #3
+ 177 000a FB73     		strb	r3, [r7, #15]
+  47:../Sources/drive/servo.c ****   if (strcmp(cmd, "help") == 0)
+ 178              		.loc 1 47 0
+ 179 000c 7B68     		ldr	r3, [r7, #4]
+ 180 000e 2249     		ldr	r1, .L14
+ 181 0010 1846     		mov	r0, r3
+ 182 0012 FFF7FEFF 		bl	strcmp
+ 183 0016 0346     		mov	r3, r0
+ 184 0018 002B     		cmp	r3, #0
+ 185 001a 05D1     		bne	.L9
+  48:../Sources/drive/servo.c ****   {
+  49:../Sources/drive/servo.c ****     termWriteLine(" servo commands:");
+ 186              		.loc 1 49 0
+ 187 001c 1F48     		ldr	r0, .L14+4
+ 188 001e FFF7FEFF 		bl	termWriteLine
+  50:../Sources/drive/servo.c ****     result = EC_SUCCESS;
+ 189              		.loc 1 50 0
+ 190 0022 0023     		movs	r3, #0
+ 191 0024 FB73     		strb	r3, [r7, #15]
+ 192 0026 31E0     		b	.L10
+ 193              	.L9:
+  51:../Sources/drive/servo.c ****   }
+  52:../Sources/drive/servo.c ****   else if (strncmp(cmd, "set", sizeof("set")-1) == 0)
+ 194              		.loc 1 52 0
+ 195 0028 7B68     		ldr	r3, [r7, #4]
+ 196 002a 0322     		movs	r2, #3
+ 197 002c 1C49     		ldr	r1, .L14+8
+ 198 002e 1846     		mov	r0, r3
+ 199 0030 FFF7FEFF 		bl	strncmp
+ 200 0034 0346     		mov	r3, r0
+ 201 0036 002B     		cmp	r3, #0
+ 202 0038 16D1     		bne	.L11
+ 203              	.LBB2:
+  53:../Sources/drive/servo.c ****     {
+  54:../Sources/drive/servo.c ****       cmd += sizeof("set");
+ 204              		.loc 1 54 0
+ 205 003a 7B68     		ldr	r3, [r7, #4]
+ 206 003c 0433     		adds	r3, r3, #4
+ 207 003e 7B60     		str	r3, [r7, #4]
+  55:../Sources/drive/servo.c ****       int16_t v;
+  56:../Sources/drive/servo.c ****       result = utilScanDecimal16s(&cmd, &v);
+ 208              		.loc 1 56 0
+ 209 0040 07F10C02 		add	r2, r7, #12
+ 210 0044 3B1D     		adds	r3, r7, #4
+ 211 0046 1146     		mov	r1, r2
+ 212 0048 1846     		mov	r0, r3
+ 213 004a FFF7FEFF 		bl	utilScanDecimal16s
+ 214 004e 0346     		mov	r3, r0
+ 215 0050 FB73     		strb	r3, [r7, #15]
+  57:../Sources/drive/servo.c ****   if (result != EC_SUCCESS) return result;
+ 216              		.loc 1 57 0
+ 217 0052 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 218 0054 002B     		cmp	r3, #0
+ 219 0056 01D0     		beq	.L12
+ 220              		.loc 1 57 0 is_stmt 0 discriminator 1
+ 221 0058 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 222 005a 18E0     		b	.L13
+ 223              	.L12:
+  58:../Sources/drive/servo.c **** 
+  59:../Sources/drive/servo.c ****       servoSet((int16_t)(v));
+ 224              		.loc 1 59 0 is_stmt 1
+ 225 005c B7F90C30 		ldrsh	r3, [r7, #12]
+ 226 0060 1846     		mov	r0, r3
+ 227 0062 FFF7FEFF 		bl	servoSet
+ 228              	.LBE2:
+ 229 0066 11E0     		b	.L10
+ 230              	.L11:
+  60:../Sources/drive/servo.c ****     }
+  61:../Sources/drive/servo.c ****   else if (CheckCommand(cmd, "0"))
+ 231              		.loc 1 61 0
+ 232 0068 7B68     		ldr	r3, [r7, #4]
+ 233 006a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 234 006c 0D4B     		ldr	r3, .L14+12
+ 235 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 236 0070 9A42     		cmp	r2, r3
+ 237 0072 0BD1     		bne	.L10
+  62:../Sources/drive/servo.c ****     {
+  63:../Sources/drive/servo.c ****       SERVO_GPIO();
+ 238              		.loc 1 63 0
+ 239 0074 0C4B     		ldr	r3, .L14+16
+ 240 0076 4FF48072 		mov	r2, #256
+ 241 007a DA61     		str	r2, [r3, #28]
+  64:../Sources/drive/servo.c ****       GPIOD_PCOR |= 1<<7;
+ 242              		.loc 1 64 0
+ 243 007c 0B4A     		ldr	r2, .L14+20
+ 244 007e 0B4B     		ldr	r3, .L14+20
+ 245 0080 9B68     		ldr	r3, [r3, #8]
+ 246 0082 43F08003 		orr	r3, r3, #128
+ 247 0086 9360     		str	r3, [r2, #8]
+  65:../Sources/drive/servo.c ****       result = EC_SUCCESS;
+ 248              		.loc 1 65 0
+ 249 0088 0023     		movs	r3, #0
+ 250 008a FB73     		strb	r3, [r7, #15]
+ 251              	.L10:
+  66:../Sources/drive/servo.c ****     }
+  67:../Sources/drive/servo.c **** 
+  68:../Sources/drive/servo.c **** 
+  69:../Sources/drive/servo.c ****   return result;
+ 252              		.loc 1 69 0
+ 253 008c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 254              	.L13:
+  70:../Sources/drive/servo.c **** }
+ 255              		.loc 1 70 0
+ 256 008e 1846     		mov	r0, r3
+ 257 0090 1037     		adds	r7, r7, #16
+ 258              		.cfi_def_cfa_offset 8
+ 259 0092 BD46     		mov	sp, r7
+ 260              		.cfi_def_cfa_register 13
+ 261              		@ sp needed
+ 262 0094 80BD     		pop	{r7, pc}
+ 263              	.L15:
+ 264 0096 00BF     		.align	2
+ 265              	.L14:
+ 266 0098 00000000 		.word	.LC0
+ 267 009c 08000000 		.word	.LC1
+ 268 00a0 1C000000 		.word	.LC2
+ 269 00a4 20000000 		.word	.LC3
+ 270 00a8 00C00440 		.word	1074053120
+ 271 00ac C0F00F40 		.word	1074786496
+ 272              		.cfi_endproc
+ 273              	.LFE127:
+ 275              		.section	.rodata
+ 276 0022 0000     		.align	2
+ 277              	.LC4:
+ 278 0024 312C2032 		.ascii	"1, 2, 3, 4, 5, 6, 7, 8, 9\000"
+ 278      2C20332C 
+ 278      20342C20 
+ 278      352C2036 
+ 278      2C20372C 
+ 279 003e 0000     		.align	2
+ 280              	.LC5:
+ 281 0040 73657276 		.ascii	"servo\000"
+ 281      6F00
+ 282              		.section	.text.servoInit,"ax",%progbits
+ 283              		.align	1
+ 284              		.global	servoInit
+ 285              		.syntax unified
+ 286              		.thumb
+ 287              		.thumb_func
+ 288              		.fpu fpv4-sp-d16
+ 290              	servoInit:
+ 291              	.LFB128:
+  71:../Sources/drive/servo.c **** 
+  72:../Sources/drive/servo.c **** 
+  73:../Sources/drive/servo.c **** void servoInit(void)
+  74:../Sources/drive/servo.c **** {
+ 292              		.loc 1 74 0
+ 293              		.cfi_startproc
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 1, uses_anonymous_args = 0
+ 296 0000 80B5     		push	{r7, lr}
+ 297              		.cfi_def_cfa_offset 8
+ 298              		.cfi_offset 7, -8
+ 299              		.cfi_offset 14, -4
+ 300 0002 00AF     		add	r7, sp, #0
+ 301              		.cfi_def_cfa_register 7
+  75:../Sources/drive/servo.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+  76:../Sources/drive/servo.c ****   GPIOD_PDDR |= 1<<7;               // configure PTA12
+ 302              		.loc 1 76 0
+ 303 0004 0E4A     		ldr	r2, .L17
+ 304 0006 0E4B     		ldr	r3, .L17
+ 305 0008 5B69     		ldr	r3, [r3, #20]
+ 306 000a 43F08003 		orr	r3, r3, #128
+ 307 000e 5361     		str	r3, [r2, #20]
+  77:../Sources/drive/servo.c **** 
+  78:../Sources/drive/servo.c **** //-------------------------------Achtung noch anpassen
+  79:../Sources/drive/servo.c ****   SERVO_GPIO();
+ 308              		.loc 1 79 0
+ 309 0010 0C4B     		ldr	r3, .L17+4
+ 310 0012 4FF48072 		mov	r2, #256
+ 311 0016 DA61     		str	r2, [r3, #28]
+  80:../Sources/drive/servo.c ****   //SERVO_PWM();
+  81:../Sources/drive/servo.c ****   GPIOD_PCOR |= 1<<7;
+ 312              		.loc 1 81 0
+ 313 0018 094A     		ldr	r2, .L17
+ 314 001a 094B     		ldr	r3, .L17
+ 315 001c 9B68     		ldr	r3, [r3, #8]
+ 316 001e 43F08003 		orr	r3, r3, #128
+ 317 0022 9360     		str	r3, [r2, #8]
+  82:../Sources/drive/servo.c **** 
+  83:../Sources/drive/servo.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+  84:../Sources/drive/servo.c ****   FTM0_C7SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 318              		.loc 1 84 0
+ 319 0024 084B     		ldr	r3, .L17+8
+ 320 0026 2822     		movs	r2, #40
+ 321 0028 5A64     		str	r2, [r3, #68]
+  85:../Sources/drive/servo.c ****   servoSet(SERVO_START);
+ 322              		.loc 1 85 0
+ 323 002a B920     		movs	r0, #185
+ 324 002c FFF7FEFF 		bl	servoSet
+  86:../Sources/drive/servo.c **** 
+  87:../Sources/drive/servo.c **** 
+  88:../Sources/drive/servo.c ****   // register terminal command line handler
+  89:../Sources/drive/servo.c ****     termRegisterCommandLineHandler(&clh, "servo", "1, 2, 3, 4, 5, 6, 7, 8, 9", servoParseCommand);
+ 325              		.loc 1 89 0
+ 326 0030 064B     		ldr	r3, .L17+12
+ 327 0032 074A     		ldr	r2, .L17+16
+ 328 0034 0749     		ldr	r1, .L17+20
+ 329 0036 0848     		ldr	r0, .L17+24
+ 330 0038 FFF7FEFF 		bl	termRegisterCommandLineHandler
+  90:../Sources/drive/servo.c **** }
+ 331              		.loc 1 90 0
+ 332 003c 00BF     		nop
+ 333 003e 80BD     		pop	{r7, pc}
+ 334              	.L18:
+ 335              		.align	2
+ 336              	.L17:
+ 337 0040 C0F00F40 		.word	1074786496
+ 338 0044 00C00440 		.word	1074053120
+ 339 0048 00800340 		.word	1073971200
+ 340 004c 00000000 		.word	servoParseCommand
+ 341 0050 24000000 		.word	.LC4
+ 342 0054 40000000 		.word	.LC5
+ 343 0058 00000000 		.word	clh
+ 344              		.cfi_endproc
+ 345              	.LFE128:
+ 347              		.text
+ 348              	.Letext0:
+ 349              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 350              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 351              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 352              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 353              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 354              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 355              		.file 8 "../Includes/core_cm4.h"
+ 356              		.file 9 "../Includes/system_MK22F51212.h"
+ 357              		.file 10 "../Includes/MK22F51212.h"
+ 358              		.file 11 "../Includes/platform.h"
+ 359              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 servo.c
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:24     .text.servoOff:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:31     .text.servoOff:00000000 servoOff
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:66     .text.servoOff:00000024 $d
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:72     .text.servoSet:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:79     .text.servoSet:00000000 servoSet
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:133    .text.servoSet:0000004c $d
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:140    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:153    .text.servoParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:160    .text.servoParseCommand:00000000 servoParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:266    .text.servoParseCommand:00000098 $d
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:283    .text.servoInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:290    .text.servoInit:00000000 servoInit
+C:\Users\Blub\AppData\Local\Temp\ccaeXbRA.s:337    .text.servoInit:00000040 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.ftm0.h.17.cec3e0a8843af04be56280b53fe960ea
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.servo.h.11.8ade999649361508e48147a13552f2fb
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+strncmp
+utilScanDecimal16s
+termRegisterCommandLineHandler

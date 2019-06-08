@@ -1,0 +1,2755 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+                              ./Sources/adc/adc.o (__aeabi_uldivmod)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o) (__udivmoddi4)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_dvmd_tls.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o) (__aeabi_ldiv0)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o (exit)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o) (_global_impure_ptr)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o (__libc_init_array)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o (memset)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+                              ./Sources/utils/test.o (strcmp)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strlen.o)
+                              ./Sources/com/term.o (strlen)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+                              ./Sources/drive/drive.o (strncmp)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+                              ./Sources/com/term.o (strncpy)
+c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+                              c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o) (_exit)
+
+Allocating common symbols
+Common symbol       size              file
+
+j                   0x2               ./Sources/utils/test.o
+ticks10ms           0x4               ./Sources/sensors/encoder.o
+ticks100ms          0x4               ./Sources/sensors/encoder.o
+accel_data          0x6               ./Sources/utils/test.o
+valueMotor          0x2               ./Sources/drive/motor.o
+
+Discarded input sections
+
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+ .data          0x00000000        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+ .ARM.extab     0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/test.o
+ .text          0x00000000        0x0 ./Sources/utils/test.o
+ .data          0x00000000        0x0 ./Sources/utils/test.o
+ .bss           0x00000000        0x0 ./Sources/utils/test.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/utils/util.o
+ .text          0x00000000        0x0 ./Sources/utils/util.o
+ .data          0x00000000        0x0 ./Sources/utils/util.o
+ .bss           0x00000000        0x0 ./Sources/utils/util.o
+ .text.utilStrcat
+                0x00000000       0x66 ./Sources/utils/util.o
+ .text.utilNum32uToStr
+                0x00000000       0xe8 ./Sources/utils/util.o
+ .text.utilNum32sToStr
+                0x00000000      0x130 ./Sources/utils/util.o
+ .text.utilStrcatNum16u
+                0x00000000       0x32 ./Sources/utils/util.o
+ .text.utilStrcatNum16s
+                0x00000000       0x34 ./Sources/utils/util.o
+ .text.utilStrcatNum32u
+                0x00000000       0x30 ./Sources/utils/util.o
+ .text.utilStrcatNum32s
+                0x00000000       0x30 ./Sources/utils/util.o
+ .text.utilCheckStackSize
+                0x00000000       0x74 ./Sources/utils/util.o
+ .debug_macro   0x00000000      0x898 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x22 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x35 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x9c ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x58 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x1f ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x43 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x20 ./Sources/utils/util.o
+ .debug_macro   0x00000000      0x187 ./Sources/utils/util.o
+ .debug_macro   0x00000000      0x353 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x16 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0xef ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x6a ./Sources/utils/util.o
+ .debug_macro   0x00000000      0x1df ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x55 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x3b ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x34 ./Sources/utils/util.o
+ .debug_macro   0x00000000       0x26 ./Sources/utils/util.o
+ .debug_macro   0x00000000      0xd1d ./Sources/utils/util.o
+ .debug_macro   0x00000000       0xd9 ./Sources/utils/util.o
+ .debug_macro   0x00000000     0xefee ./Sources/utils/util.o
+ .debug_macro   0x00000000       0xf5 ./Sources/utils/util.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm0.o
+ .text          0x00000000        0x0 ./Sources/timer/ftm0.o
+ .data          0x00000000        0x0 ./Sources/timer/ftm0.o
+ .bss           0x00000000        0x0 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000      0x898 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x16 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x22 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x4f ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x51 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0xef ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x6a ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000      0x1df ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x55 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x3b ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x34 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x26 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000      0xd1d ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0xd9 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000     0xefee ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0xf5 ./Sources/timer/ftm0.o
+ .debug_macro   0x00000000       0x16 ./Sources/timer/ftm0.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm1quad.o
+ .text          0x00000000        0x0 ./Sources/timer/ftm1quad.o
+ .data          0x00000000        0x0 ./Sources/timer/ftm1quad.o
+ .bss           0x00000000        0x0 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000      0x898 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x16 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x22 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x4f ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x51 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0xef ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x6a ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000      0x1df ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x55 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x3b ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x34 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0x26 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000      0xd1d ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0xd9 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000     0xefee ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00000000       0xf5 ./Sources/timer/ftm1quad.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm2.o
+ .text          0x00000000        0x0 ./Sources/timer/ftm2.o
+ .data          0x00000000        0x0 ./Sources/timer/ftm2.o
+ .bss           0x00000000        0x0 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000      0x898 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x16 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x22 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x4f ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x51 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0xef ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x6a ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000      0x1df ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x55 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x3b ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x34 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0x26 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000      0xd1d ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0xd9 ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000     0xefee ./Sources/timer/ftm2.o
+ .debug_macro   0x00000000       0xf5 ./Sources/timer/ftm2.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/timer/ftm3.o
+ .text          0x00000000        0x0 ./Sources/timer/ftm3.o
+ .data          0x00000000        0x0 ./Sources/timer/ftm3.o
+ .bss           0x00000000        0x0 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000      0x898 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x16 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x22 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x4f ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x51 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0xef ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x6a ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000      0x1df ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x55 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x3b ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x34 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0x26 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000      0xd1d ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0xd9 ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000     0xefee ./Sources/timer/ftm3.o
+ .debug_macro   0x00000000       0xf5 ./Sources/timer/ftm3.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/accel.o
+ .text          0x00000000        0x0 ./Sources/sensors/accel.o
+ .data          0x00000000        0x0 ./Sources/sensors/accel.o
+ .bss           0x00000000        0x0 ./Sources/sensors/accel.o
+ .text.gyroReadRaw
+                0x00000000       0x26 ./Sources/sensors/accel.o
+ .text.gyroRead
+                0x00000000       0x84 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0x898 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x22 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x4f ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x51 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0xef ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x6a ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0x1df ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x55 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x3b ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x34 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x26 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0xd1d ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0xd9 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000     0xefee ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0xf5 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x9c ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0x16d ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x1f ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x43 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x20 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0x187 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000      0x353 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x10 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/accel.o
+ .debug_macro   0x00000000       0x1c ./Sources/sensors/accel.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/beep.o
+ .text          0x00000000        0x0 ./Sources/sensors/beep.o
+ .data          0x00000000        0x0 ./Sources/sensors/beep.o
+ .bss           0x00000000        0x0 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0x898 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x22 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x4f ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x51 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0xef ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x6a ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0x1df ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x55 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x3b ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x34 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x26 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0xd1d ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0xd9 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000     0xefee ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0xf5 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x9c ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0x16d ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x1f ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x43 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x20 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0x187 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000      0x353 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x10 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/beep.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/beep.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/encoder.o
+ .text          0x00000000        0x0 ./Sources/sensors/encoder.o
+ .data          0x00000000        0x0 ./Sources/sensors/encoder.o
+ .bss           0x00000000        0x0 ./Sources/sensors/encoder.o
+ .text.encodergetRPM
+                0x00000000       0x50 ./Sources/sensors/encoder.o
+ .text.encodergetSpeedmmps100ms
+                0x00000000       0x68 ./Sources/sensors/encoder.o
+ .bss.getTicks.7129
+                0x00000000        0x1 ./Sources/sensors/encoder.o
+ .bss.sumticks.7128
+                0x00000000        0x2 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0x898 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x22 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x4f ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x51 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0xef ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x6a ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0x1df ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x55 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x3b ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x34 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x26 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0xd1d ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0xd9 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000     0xefee ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0xf5 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x10 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0x16d ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x9c ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x1f ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x43 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x20 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0x187 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000      0x353 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x10 ./Sources/sensors/encoder.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/encoder.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/switch.o
+ .text          0x00000000        0x0 ./Sources/sensors/switch.o
+ .data          0x00000000        0x0 ./Sources/sensors/switch.o
+ .bss           0x00000000        0x0 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000      0x898 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x22 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x4f ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x51 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0xef ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x6a ./Sources/sensors/switch.o
+ .debug_macro   0x00000000      0x1df ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x55 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x3b ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x34 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0x26 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000      0xd1d ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0xd9 ./Sources/sensors/switch.o
+ .debug_macro   0x00000000     0xefee ./Sources/sensors/switch.o
+ .debug_macro   0x00000000       0xf5 ./Sources/sensors/switch.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/sensors/tof.o
+ .text          0x00000000        0x0 ./Sources/sensors/tof.o
+ .data          0x00000000        0x0 ./Sources/sensors/tof.o
+ .bss           0x00000000        0x0 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0x898 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x22 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x4f ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x51 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0xef ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x6a ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0x1df ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x55 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x3b ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x34 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x26 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0xd1d ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0xd9 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000     0xefee ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0xf5 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x16 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0x16d ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x9c ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x58 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x1f ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x43 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x20 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0x187 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000      0x353 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x10 ./Sources/sensors/tof.o
+ .debug_macro   0x00000000       0x35 ./Sources/sensors/tof.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/i2c/i2c.o
+ .text          0x00000000        0x0 ./Sources/i2c/i2c.o
+ .data          0x00000000        0x0 ./Sources/i2c/i2c.o
+ .bss           0x00000000        0x0 ./Sources/i2c/i2c.o
+ .text.i2cReceiveLastByte
+                0x00000000       0x74 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000      0x898 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x16 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x22 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x4f ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x51 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0xef ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x6a ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000      0x1df ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x55 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x3b ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x34 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0x26 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000      0xd1d ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0xd9 ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000     0xefee ./Sources/i2c/i2c.o
+ .debug_macro   0x00000000       0xf5 ./Sources/i2c/i2c.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/drive.o
+ .text          0x00000000        0x0 ./Sources/drive/drive.o
+ .data          0x00000000        0x0 ./Sources/drive/drive.o
+ .bss           0x00000000        0x0 ./Sources/drive/drive.o
+ .text.driveSetParameters
+                0x00000000       0x30 ./Sources/drive/drive.o
+ .text.driveSetParameterTa
+                0x00000000       0x20 ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0x898 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x22 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x4f ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x51 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0xef ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x6a ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0x1df ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x3b ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x34 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x26 ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0xd1d ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0xd9 ./Sources/drive/drive.o
+ .debug_macro   0x00000000     0xefee ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0xf5 ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0x16d ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x9c ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x1f ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x43 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x20 ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0x187 ./Sources/drive/drive.o
+ .debug_macro   0x00000000      0x353 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/drive.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/drive.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/motor.o
+ .text          0x00000000        0x0 ./Sources/drive/motor.o
+ .data          0x00000000        0x0 ./Sources/drive/motor.o
+ .bss           0x00000000        0x0 ./Sources/drive/motor.o
+ .text.motorRamp
+                0x00000000       0x34 ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0x898 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x22 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x4f ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x51 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0xef ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x6a ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0x1df ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x3b ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x34 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x26 ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0xd1d ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0xd9 ./Sources/drive/motor.o
+ .debug_macro   0x00000000     0xefee ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0xf5 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0x16d ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x9c ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x1f ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x43 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x20 ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0x187 ./Sources/drive/motor.o
+ .debug_macro   0x00000000      0x353 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/motor.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/motor.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/servo.o
+ .text          0x00000000        0x0 ./Sources/drive/servo.o
+ .data          0x00000000        0x0 ./Sources/drive/servo.o
+ .bss           0x00000000        0x0 ./Sources/drive/servo.o
+ .text.servoOff
+                0x00000000       0x2c ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0x898 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x22 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x52 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x9c ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0x16d ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x57 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x1f ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x43 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x20 ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0x187 ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0x353 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0xef ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x6a ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0x1df ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x3b ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x34 ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0x26 ./Sources/drive/servo.o
+ .debug_macro   0x00000000      0xd1d ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0xd9 ./Sources/drive/servo.o
+ .debug_macro   0x00000000     0xefee ./Sources/drive/servo.o
+ .debug_macro   0x00000000       0xf5 ./Sources/drive/servo.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/spindle.o
+ .text          0x00000000        0x0 ./Sources/drive/spindle.o
+ .data          0x00000000        0x0 ./Sources/drive/spindle.o
+ .bss           0x00000000        0x0 ./Sources/drive/spindle.o
+ .text.spindleIncrementPwm
+                0x00000000       0x48 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0x898 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x22 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x52 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x9c ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0x16d ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x57 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x1f ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x43 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x20 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0x187 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0x353 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0xef ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x6a ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0x1df ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x3b ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x34 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x26 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000      0xd1d ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0xd9 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000     0xefee ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0xf5 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/spindle.o
+ .debug_macro   0x00000000       0x28 ./Sources/drive/spindle.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/drive/stepper.o
+ .text          0x00000000        0x0 ./Sources/drive/stepper.o
+ .data          0x00000000        0x0 ./Sources/drive/stepper.o
+ .bss           0x00000000        0x0 ./Sources/drive/stepper.o
+ .bss.clh       0x00000000       0x38 ./Sources/drive/stepper.o
+ .text.steperSet
+                0x00000000       0xfc ./Sources/drive/stepper.o
+ .rodata        0x00000000       0x2f ./Sources/drive/stepper.o
+ .text.steperParseCommand
+                0x00000000       0x64 ./Sources/drive/stepper.o
+ .text.steperInit
+                0x00000000       0x64 ./Sources/drive/stepper.o
+ .debug_info    0x00000000      0xbb3 ./Sources/drive/stepper.o
+ .debug_abbrev  0x00000000      0x237 ./Sources/drive/stepper.o
+ .debug_aranges
+                0x00000000       0x30 ./Sources/drive/stepper.o
+ .debug_ranges  0x00000000       0x20 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x1b3 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x898 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x22 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x52 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x9c ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x16d ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x57 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x58 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x1f ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x43 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x20 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x187 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x353 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x35 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x16 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0xef ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x6a ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0x1df ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x55 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x3b ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x34 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x26 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000      0xd1d ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0xd9 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000     0xefee ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0xf5 ./Sources/drive/stepper.o
+ .debug_macro   0x00000000       0x10 ./Sources/drive/stepper.o
+ .debug_line    0x00000000      0x422 ./Sources/drive/stepper.o
+ .debug_str     0x00000000    0x62700 ./Sources/drive/stepper.o
+ .comment       0x00000000       0x80 ./Sources/drive/stepper.o
+ .debug_frame   0x00000000       0x7c ./Sources/drive/stepper.o
+ .ARM.attributes
+                0x00000000       0x39 ./Sources/drive/stepper.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/cube/cube.o
+ .text          0x00000000        0x0 ./Sources/cube/cube.o
+ .data          0x00000000        0x0 ./Sources/cube/cube.o
+ .bss           0x00000000        0x0 ./Sources/cube/cube.o
+ .bss.distance1
+                0x00000000        0x1 ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0x898 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x16 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x22 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x4f ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x51 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0xef ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x6a ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0x1df ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x55 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x3b ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x34 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x26 ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0xd1d ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0xd9 ./Sources/cube/cube.o
+ .debug_macro   0x00000000     0xefee ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0xf5 ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0x16d ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x58 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x35 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x9c ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x58 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x1f ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x43 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x20 ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0x187 ./Sources/cube/cube.o
+ .debug_macro   0x00000000      0x353 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x10 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x35 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x16 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x10 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x10 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x10 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x28 ./Sources/cube/cube.o
+ .debug_macro   0x00000000       0x1c ./Sources/cube/cube.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/lpuart0.o
+ .text          0x00000000        0x0 ./Sources/com/lpuart0.o
+ .data          0x00000000        0x0 ./Sources/com/lpuart0.o
+ .bss           0x00000000        0x0 ./Sources/com/lpuart0.o
+ .text.NVIC_EnableIRQ
+                0x00000000       0x34 ./Sources/com/lpuart0.o
+ .text.NVIC_DisableIRQ
+                0x00000000       0x34 ./Sources/com/lpuart0.o
+ .text.NVIC_SetPriority
+                0x00000000       0x54 ./Sources/com/lpuart0.o
+ .text.NVIC_DisableIRQEx
+                0x00000000       0x24 ./Sources/com/lpuart0.o
+ .bss.rxBufReadPos
+                0x00000000        0x2 ./Sources/com/lpuart0.o
+ .bss.txBufWritePos
+                0x00000000        0x2 ./Sources/com/lpuart0.o
+ .text.lpuart0WriteChar
+                0x00000000       0x7c ./Sources/com/lpuart0.o
+ .text.lpuart0Write
+                0x00000000       0x34 ./Sources/com/lpuart0.o
+ .text.lpuart0WriteLine
+                0x00000000       0x1c ./Sources/com/lpuart0.o
+ .text.lpuart0ReadChar
+                0x00000000       0x68 ./Sources/com/lpuart0.o
+ .text.lpuart0ReadLine
+                0x00000000       0x4e ./Sources/com/lpuart0.o
+ .text.lpuart0HasLineReceived
+                0x00000000       0x60 ./Sources/com/lpuart0.o
+ .text.lpuart0RxBufCount
+                0x00000000       0x18 ./Sources/com/lpuart0.o
+ .text.lpuart0Init
+                0x00000000       0xe0 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000      0x898 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x16 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x22 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x4f ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x51 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0xef ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x6a ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000      0x1df ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x55 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x3b ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x34 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0x26 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000      0xd1d ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0xd9 ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000     0xefee ./Sources/com/lpuart0.o
+ .debug_macro   0x00000000       0xf5 ./Sources/com/lpuart0.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/term.o
+ .text          0x00000000        0x0 ./Sources/com/term.o
+ .data          0x00000000        0x0 ./Sources/com/term.o
+ .bss           0x00000000        0x0 ./Sources/com/term.o
+ .text.termWriteNum32s
+                0x00000000       0x28 ./Sources/com/term.o
+ .debug_macro   0x00000000      0x898 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x16 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x22 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x4f ./Sources/com/term.o
+ .debug_macro   0x00000000       0x51 ./Sources/com/term.o
+ .debug_macro   0x00000000       0xef ./Sources/com/term.o
+ .debug_macro   0x00000000       0x6a ./Sources/com/term.o
+ .debug_macro   0x00000000      0x1df ./Sources/com/term.o
+ .debug_macro   0x00000000       0x55 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x3b ./Sources/com/term.o
+ .debug_macro   0x00000000       0x34 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x26 ./Sources/com/term.o
+ .debug_macro   0x00000000      0xd1d ./Sources/com/term.o
+ .debug_macro   0x00000000       0xd9 ./Sources/com/term.o
+ .debug_macro   0x00000000     0xefee ./Sources/com/term.o
+ .debug_macro   0x00000000       0xf5 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x7c ./Sources/com/term.o
+ .debug_macro   0x00000000       0x58 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x35 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x9c ./Sources/com/term.o
+ .debug_macro   0x00000000      0x16d ./Sources/com/term.o
+ .debug_macro   0x00000000       0x58 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x1f ./Sources/com/term.o
+ .debug_macro   0x00000000       0x43 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x20 ./Sources/com/term.o
+ .debug_macro   0x00000000      0x187 ./Sources/com/term.o
+ .debug_macro   0x00000000      0x353 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x10 ./Sources/com/term.o
+ .debug_macro   0x00000000       0x35 ./Sources/com/term.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart0.o
+ .text          0x00000000        0x0 ./Sources/com/uart0.o
+ .data          0x00000000        0x0 ./Sources/com/uart0.o
+ .bss           0x00000000        0x0 ./Sources/com/uart0.o
+ .text.uart0Write
+                0x00000000       0x34 ./Sources/com/uart0.o
+ .text.uart0WriteLine
+                0x00000000       0x1c ./Sources/com/uart0.o
+ .text.uart0RxBufCount
+                0x00000000       0x18 ./Sources/com/uart0.o
+ .debug_macro   0x00000000      0x898 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x16 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x22 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x4f ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x51 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0xef ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x6a ./Sources/com/uart0.o
+ .debug_macro   0x00000000      0x1df ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x55 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x3b ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x34 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x26 ./Sources/com/uart0.o
+ .debug_macro   0x00000000      0xd1d ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0xd9 ./Sources/com/uart0.o
+ .debug_macro   0x00000000     0xefee ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0xf5 ./Sources/com/uart0.o
+ .debug_macro   0x00000000       0x7c ./Sources/com/uart0.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/com/uart1.o
+ .text          0x00000000        0x0 ./Sources/com/uart1.o
+ .data          0x00000000        0x0 ./Sources/com/uart1.o
+ .bss           0x00000000        0x0 ./Sources/com/uart1.o
+ .text.uart1Write
+                0x00000000       0x34 ./Sources/com/uart1.o
+ .text.uart1WriteLine
+                0x00000000       0x1c ./Sources/com/uart1.o
+ .text.uart1RxBufCount
+                0x00000000       0x18 ./Sources/com/uart1.o
+ .debug_macro   0x00000000      0x898 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x16 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x22 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x4f ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x51 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0xef ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x6a ./Sources/com/uart1.o
+ .debug_macro   0x00000000      0x1df ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x55 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x3b ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x34 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x26 ./Sources/com/uart1.o
+ .debug_macro   0x00000000      0xd1d ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0xd9 ./Sources/com/uart1.o
+ .debug_macro   0x00000000     0xefee ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0xf5 ./Sources/com/uart1.o
+ .debug_macro   0x00000000       0x7c ./Sources/com/uart1.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/adc/adc.o
+ .text          0x00000000        0x0 ./Sources/adc/adc.o
+ .data          0x00000000        0x0 ./Sources/adc/adc.o
+ .bss           0x00000000        0x0 ./Sources/adc/adc.o
+ .text.adcGet16BitValue
+                0x00000000       0x34 ./Sources/adc/adc.o
+ .text.adcGetVoltage
+                0x00000000       0x58 ./Sources/adc/adc.o
+ .text.adcGetTemperature
+                0x00000000       0x40 ./Sources/adc/adc.o
+ .text.adcInit  0x00000000      0x150 ./Sources/adc/adc.o
+ .debug_info    0x00000000      0x554 ./Sources/adc/adc.o
+ .debug_abbrev  0x00000000      0x145 ./Sources/adc/adc.o
+ .debug_aranges
+                0x00000000       0x38 ./Sources/adc/adc.o
+ .debug_ranges  0x00000000       0x28 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0xdf ./Sources/adc/adc.o
+ .debug_macro   0x00000000      0x898 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x16 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x22 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x4f ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x51 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0xef ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x6a ./Sources/adc/adc.o
+ .debug_macro   0x00000000      0x1df ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x55 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x3b ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x34 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x26 ./Sources/adc/adc.o
+ .debug_macro   0x00000000      0xd1d ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0xd9 ./Sources/adc/adc.o
+ .debug_macro   0x00000000     0xefee ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0xf5 ./Sources/adc/adc.o
+ .debug_macro   0x00000000       0x1c ./Sources/adc/adc.o
+ .debug_macro   0x00000000      0x16d ./Sources/adc/adc.o
+ .debug_line    0x00000000      0x330 ./Sources/adc/adc.o
+ .debug_str     0x00000000    0x5f99a ./Sources/adc/adc.o
+ .comment       0x00000000       0x80 ./Sources/adc/adc.o
+ .debug_frame   0x00000000       0xb0 ./Sources/adc/adc.o
+ .ARM.attributes
+                0x00000000       0x39 ./Sources/adc/adc.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .group         0x00000000        0x8 ./Sources/main.o
+ .text          0x00000000        0x0 ./Sources/main.o
+ .data          0x00000000        0x0 ./Sources/main.o
+ .bss           0x00000000        0x0 ./Sources/main.o
+ .debug_macro   0x00000000      0x898 ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x22 ./Sources/main.o
+ .debug_macro   0x00000000       0x4f ./Sources/main.o
+ .debug_macro   0x00000000       0x51 ./Sources/main.o
+ .debug_macro   0x00000000       0xef ./Sources/main.o
+ .debug_macro   0x00000000       0x6a ./Sources/main.o
+ .debug_macro   0x00000000      0x1df ./Sources/main.o
+ .debug_macro   0x00000000       0x55 ./Sources/main.o
+ .debug_macro   0x00000000       0x3b ./Sources/main.o
+ .debug_macro   0x00000000       0x34 ./Sources/main.o
+ .debug_macro   0x00000000       0x26 ./Sources/main.o
+ .debug_macro   0x00000000      0xd1d ./Sources/main.o
+ .debug_macro   0x00000000       0xd9 ./Sources/main.o
+ .debug_macro   0x00000000     0xefee ./Sources/main.o
+ .debug_macro   0x00000000       0xf5 ./Sources/main.o
+ .debug_macro   0x00000000      0x16d ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x10 ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x1c ./Sources/main.o
+ .debug_macro   0x00000000       0x7c ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x1c ./Sources/main.o
+ .debug_macro   0x00000000       0x10 ./Sources/main.o
+ .debug_macro   0x00000000       0x28 ./Sources/main.o
+ .debug_macro   0x00000000       0x16 ./Sources/main.o
+ .debug_macro   0x00000000       0x10 ./Sources/main.o
+ .debug_macro   0x00000000       0x10 ./Sources/main.o
+ .data          0x00000000        0x0 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .bss           0x00000000        0x0 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .group         0x00000000        0x8 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .text          0x00000000        0x0 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .data          0x00000000        0x0 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .bss           0x00000000        0x0 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .data.SystemCoreClock
+                0x00000000        0x4 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .text.SystemCoreClockUpdate
+                0x00000000      0x278 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000      0x898 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x22 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x4f ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x51 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0xef ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x6a ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000      0x1df ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x3b ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x34 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0x26 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000      0xd1d ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000       0xd9 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x00000000     0xefee ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .text          0x00000000       0x30 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x00000000       0x2c c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .ARM.attributes
+                0x00000000       0x22 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .text          0x00000000      0x2dc c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .ARM.extab     0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .ARM.exidx     0x00000000        0x8 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x00000000       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .ARM.attributes
+                0x00000000       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .text          0x00000000        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_dvmd_tls.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_dvmd_tls.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x00000000       0x22 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_dvmd_tls.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x00000000        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strlen.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strlen.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+ .eh_frame      0x00000000        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+ .text          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+ .data          0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+ .bss           0x00000000        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+m_interrupts     0x00000000         0x00000400         xr
+m_flash_config   0x00000400         0x00000010         xr
+m_text           0x00000410         0x0007fbf0         xr
+m_data           0x1fff0000         0x00010000         rw
+m_data_2         0x20000000         0x00010000         rw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+LOAD ./Sources/utils/test.o
+LOAD ./Sources/utils/util.o
+LOAD ./Sources/timer/ftm0.o
+LOAD ./Sources/timer/ftm1quad.o
+LOAD ./Sources/timer/ftm2.o
+LOAD ./Sources/timer/ftm3.o
+LOAD ./Sources/sensors/accel.o
+LOAD ./Sources/sensors/beep.o
+LOAD ./Sources/sensors/encoder.o
+LOAD ./Sources/sensors/switch.o
+LOAD ./Sources/sensors/tof.o
+LOAD ./Sources/i2c/i2c.o
+LOAD ./Sources/drive/drive.o
+LOAD ./Sources/drive/motor.o
+LOAD ./Sources/drive/servo.o
+LOAD ./Sources/drive/spindle.o
+LOAD ./Sources/drive/stepper.o
+LOAD ./Sources/cube/cube.o
+LOAD ./Sources/com/lpuart0.o
+LOAD ./Sources/com/term.o
+LOAD ./Sources/com/uart0.o
+LOAD ./Sources/com/uart1.o
+LOAD ./Sources/adc/adc.o
+LOAD ./Sources/main.o
+LOAD ./Project_Settings/Startup_Code/startup_MK22F51212.o
+LOAD ./Project_Settings/Startup_Code/system_MK22F51212.o
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libstdc++_nano.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libm.a
+START GROUP
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a
+END GROUP
+START GROUP
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a
+END GROUP
+START GROUP
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a
+END GROUP
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+LOAD c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+                0x00000400                HEAP_SIZE = DEFINED (__heap_size__)?__heap_size__:0x400
+                0x00000400                STACK_SIZE = DEFINED (__stack_size__)?__stack_size__:0x400
+
+.interrupts     0x00000000      0x400
+                0x00000000                __VECTOR_TABLE = .
+                0x00000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x00000000      0x400 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+                0x00000000                __isr_vector
+                0x00000400                . = ALIGN (0x4)
+
+.flash_config   0x00000400       0x10
+                0x00000400                . = ALIGN (0x4)
+ *(.FlashConfig)
+ .FlashConfig   0x00000400       0x10 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+                0x00000410                . = ALIGN (0x4)
+
+.text           0x00000410     0x469c
+                0x00000410                . = ALIGN (0x4)
+ *(.text)
+ .text          0x00000410       0x6c c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .text          0x0000047c       0x74 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+                0x0000047c                _start
+                0x0000047c                _mainCRTStartup
+ .text          0x000004f0      0x288 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+                0x000004f0                Reset_Handler
+                0x00000538                NMI_Handler
+                0x00000544                MemManage_Handler
+                0x0000054a                BusFault_Handler
+                0x00000550                UsageFault_Handler
+                0x00000556                SVC_Handler
+                0x0000055c                DebugMon_Handler
+                0x00000562                PendSV_Handler
+                0x00000568                SysTick_Handler
+                0x0000056e                DMA0_IRQHandler
+                0x00000574                DMA1_IRQHandler
+                0x0000057a                DMA2_IRQHandler
+                0x00000580                DMA3_IRQHandler
+                0x00000586                DMA4_IRQHandler
+                0x0000058c                DMA5_IRQHandler
+                0x00000592                DMA6_IRQHandler
+                0x00000598                DMA7_IRQHandler
+                0x0000059e                DMA8_IRQHandler
+                0x000005a4                DMA9_IRQHandler
+                0x000005aa                DMA10_IRQHandler
+                0x000005b0                DMA11_IRQHandler
+                0x000005b6                DMA12_IRQHandler
+                0x000005bc                DMA13_IRQHandler
+                0x000005c2                DMA14_IRQHandler
+                0x000005c8                DMA15_IRQHandler
+                0x000005ce                DMA_Error_IRQHandler
+                0x000005d4                MCM_IRQHandler
+                0x000005da                FTF_IRQHandler
+                0x000005e0                Read_Collision_IRQHandler
+                0x000005e6                LVD_LVW_IRQHandler
+                0x000005ec                LLWU_IRQHandler
+                0x000005f2                WDOG_EWM_IRQHandler
+                0x000005f8                RNG_IRQHandler
+                0x000005fe                I2C0_IRQHandler
+                0x00000604                I2C1_IRQHandler
+                0x0000060a                SPI0_IRQHandler
+                0x00000610                SPI1_IRQHandler
+                0x00000616                I2S0_Tx_IRQHandler
+                0x0000061c                I2S0_Rx_IRQHandler
+                0x00000640                UART2_RX_TX_IRQHandler
+                0x00000646                UART2_ERR_IRQHandler
+                0x0000064c                Reserved53_IRQHandler
+                0x00000652                Reserved54_IRQHandler
+                0x00000658                ADC0_IRQHandler
+                0x0000065e                CMP0_IRQHandler
+                0x00000664                CMP1_IRQHandler
+                0x0000067c                Reserved61_IRQHandler
+                0x00000682                RTC_IRQHandler
+                0x00000688                RTC_Seconds_IRQHandler
+                0x0000068e                PIT0_IRQHandler
+                0x00000694                PIT1_IRQHandler
+                0x0000069a                PIT2_IRQHandler
+                0x000006a0                PIT3_IRQHandler
+                0x000006a6                PDB0_IRQHandler
+                0x000006ac                USB0_IRQHandler
+                0x000006b2                Reserved70_IRQHandler
+                0x000006b8                Reserved71_IRQHandler
+                0x000006be                DAC0_IRQHandler
+                0x000006c4                MCG_IRQHandler
+                0x000006ca                LPTMR0_IRQHandler
+                0x000006d0                PORTA_IRQHandler
+                0x000006d6                PORTB_IRQHandler
+                0x000006dc                PORTC_IRQHandler
+                0x000006e2                PORTD_IRQHandler
+                0x000006e8                PORTE_IRQHandler
+                0x000006ee                SWI_IRQHandler
+                0x000006f4                Reserved81_IRQHandler
+                0x000006fa                Reserved82_IRQHandler
+                0x00000700                Reserved83_IRQHandler
+                0x00000706                Reserved84_IRQHandler
+                0x0000070c                Reserved85_IRQHandler
+                0x00000712                Reserved86_IRQHandler
+                0x0000071e                DAC1_IRQHandler
+                0x00000724                ADC1_IRQHandler
+                0x0000072a                Reserved90_IRQHandler
+                0x00000730                Reserved91_IRQHandler
+                0x00000736                Reserved92_IRQHandler
+                0x0000073c                Reserved93_IRQHandler
+                0x00000742                Reserved94_IRQHandler
+                0x00000748                Reserved95_IRQHandler
+                0x0000074e                Reserved96_IRQHandler
+                0x00000754                Reserved97_IRQHandler
+                0x0000075a                Reserved98_IRQHandler
+                0x00000760                Reserved99_IRQHandler
+                0x00000766                Reserved100_IRQHandler
+                0x0000076c                Reserved101_IRQHandler
+                0x00000772                DefaultISR
+ .text          0x00000778       0x14 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+                0x00000778                strcmp
+ .text          0x0000078c       0x10 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strlen.o)
+                0x0000078c                strlen
+ *(.text*)
+ .text.testStateMachine
+                0x0000079c      0x1dc ./Sources/utils/test.o
+                0x0000079c                testStateMachine
+ .text.testParseCommand
+                0x00000978       0x38 ./Sources/utils/test.o
+                0x00000978                testParseCommand
+ .text.testInit
+                0x000009b0       0x28 ./Sources/utils/test.o
+                0x000009b0                testInit
+ .text.utilStrcpy
+                0x000009d8       0x4a ./Sources/utils/util.o
+                0x000009d8                utilStrcpy
+ *fill*         0x00000a22        0x2 
+ .text.utilNum16uToStr
+                0x00000a24       0xec ./Sources/utils/util.o
+                0x00000a24                utilNum16uToStr
+ .text.utilNum16sToStr
+                0x00000b10      0x140 ./Sources/utils/util.o
+                0x00000b10                utilNum16sToStr
+ .text.utilScanDecimal16u
+                0x00000c50       0x9e ./Sources/utils/util.o
+                0x00000c50                utilScanDecimal16u
+ .text.utilScanDecimal16s
+                0x00000cee       0x8a ./Sources/utils/util.o
+                0x00000cee                utilScanDecimal16s
+ .text.utilWaitUs
+                0x00000d78       0x3a ./Sources/utils/util.o
+                0x00000d78                utilWaitUs
+ *fill*         0x00000db2        0x2 
+ .text.NVIC_EnableIRQ
+                0x00000db4       0x34 ./Sources/timer/ftm0.o
+ .text.NVIC_SetPriority
+                0x00000de8       0x54 ./Sources/timer/ftm0.o
+ .text.Default_Handler_FTM0
+                0x00000e3c       0x10 ./Sources/timer/ftm0.o
+                0x00000e3c                FTM0CH7_IRQHandler
+                0x00000e3c                Default_Handler_FTM0
+                0x00000e3c                FTM0CH4_IRQHandler
+                0x00000e3c                FTM0CH6_IRQHandler
+                0x00000e3c                FTM0TOF_IRQHandler
+                0x00000e3c                FTM0CH2_IRQHandler
+                0x00000e3c                FTM0CH3_IRQHandler
+                0x00000e3c                FTM0CH5_IRQHandler
+ .text.FTM0_IRQHandler
+                0x00000e4c       0x9c ./Sources/timer/ftm0.o
+                0x00000e4c                FTM0_IRQHandler
+ .text.ftm0Init
+                0x00000ee8       0x44 ./Sources/timer/ftm0.o
+                0x00000ee8                ftm0Init
+ .text.NVIC_EnableIRQ
+                0x00000f2c       0x34 ./Sources/timer/ftm1quad.o
+ .text.NVIC_SetPriority
+                0x00000f60       0x54 ./Sources/timer/ftm1quad.o
+ .text.Default_Handler_FTM1
+                0x00000fb4       0x10 ./Sources/timer/ftm1quad.o
+                0x00000fb4                Default_Handler_FTM1
+                0x00000fb4                FTM1CH1_IRQHandler
+ .text.FTM1_IRQHandler
+                0x00000fc4       0x3c ./Sources/timer/ftm1quad.o
+                0x00000fc4                FTM1_IRQHandler
+ .text.ftm1quadInit
+                0x00001000       0x90 ./Sources/timer/ftm1quad.o
+                0x00001000                ftm1quadInit
+ .text.NVIC_EnableIRQ
+                0x00001090       0x34 ./Sources/timer/ftm2.o
+ .text.NVIC_SetPriority
+                0x000010c4       0x54 ./Sources/timer/ftm2.o
+ .text.Default_Handler_FTM2
+                0x00001118       0x10 ./Sources/timer/ftm2.o
+                0x00001118                Default_Handler_FTM2
+                0x00001118                FTM2CH1_IRQHandler
+                0x00001118                FTM2CH0_IRQHandler
+ .text.FTM2_IRQHandler
+                0x00001128       0x2c ./Sources/timer/ftm2.o
+                0x00001128                FTM2_IRQHandler
+ .text.ftm2Init
+                0x00001154       0x44 ./Sources/timer/ftm2.o
+                0x00001154                ftm2Init
+ .text.NVIC_EnableIRQ
+                0x00001198       0x34 ./Sources/timer/ftm3.o
+ .text.NVIC_SetPriority
+                0x000011cc       0x54 ./Sources/timer/ftm3.o
+ .text.Default_Handler_FTM3
+                0x00001220       0x10 ./Sources/timer/ftm3.o
+                0x00001220                FTM3CH6_IRQHandler
+                0x00001220                FTM3CH7_IRQHandler
+                0x00001220                FTM3CH0_IRQHandler
+                0x00001220                FTM3TOF_IRQHandler
+                0x00001220                FTM3CH3_IRQHandler
+                0x00001220                Default_Handler_FTM3
+                0x00001220                FTM3CH4_IRQHandler
+                0x00001220                FTM3CH5_IRQHandler
+                0x00001220                FTM3CH1_IRQHandler
+ .text.FTM3_IRQHandler
+                0x00001230       0x9c ./Sources/timer/ftm3.o
+                0x00001230                FTM3_IRQHandler
+ .text.ftm3Init
+                0x000012cc       0x44 ./Sources/timer/ftm3.o
+                0x000012cc                ftm3Init
+ .text.accelResetData
+                0x00001310       0x4c ./Sources/sensors/accel.o
+                0x00001310                accelResetData
+ .text.accelReadRaw
+                0x0000135c       0x26 ./Sources/sensors/accel.o
+                0x0000135c                accelReadRaw
+ *fill*         0x00001382        0x2 
+ .text.accelRead
+                0x00001384       0xb4 ./Sources/sensors/accel.o
+                0x00001384                accelRead
+ .text.accelParseCommand
+                0x00001438       0x68 ./Sources/sensors/accel.o
+                0x00001438                accelParseCommand
+ .text.accelInit
+                0x000014a0       0x80 ./Sources/sensors/accel.o
+                0x000014a0                accelInit
+ .text.FTM0CH1_IRQHandler
+                0x00001520       0x90 ./Sources/sensors/beep.o
+                0x00001520                FTM0CH1_IRQHandler
+ .text.beepParseCommand
+                0x000015b0       0x68 ./Sources/sensors/beep.o
+                0x000015b0                beepParseCommand
+ .text.beepInit
+                0x00001618       0x58 ./Sources/sensors/beep.o
+                0x00001618                beepInit
+ .text.FTM1TOF_IRQHandler
+                0x00001670       0x50 ./Sources/sensors/encoder.o
+                0x00001670                FTM1TOF_IRQHandler
+ .text.FTM0CH0_IRQHandler
+                0x000016c0       0xb4 ./Sources/sensors/encoder.o
+                0x000016c0                FTM0CH0_IRQHandler
+ .text.encodergetTicks
+                0x00001774       0x18 ./Sources/sensors/encoder.o
+                0x00001774                encodergetTicks
+ .text.encodergetTicks10ms
+                0x0000178c       0x18 ./Sources/sensors/encoder.o
+                0x0000178c                encodergetTicks10ms
+ .text.encodergetRPS
+                0x000017a4       0x48 ./Sources/sensors/encoder.o
+                0x000017a4                encodergetRPS
+ .text.encodergetSpeedmmps
+                0x000017ec       0x6c ./Sources/sensors/encoder.o
+                0x000017ec                encodergetSpeedmmps
+ .text.encoderParseCommand
+                0x00001858       0x94 ./Sources/sensors/encoder.o
+                0x00001858                encoderParseCommand
+ .text.encoderInit
+                0x000018ec       0x38 ./Sources/sensors/encoder.o
+                0x000018ec                encoderInit
+ .text.switchStateClose
+                0x00001924       0x20 ./Sources/sensors/switch.o
+                0x00001924                switchStateClose
+ .text.switchStateOpen
+                0x00001944       0x28 ./Sources/sensors/switch.o
+                0x00001944                switchStateOpen
+ .text.switchInit
+                0x0000196c       0x28 ./Sources/sensors/switch.o
+                0x0000196c                switchInit
+ .text.tofWriteReg
+                0x00001994       0x72 ./Sources/sensors/tof.o
+                0x00001994                tofWriteReg
+ .text.tofReadReg
+                0x00001a06       0x7c ./Sources/sensors/tof.o
+                0x00001a06                tofReadReg
+ .text.tofRange
+                0x00001a82       0x8a ./Sources/sensors/tof.o
+                0x00001a82                tofRange
+ .text.tofInitSequence
+                0x00001b0c      0x34c ./Sources/sensors/tof.o
+                0x00001b0c                tofInitSequence
+ .text.tofParseCommand
+                0x00001e58       0xc0 ./Sources/sensors/tof.o
+                0x00001e58                tofParseCommand
+ .text.tofInit  0x00001f18       0xb4 ./Sources/sensors/tof.o
+                0x00001f18                tofInit
+ .text.i2cStart
+                0x00001fcc       0xbc ./Sources/i2c/i2c.o
+                0x00001fcc                i2cStart
+ .text.i2cRepeatedStart
+                0x00002088       0x8c ./Sources/i2c/i2c.o
+                0x00002088                i2cRepeatedStart
+ .text.i2cSendData
+                0x00002114       0x80 ./Sources/i2c/i2c.o
+                0x00002114                i2cSendData
+ .text.i2cReceiveData
+                0x00002194      0x168 ./Sources/i2c/i2c.o
+                0x00002194                i2cReceiveData
+ .text.i2cStop  0x000022fc       0x34 ./Sources/i2c/i2c.o
+                0x000022fc                i2cStop
+ .text.i2cTest  0x00002330       0x30 ./Sources/i2c/i2c.o
+                0x00002330                i2cTest
+ .text.i2cReadCmdData
+                0x00002360       0x72 ./Sources/i2c/i2c.o
+                0x00002360                i2cReadCmdData
+ .text.i2cWriteCmdData
+                0x000023d2       0x6c ./Sources/i2c/i2c.o
+                0x000023d2                i2cWriteCmdData
+ *fill*         0x0000243e        0x2 
+ .text.i2cInit  0x00002440       0x58 ./Sources/i2c/i2c.o
+                0x00002440                i2cInit
+ .text.driveSetParameterKp
+                0x00002498       0x20 ./Sources/drive/drive.o
+                0x00002498                driveSetParameterKp
+ .text.driveSetParameterKi
+                0x000024b8       0x20 ./Sources/drive/drive.o
+                0x000024b8                driveSetParameterKi
+ .text.driveSetParameterKd
+                0x000024d8       0x20 ./Sources/drive/drive.o
+                0x000024d8                driveSetParameterKd
+ .text.driveSetSpeed
+                0x000024f8       0x20 ./Sources/drive/drive.o
+                0x000024f8                driveSetSpeed
+ .text.driveSetDistance
+                0x00002518       0xc4 ./Sources/drive/drive.o
+                0x00002518                driveSetDistance
+ .text.driveGetDistanceInfo
+                0x000025dc       0x18 ./Sources/drive/drive.o
+                0x000025dc                driveGetDistanceInfo
+ .text.FTM1CH0_IRQHandler
+                0x000025f4       0x44 ./Sources/drive/drive.o
+                0x000025f4                FTM1CH0_IRQHandler
+ .text.driveToWork
+                0x00002638      0x22c ./Sources/drive/drive.o
+                0x00002638                driveToWork
+ .text.driveParseCommand
+                0x00002864      0x1b0 ./Sources/drive/drive.o
+                0x00002864                driveParseCommand
+ .text.driveInit
+                0x00002a14       0x58 ./Sources/drive/drive.o
+                0x00002a14                driveInit
+ .text.motorIncrementPwm
+                0x00002a6c       0x50 ./Sources/drive/motor.o
+                0x00002a6c                motorIncrementPwm
+ .text.FTM3CH2_IRQHandler
+                0x00002abc       0xac ./Sources/drive/motor.o
+                0x00002abc                FTM3CH2_IRQHandler
+ .text.motorSetPwm
+                0x00002b68       0xcc ./Sources/drive/motor.o
+                0x00002b68                motorSetPwm
+ .text.motorParseCommand
+                0x00002c34       0xb8 ./Sources/drive/motor.o
+                0x00002c34                motorParseCommand
+ .text.motorInit
+                0x00002cec       0x64 ./Sources/drive/motor.o
+                0x00002cec                motorInit
+ .text.servoSet
+                0x00002d50       0x58 ./Sources/drive/servo.o
+                0x00002d50                servoSet
+ .text.servoParseCommand
+                0x00002da8       0xb0 ./Sources/drive/servo.o
+                0x00002da8                servoParseCommand
+ .text.servoInit
+                0x00002e58       0x5c ./Sources/drive/servo.o
+                0x00002e58                servoInit
+ .text.spindleSet
+                0x00002eb4       0xb8 ./Sources/drive/spindle.o
+                0x00002eb4                spindleSet
+ .text.spindleParseCommand
+                0x00002f6c       0xac ./Sources/drive/spindle.o
+                0x00002f6c                spindleParseCommand
+ .text.spindleInit
+                0x00003018       0x80 ./Sources/drive/spindle.o
+                0x00003018                spindleInit
+ .text.cubeStateMachine
+                0x00003098      0x3ac ./Sources/cube/cube.o
+                0x00003098                cubeStateMachine
+ .text.cubeParseCommand
+                0x00003444       0xec ./Sources/cube/cube.o
+                0x00003444                cubeParseCommand
+ .text.cubeInit
+                0x00003530       0x24 ./Sources/cube/cube.o
+                0x00003530                cubeInit
+ .text.LPUART0_IRQHandler
+                0x00003554       0xe8 ./Sources/com/lpuart0.o
+                0x00003554                LPUART0_IRQHandler
+ .text.termRegisterCommandLineHandler
+                0x0000363c       0x64 ./Sources/com/term.o
+                0x0000363c                termRegisterCommandLineHandler
+ .text.termWriteChar
+                0x000036a0       0x44 ./Sources/com/term.o
+                0x000036a0                termWriteChar
+ .text.termWrite
+                0x000036e4       0x34 ./Sources/com/term.o
+                0x000036e4                termWrite
+ .text.termWriteNum16s
+                0x00003718       0x2c ./Sources/com/term.o
+                0x00003718                termWriteNum16s
+ .text.termWriteLine
+                0x00003744       0x1c ./Sources/com/term.o
+                0x00003744                termWriteLine
+ .text.termWriteSubString
+                0x00003760       0x3c ./Sources/com/term.o
+                0x00003760                termWriteSubString
+ .text.termParseCommand
+                0x0000379c      0x13c ./Sources/com/term.o
+                0x0000379c                termParseCommand
+ .text.termDoWork
+                0x000038d8       0x60 ./Sources/com/term.o
+                0x000038d8                termDoWork
+ .text.termInit
+                0x00003938       0x2c ./Sources/com/term.o
+                0x00003938                termInit
+ .text.NVIC_EnableIRQ
+                0x00003964       0x34 ./Sources/com/uart0.o
+ .text.NVIC_DisableIRQ
+                0x00003998       0x34 ./Sources/com/uart0.o
+ .text.NVIC_SetPriority
+                0x000039cc       0x54 ./Sources/com/uart0.o
+ .text.NVIC_DisableIRQEx
+                0x00003a20       0x24 ./Sources/com/uart0.o
+ .text.UART0_RX_TX_IRQHandler
+                0x00003a44       0xe0 ./Sources/com/uart0.o
+                0x00003a44                UART0_RX_TX_IRQHandler
+ .text.UART0_ERR_IRQHandler
+                0x00003b24       0x1c ./Sources/com/uart0.o
+                0x00003b24                UART0_ERR_IRQHandler
+ .text.uart0WriteChar
+                0x00003b40       0x80 ./Sources/com/uart0.o
+                0x00003b40                uart0WriteChar
+ .text.uart0ReadChar
+                0x00003bc0       0x68 ./Sources/com/uart0.o
+                0x00003bc0                uart0ReadChar
+ .text.uart0ReadLine
+                0x00003c28       0x4e ./Sources/com/uart0.o
+                0x00003c28                uart0ReadLine
+ *fill*         0x00003c76        0x2 
+ .text.uart0HasLineReceived
+                0x00003c78       0x60 ./Sources/com/uart0.o
+                0x00003c78                uart0HasLineReceived
+ .text.uart0Init
+                0x00003cd8       0xdc ./Sources/com/uart0.o
+                0x00003cd8                uart0Init
+ .text.NVIC_EnableIRQ
+                0x00003db4       0x34 ./Sources/com/uart1.o
+ .text.NVIC_DisableIRQ
+                0x00003de8       0x34 ./Sources/com/uart1.o
+ .text.NVIC_SetPriority
+                0x00003e1c       0x54 ./Sources/com/uart1.o
+ .text.NVIC_DisableIRQEx
+                0x00003e70       0x24 ./Sources/com/uart1.o
+ .text.UART1_RX_TX_IRQHandler
+                0x00003e94       0xe0 ./Sources/com/uart1.o
+                0x00003e94                UART1_RX_TX_IRQHandler
+ .text.UART1_ERR_IRQHandler
+                0x00003f74       0x1c ./Sources/com/uart1.o
+                0x00003f74                UART1_ERR_IRQHandler
+ .text.uart1WriteChar
+                0x00003f90       0x80 ./Sources/com/uart1.o
+                0x00003f90                uart1WriteChar
+ .text.uart1ReadChar
+                0x00004010       0x68 ./Sources/com/uart1.o
+                0x00004010                uart1ReadChar
+ .text.uart1ReadLine
+                0x00004078       0x4e ./Sources/com/uart1.o
+                0x00004078                uart1ReadLine
+ *fill*         0x000040c6        0x2 
+ .text.uart1HasLineReceived
+                0x000040c8       0x60 ./Sources/com/uart1.o
+                0x000040c8                uart1HasLineReceived
+ .text.uart1Init
+                0x00004128       0xdc ./Sources/com/uart1.o
+                0x00004128                uart1Init
+ .text.ProcessTest
+                0x00004204       0x2c ./Sources/main.o
+                0x00004204                ProcessTest
+ .text.ProcessCube
+                0x00004230       0x28 ./Sources/main.o
+                0x00004230                ProcessCube
+ .text.ProcessDrive
+                0x00004258       0x28 ./Sources/main.o
+                0x00004258                ProcessDrive
+ .text.main     0x00004280       0xf4 ./Sources/main.o
+                0x00004280                main
+ .text.SystemInit
+                0x00004374      0x224 ./Project_Settings/Startup_Code/system_MK22F51212.o
+                0x00004374                SystemInit
+ .text.HardFault_HandlerC
+                0x00004598       0xa0 ./Project_Settings/Startup_Code/system_MK22F51212.o
+                0x00004598                HardFault_HandlerC
+ .text.HardFault_Handler
+                0x00004638       0x1e ./Project_Settings/Startup_Code/system_MK22F51212.o
+                0x00004638                HardFault_Handler
+ *fill*         0x00004656        0x2 
+ .text.exit     0x00004658       0x28 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+                0x00004658                exit
+ .text.__libc_init_array
+                0x00004680       0x48 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+                0x00004680                __libc_init_array
+ .text.memset   0x000046c8       0x10 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+                0x000046c8                memset
+ .text.strncmp  0x000046d8       0x24 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+                0x000046d8                strncmp
+ .text.strncpy  0x000046fc       0x2a c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+                0x000046fc                strncpy
+ *fill*         0x00004726        0x2 
+ .text._exit    0x00004728        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+                0x00004728                _exit
+ *(.rodata)
+ .rodata        0x0000472c       0x15 ./Sources/utils/test.o
+ *fill*         0x00004741        0x3 
+ .rodata        0x00004744       0x14 ./Sources/utils/util.o
+ .rodata        0x00004758        0xe ./Sources/sensors/accel.o
+ *fill*         0x00004766        0x2 
+ .rodata        0x00004768       0x2e ./Sources/sensors/beep.o
+ *fill*         0x00004796        0x2 
+ .rodata        0x00004798        0xe ./Sources/sensors/encoder.o
+ *fill*         0x000047a6        0x2 
+ .rodata        0x000047a8       0x4c ./Sources/sensors/tof.o
+ .rodata        0x000047f4       0x76 ./Sources/drive/drive.o
+ *fill*         0x0000486a        0x2 
+ .rodata        0x0000486c       0x5e ./Sources/drive/motor.o
+ *fill*         0x000048ca        0x2 
+ .rodata        0x000048cc       0x46 ./Sources/drive/servo.o
+ *fill*         0x00004912        0x2 
+ .rodata        0x00004914       0x5c ./Sources/drive/spindle.o
+ .rodata        0x00004970       0x7d ./Sources/cube/cube.o
+ *fill*         0x000049ed        0x3 
+ .rodata        0x000049f0       0xa0 ./Sources/com/term.o
+ *(.rodata*)
+ .rodata._global_impure_ptr
+                0x00004a90        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+                0x00004a90                _global_impure_ptr
+ *(.glue_7)
+ .glue_7        0x00004a94        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x00004a94        0x0 linker stubs
+ *(.eh_frame)
+ .eh_frame      0x00004a94        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ *(.init)
+ .init          0x00004a94        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+                0x00004a94                _init
+ .init          0x00004a98        0x8 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+ *(.fini)
+ .fini          0x00004aa0        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+                0x00004aa0                _fini
+ .fini          0x00004aa4        0x8 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+                0x00004aac                . = ALIGN (0x4)
+
+.vfp11_veneer   0x00004aac        0x0
+ .vfp11_veneer  0x00004aac        0x0 linker stubs
+
+.v4_bx          0x00004aac        0x0
+ .v4_bx         0x00004aac        0x0 linker stubs
+
+.iplt           0x00004aac        0x0
+ .iplt          0x00004aac        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+
+.ARM            0x00004aac        0x8
+                0x00004aac                __exidx_start = .
+ *(.ARM.exidx*)
+ .ARM.exidx     0x00004aac        0x8 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+                0x00004ab4                __exidx_end = .
+
+.rel.dyn        0x00004ab4        0x0
+ .rel.iplt      0x00004ab4        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+
+.ctors          0x00004ab4        0x0
+                0x00004ab4                __CTOR_LIST__ = .
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+                0x00004ab4                __CTOR_END__ = .
+
+.dtors          0x00004ab4        0x0
+                0x00004ab4                __DTOR_LIST__ = .
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+                0x00004ab4                __DTOR_END__ = .
+
+.preinit_array  0x00004ab4        0x0
+                0x00004ab4                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array*)
+                0x00004ab4                PROVIDE (__preinit_array_end, .)
+
+.init_array     0x00004ab4        0x4
+                0x00004ab4                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array*)
+ .init_array    0x00004ab4        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+                0x00004ab8                PROVIDE (__init_array_end, .)
+
+.fini_array     0x00004ab8        0x4
+                [!provide]                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array*)
+ .fini_array    0x00004ab8        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+                [!provide]                PROVIDE (__fini_array_end, .)
+                0x00004abc                __etext = .
+                0x00004abc                __DATA_ROM = .
+
+.data           0x1fff0000       0x68 load address 0x00004abc
+                0x1fff0000                . = ALIGN (0x4)
+                0x1fff0000                __DATA_RAM = .
+                0x1fff0000                __data_start__ = .
+ *(.data)
+ *(.data*)
+ .data.closeTime
+                0x1fff0000        0x2 ./Sources/cube/cube.o
+                0x1fff0000                closeTime
+ *fill*         0x1fff0002        0x2 
+ .data.impure_data
+                0x1fff0004       0x60 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ *(.jcr*)
+ .jcr           0x1fff0064        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .jcr           0x1fff0064        0x4 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+                0x1fff0068                . = ALIGN (0x4)
+                0x1fff0068                __data_end__ = .
+                0x00004b24                __DATA_END = (__DATA_ROM + (__data_end__ - __data_start__))
+
+.igot.plt       0x1fff0068        0x0 load address 0x00004b24
+ .igot.plt      0x1fff0068        0x0 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+
+.bss            0x1fff0068      0xf00 load address 0x00004b24
+                0x1fff0068                . = ALIGN (0x4)
+                0x1fff0068                __START_BSS = .
+                0x1fff0068                __bss_start__ = .
+ *(.bss)
+ .bss           0x1fff0068       0x1c c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ *(.bss*)
+ .bss.state     0x1fff0084        0x1 ./Sources/utils/test.o
+ .bss.tof1      0x1fff0085        0x1 ./Sources/utils/test.o
+                0x1fff0085                tof1
+ .bss.tof2      0x1fff0086        0x1 ./Sources/utils/test.o
+                0x1fff0086                tof2
+ .bss.accel     0x1fff0087        0x1 ./Sources/utils/test.o
+                0x1fff0087                accel
+ .bss.spindle   0x1fff0088        0x1 ./Sources/utils/test.o
+                0x1fff0088                spindle
+ .bss.drive     0x1fff0089        0x1 ./Sources/utils/test.o
+                0x1fff0089                drive
+ .bss.range_tof1
+                0x1fff008a        0x1 ./Sources/utils/test.o
+                0x1fff008a                range_tof1
+ .bss.range_tof2
+                0x1fff008b        0x1 ./Sources/utils/test.o
+                0x1fff008b                range_tof2
+ .bss.clh       0x1fff008c       0x38 ./Sources/utils/test.o
+ .bss.clh       0x1fff00c4       0x38 ./Sources/sensors/accel.o
+ .bss.Offset    0x1fff00fc        0x6 ./Sources/sensors/accel.o
+                0x1fff00fc                Offset
+ *fill*         0x1fff0102        0x2 
+ .bss.clh       0x1fff0104       0x38 ./Sources/sensors/beep.o
+ .bss.number    0x1fff013c        0x2 ./Sources/sensors/beep.o
+ .bss.i.7083    0x1fff013e        0x2 ./Sources/sensors/beep.o
+ .bss.j.7084    0x1fff0140        0x2 ./Sources/sensors/beep.o
+ *fill*         0x1fff0142        0x2 
+ .bss.clh       0x1fff0144       0x38 ./Sources/sensors/encoder.o
+ .bss.ticks     0x1fff017c        0x4 ./Sources/sensors/encoder.o
+ .bss.oldticks  0x1fff0180        0x4 ./Sources/sensors/encoder.o
+ .bss.avgticks  0x1fff0184        0x4 ./Sources/sensors/encoder.o
+ .bss.oldavgticks
+                0x1fff0188        0x4 ./Sources/sensors/encoder.o
+ .bss.i.7127    0x1fff018c        0x1 ./Sources/sensors/encoder.o
+ *fill*         0x1fff018d        0x3 
+ .bss.clh       0x1fff0190       0x38 ./Sources/sensors/tof.o
+ .bss.clh       0x1fff01c8       0x38 ./Sources/drive/drive.o
+ .bss.targetSpeed
+                0x1fff0200        0x4 ./Sources/drive/drive.o
+ .bss.targetDistance
+                0x1fff0204        0x4 ./Sources/drive/drive.o
+ .bss.kp        0x1fff0208        0x1 ./Sources/drive/drive.o
+ .bss.ki        0x1fff0209        0x1 ./Sources/drive/drive.o
+ .bss.kd        0x1fff020a        0x1 ./Sources/drive/drive.o
+ .bss.Ta        0x1fff020b        0x1 ./Sources/drive/drive.o
+ .bss.val       0x1fff020c        0x4 ./Sources/drive/drive.o
+ .bss.motorBrake
+                0x1fff0210        0x1 ./Sources/drive/drive.o
+ *fill*         0x1fff0211        0x1 
+ .bss.startTicks
+                0x1fff0212        0x2 ./Sources/drive/drive.o
+ .bss.targetTicks
+                0x1fff0214        0x2 ./Sources/drive/drive.o
+ .bss.trueSpeed.7143
+                0x1fff0216        0x2 ./Sources/drive/drive.o
+ .bss.setSpeed.7144
+                0x1fff0218        0x2 ./Sources/drive/drive.o
+ *fill*         0x1fff021a        0x2 
+ .bss.intError.7146
+                0x1fff021c        0x4 ./Sources/drive/drive.o
+ .bss.oldError.7145
+                0x1fff0220        0x4 ./Sources/drive/drive.o
+ .bss.newvalue  0x1fff0224        0x1 ./Sources/drive/motor.o
+ *fill*         0x1fff0225        0x3 
+ .bss.clh       0x1fff0228       0x38 ./Sources/drive/motor.o
+ .bss.cnt_timer.7092
+                0x1fff0260        0x2 ./Sources/drive/motor.o
+ .bss.cnt_value.7093
+                0x1fff0262        0x2 ./Sources/drive/motor.o
+ .bss.clh       0x1fff0264       0x38 ./Sources/drive/servo.o
+ .bss.clh       0x1fff029c       0x38 ./Sources/drive/spindle.o
+ .bss.valueSpindle
+                0x1fff02d4        0x1 ./Sources/drive/spindle.o
+ *fill*         0x1fff02d5        0x3 
+ .bss.clh       0x1fff02d8       0x38 ./Sources/cube/cube.o
+ .bss.state     0x1fff0310        0x1 ./Sources/cube/cube.o
+ .bss.startPi   0x1fff0311        0x1 ./Sources/cube/cube.o
+ .bss.distance  0x1fff0312        0x1 ./Sources/cube/cube.o
+                0x1fff0312                distance
+ .bss.accelXStart
+                0x1fff0313        0x1 ./Sources/cube/cube.o
+                0x1fff0313                accelXStart
+ .bss.fail      0x1fff0314        0x1 ./Sources/cube/cube.o
+                0x1fff0314                fail
+ *fill*         0x1fff0315        0x1 
+ .bss.i.7180    0x1fff0316        0x2 ./Sources/cube/cube.o
+ .bss.k.7182    0x1fff0318        0x2 ./Sources/cube/cube.o
+ .bss.j.7181    0x1fff031a        0x2 ./Sources/cube/cube.o
+ .bss.rxBuf     0x1fff031c      0x200 ./Sources/com/lpuart0.o
+ .bss.rxBufCount
+                0x1fff051c        0x2 ./Sources/com/lpuart0.o
+ .bss.rxBufWritePos
+                0x1fff051e        0x2 ./Sources/com/lpuart0.o
+ .bss.txBuf     0x1fff0520      0x200 ./Sources/com/lpuart0.o
+ .bss.txBufCount
+                0x1fff0720        0x2 ./Sources/com/lpuart0.o
+ .bss.txBufReadPos
+                0x1fff0722        0x2 ./Sources/com/lpuart0.o
+ .bss.destination
+                0x1fff0724        0x1 ./Sources/com/term.o
+ *fill*         0x1fff0725        0x3 
+ .bss.head      0x1fff0728        0x4 ./Sources/com/term.o
+ .bss.rxBuf     0x1fff072c      0x200 ./Sources/com/uart0.o
+ .bss.rxBufCount
+                0x1fff092c        0x2 ./Sources/com/uart0.o
+ .bss.rxBufWritePos
+                0x1fff092e        0x2 ./Sources/com/uart0.o
+ .bss.rxBufReadPos
+                0x1fff0930        0x2 ./Sources/com/uart0.o
+ *fill*         0x1fff0932        0x2 
+ .bss.txBuf     0x1fff0934      0x200 ./Sources/com/uart0.o
+ .bss.txBufCount
+                0x1fff0b34        0x2 ./Sources/com/uart0.o
+ .bss.txBufWritePos
+                0x1fff0b36        0x2 ./Sources/com/uart0.o
+ .bss.txBufReadPos
+                0x1fff0b38        0x2 ./Sources/com/uart0.o
+ *fill*         0x1fff0b3a        0x2 
+ .bss.rxBuf     0x1fff0b3c      0x200 ./Sources/com/uart1.o
+ .bss.rxBufCount
+                0x1fff0d3c        0x2 ./Sources/com/uart1.o
+ .bss.rxBufWritePos
+                0x1fff0d3e        0x2 ./Sources/com/uart1.o
+ .bss.rxBufReadPos
+                0x1fff0d40        0x2 ./Sources/com/uart1.o
+ *fill*         0x1fff0d42        0x2 
+ .bss.txBuf     0x1fff0d44      0x200 ./Sources/com/uart1.o
+ .bss.txBufCount
+                0x1fff0f44        0x2 ./Sources/com/uart1.o
+ .bss.txBufWritePos
+                0x1fff0f46        0x2 ./Sources/com/uart1.o
+ .bss.txBufReadPos
+                0x1fff0f48        0x2 ./Sources/com/uart1.o
+ .bss.i.6983    0x1fff0f4a        0x2 ./Sources/main.o
+ .bss.i.6989    0x1fff0f4c        0x2 ./Sources/main.o
+ .bss.i.6993    0x1fff0f4e        0x2 ./Sources/main.o
+ *(COMMON)
+ COMMON         0x1fff0f50        0xa ./Sources/utils/test.o
+                0x1fff0f50                j
+                0x1fff0f54                accel_data
+ *fill*         0x1fff0f5a        0x2 
+ COMMON         0x1fff0f5c        0x8 ./Sources/sensors/encoder.o
+                0x1fff0f5c                ticks10ms
+                0x1fff0f60                ticks100ms
+ COMMON         0x1fff0f64        0x2 ./Sources/drive/motor.o
+                0x1fff0f64                valueMotor
+                0x1fff0f68                . = ALIGN (0x4)
+ *fill*         0x1fff0f66        0x2 
+                0x1fff0f68                __bss_end__ = .
+                0x1fff0f68                __END_BSS = .
+
+.heap           0x20000000      0x400
+                0x20000000                . = ALIGN (0x8)
+                0x20000000                __end__ = .
+                [!provide]                PROVIDE (end, .)
+                0x20000000                __HeapBase = .
+                0x20000400                . = (. + HEAP_SIZE)
+ *fill*         0x20000000      0x400 
+                0x20000400                __HeapLimit = .
+
+.stack          0x20000400      0x400
+                0x20000400                . = ALIGN (0x8)
+                0x20000800                . = (. + STACK_SIZE)
+ *fill*         0x20000400      0x400 
+                0x20010000                __StackTop = (ORIGIN (m_data_2) + LENGTH (m_data_2))
+                0x2000fc00                __StackLimit = (__StackTop - STACK_SIZE)
+                0x20010000                PROVIDE (__stack, __StackTop)
+
+.ARM.attributes
+                0x00000000       0x30
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x00000000       0x22 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+ .ARM.attributes
+                0x00000022       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .ARM.attributes
+                0x00000056       0x20 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard/crt0.o
+ .ARM.attributes
+                0x00000076       0x39 ./Sources/utils/test.o
+ .ARM.attributes
+                0x000000af       0x39 ./Sources/utils/util.o
+ .ARM.attributes
+                0x000000e8       0x39 ./Sources/timer/ftm0.o
+ .ARM.attributes
+                0x00000121       0x39 ./Sources/timer/ftm1quad.o
+ .ARM.attributes
+                0x0000015a       0x39 ./Sources/timer/ftm2.o
+ .ARM.attributes
+                0x00000193       0x39 ./Sources/timer/ftm3.o
+ .ARM.attributes
+                0x000001cc       0x39 ./Sources/sensors/accel.o
+ .ARM.attributes
+                0x00000205       0x39 ./Sources/sensors/beep.o
+ .ARM.attributes
+                0x0000023e       0x39 ./Sources/sensors/encoder.o
+ .ARM.attributes
+                0x00000277       0x39 ./Sources/sensors/switch.o
+ .ARM.attributes
+                0x000002b0       0x39 ./Sources/sensors/tof.o
+ .ARM.attributes
+                0x000002e9       0x39 ./Sources/i2c/i2c.o
+ .ARM.attributes
+                0x00000322       0x39 ./Sources/drive/drive.o
+ .ARM.attributes
+                0x0000035b       0x39 ./Sources/drive/motor.o
+ .ARM.attributes
+                0x00000394       0x39 ./Sources/drive/servo.o
+ .ARM.attributes
+                0x000003cd       0x39 ./Sources/drive/spindle.o
+ .ARM.attributes
+                0x00000406       0x39 ./Sources/cube/cube.o
+ .ARM.attributes
+                0x0000043f       0x39 ./Sources/com/lpuart0.o
+ .ARM.attributes
+                0x00000478       0x39 ./Sources/com/term.o
+ .ARM.attributes
+                0x000004b1       0x39 ./Sources/com/uart0.o
+ .ARM.attributes
+                0x000004ea       0x39 ./Sources/com/uart1.o
+ .ARM.attributes
+                0x00000523       0x39 ./Sources/main.o
+ .ARM.attributes
+                0x0000055c       0x1f ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .ARM.attributes
+                0x0000057b       0x39 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .ARM.attributes
+                0x000005b4       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+ .ARM.attributes
+                0x000005e8       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-impure.o)
+ .ARM.attributes
+                0x0000061c       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+ .ARM.attributes
+                0x00000650       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+ .ARM.attributes
+                0x00000684       0x20 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+ .ARM.attributes
+                0x000006a4       0x1b c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strlen.o)
+ .ARM.attributes
+                0x000006bf       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+ .ARM.attributes
+                0x000006f3       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+ .ARM.attributes
+                0x00000727       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)
+ .ARM.attributes
+                0x0000075b       0x34 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtend.o
+ .ARM.attributes
+                0x0000078f       0x22 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+                0x00000001                ASSERT ((__StackLimit >= __HeapLimit), region m_data_2 overflowed with stack and heap)
+OUTPUT(TrainControl1.elf elf32-littlearm)
+
+.debug_info     0x00000000    0x10993
+ .debug_info    0x00000000      0xbe9 ./Sources/utils/test.o
+ .debug_info    0x00000be9      0xf37 ./Sources/utils/util.o
+ .debug_info    0x00001b20      0x9ae ./Sources/timer/ftm0.o
+ .debug_info    0x000024ce      0xa6e ./Sources/timer/ftm1quad.o
+ .debug_info    0x00002f3c      0x9ae ./Sources/timer/ftm2.o
+ .debug_info    0x000038ea      0x9ae ./Sources/timer/ftm3.o
+ .debug_info    0x00004298      0xc85 ./Sources/sensors/accel.o
+ .debug_info    0x00004f1d      0xd4b ./Sources/sensors/beep.o
+ .debug_info    0x00005c68      0xd99 ./Sources/sensors/encoder.o
+ .debug_info    0x00006a01      0x26f ./Sources/sensors/switch.o
+ .debug_info    0x00006c70      0xd32 ./Sources/sensors/tof.o
+ .debug_info    0x000079a2      0x678 ./Sources/i2c/i2c.o
+ .debug_info    0x0000801a      0xeab ./Sources/drive/drive.o
+ .debug_info    0x00008ec5      0xe0c ./Sources/drive/motor.o
+ .debug_info    0x00009cd1      0xd5d ./Sources/drive/servo.o
+ .debug_info    0x0000aa2e      0xdbb ./Sources/drive/spindle.o
+ .debug_info    0x0000b7e9      0xc15 ./Sources/cube/cube.o
+ .debug_info    0x0000c3fe      0xbbb ./Sources/com/lpuart0.o
+ .debug_info    0x0000cfb9      0xc84 ./Sources/com/term.o
+ .debug_info    0x0000dc3d      0xde9 ./Sources/com/uart0.o
+ .debug_info    0x0000ea26      0xde9 ./Sources/com/uart1.o
+ .debug_info    0x0000f80f      0x4b4 ./Sources/main.o
+ .debug_info    0x0000fcc3       0x84 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .debug_info    0x0000fd47      0xc4c ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_abbrev   0x00000000     0x2fff
+ .debug_abbrev  0x00000000      0x277 ./Sources/utils/test.o
+ .debug_abbrev  0x00000277      0x2de ./Sources/utils/util.o
+ .debug_abbrev  0x00000555      0x165 ./Sources/timer/ftm0.o
+ .debug_abbrev  0x000006ba      0x165 ./Sources/timer/ftm1quad.o
+ .debug_abbrev  0x0000081f      0x165 ./Sources/timer/ftm2.o
+ .debug_abbrev  0x00000984      0x165 ./Sources/timer/ftm3.o
+ .debug_abbrev  0x00000ae9      0x23e ./Sources/sensors/accel.o
+ .debug_abbrev  0x00000d27      0x22a ./Sources/sensors/beep.o
+ .debug_abbrev  0x00000f51      0x29d ./Sources/sensors/encoder.o
+ .debug_abbrev  0x000011ee      0x100 ./Sources/sensors/switch.o
+ .debug_abbrev  0x000012ee      0x289 ./Sources/sensors/tof.o
+ .debug_abbrev  0x00001577      0x20a ./Sources/i2c/i2c.o
+ .debug_abbrev  0x00001781      0x2be ./Sources/drive/drive.o
+ .debug_abbrev  0x00001a3f      0x285 ./Sources/drive/motor.o
+ .debug_abbrev  0x00001cc4      0x25a ./Sources/drive/servo.o
+ .debug_abbrev  0x00001f1e      0x272 ./Sources/drive/spindle.o
+ .debug_abbrev  0x00002190      0x263 ./Sources/cube/cube.o
+ .debug_abbrev  0x000023f3      0x243 ./Sources/com/lpuart0.o
+ .debug_abbrev  0x00002636      0x217 ./Sources/com/term.o
+ .debug_abbrev  0x0000284d      0x27e ./Sources/com/uart0.o
+ .debug_abbrev  0x00002acb      0x27e ./Sources/com/uart1.o
+ .debug_abbrev  0x00002d49      0x12a ./Sources/main.o
+ .debug_abbrev  0x00002e73       0x14 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .debug_abbrev  0x00002e87      0x178 ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_aranges  0x00000000      0x768
+ .debug_aranges
+                0x00000000       0x30 ./Sources/utils/test.o
+ .debug_aranges
+                0x00000030       0x88 ./Sources/utils/util.o
+ .debug_aranges
+                0x000000b8       0x40 ./Sources/timer/ftm0.o
+ .debug_aranges
+                0x000000f8       0x40 ./Sources/timer/ftm1quad.o
+ .debug_aranges
+                0x00000138       0x40 ./Sources/timer/ftm2.o
+ .debug_aranges
+                0x00000178       0x40 ./Sources/timer/ftm3.o
+ .debug_aranges
+                0x000001b8       0x50 ./Sources/sensors/accel.o
+ .debug_aranges
+                0x00000208       0x30 ./Sources/sensors/beep.o
+ .debug_aranges
+                0x00000238       0x68 ./Sources/sensors/encoder.o
+ .debug_aranges
+                0x000002a0       0x30 ./Sources/sensors/switch.o
+ .debug_aranges
+                0x000002d0       0x48 ./Sources/sensors/tof.o
+ .debug_aranges
+                0x00000318       0x68 ./Sources/i2c/i2c.o
+ .debug_aranges
+                0x00000380       0x78 ./Sources/drive/drive.o
+ .debug_aranges
+                0x000003f8       0x48 ./Sources/drive/motor.o
+ .debug_aranges
+                0x00000440       0x38 ./Sources/drive/servo.o
+ .debug_aranges
+                0x00000478       0x38 ./Sources/drive/spindle.o
+ .debug_aranges
+                0x000004b0       0x30 ./Sources/cube/cube.o
+ .debug_aranges
+                0x000004e0       0x80 ./Sources/com/lpuart0.o
+ .debug_aranges
+                0x00000560       0x68 ./Sources/com/term.o
+ .debug_aranges
+                0x000005c8       0x88 ./Sources/com/uart0.o
+ .debug_aranges
+                0x00000650       0x88 ./Sources/com/uart1.o
+ .debug_aranges
+                0x000006d8       0x38 ./Sources/main.o
+ .debug_aranges
+                0x00000710       0x20 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .debug_aranges
+                0x00000730       0x38 ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_ranges   0x00000000      0x5d8
+ .debug_ranges  0x00000000       0x20 ./Sources/utils/test.o
+ .debug_ranges  0x00000020       0x78 ./Sources/utils/util.o
+ .debug_ranges  0x00000098       0x30 ./Sources/timer/ftm0.o
+ .debug_ranges  0x000000c8       0x30 ./Sources/timer/ftm1quad.o
+ .debug_ranges  0x000000f8       0x30 ./Sources/timer/ftm2.o
+ .debug_ranges  0x00000128       0x30 ./Sources/timer/ftm3.o
+ .debug_ranges  0x00000158       0x40 ./Sources/sensors/accel.o
+ .debug_ranges  0x00000198       0x20 ./Sources/sensors/beep.o
+ .debug_ranges  0x000001b8       0x58 ./Sources/sensors/encoder.o
+ .debug_ranges  0x00000210       0x20 ./Sources/sensors/switch.o
+ .debug_ranges  0x00000230       0x38 ./Sources/sensors/tof.o
+ .debug_ranges  0x00000268       0x58 ./Sources/i2c/i2c.o
+ .debug_ranges  0x000002c0       0x68 ./Sources/drive/drive.o
+ .debug_ranges  0x00000328       0x38 ./Sources/drive/motor.o
+ .debug_ranges  0x00000360       0x28 ./Sources/drive/servo.o
+ .debug_ranges  0x00000388       0x28 ./Sources/drive/spindle.o
+ .debug_ranges  0x000003b0       0x20 ./Sources/cube/cube.o
+ .debug_ranges  0x000003d0       0x70 ./Sources/com/lpuart0.o
+ .debug_ranges  0x00000440       0x58 ./Sources/com/term.o
+ .debug_ranges  0x00000498       0x78 ./Sources/com/uart0.o
+ .debug_ranges  0x00000510       0x78 ./Sources/com/uart1.o
+ .debug_ranges  0x00000588       0x28 ./Sources/main.o
+ .debug_ranges  0x000005b0       0x28 ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_macro    0x00000000    0x13750
+ .debug_macro   0x00000000      0x1c4 ./Sources/utils/test.o
+ .debug_macro   0x000001c4      0x898 ./Sources/utils/test.o
+ .debug_macro   0x00000a5c       0x16 ./Sources/utils/test.o
+ .debug_macro   0x00000a72       0x22 ./Sources/utils/test.o
+ .debug_macro   0x00000a94       0x4f ./Sources/utils/test.o
+ .debug_macro   0x00000ae3       0x51 ./Sources/utils/test.o
+ .debug_macro   0x00000b34       0xef ./Sources/utils/test.o
+ .debug_macro   0x00000c23       0x6a ./Sources/utils/test.o
+ .debug_macro   0x00000c8d      0x1df ./Sources/utils/test.o
+ .debug_macro   0x00000e6c       0x55 ./Sources/utils/test.o
+ .debug_macro   0x00000ec1       0x3b ./Sources/utils/test.o
+ .debug_macro   0x00000efc       0x34 ./Sources/utils/test.o
+ .debug_macro   0x00000f30       0x26 ./Sources/utils/test.o
+ .debug_macro   0x00000f56      0xd1d ./Sources/utils/test.o
+ .debug_macro   0x00001c73       0xd9 ./Sources/utils/test.o
+ .debug_macro   0x00001d4c     0xefee ./Sources/utils/test.o
+ .debug_macro   0x00010d3a       0xf5 ./Sources/utils/test.o
+ .debug_macro   0x00010e2f       0x58 ./Sources/utils/test.o
+ .debug_macro   0x00010e87       0x35 ./Sources/utils/test.o
+ .debug_macro   0x00010ebc       0x9c ./Sources/utils/test.o
+ .debug_macro   0x00010f58      0x16d ./Sources/utils/test.o
+ .debug_macro   0x000110c5       0x58 ./Sources/utils/test.o
+ .debug_macro   0x0001111d       0x1f ./Sources/utils/test.o
+ .debug_macro   0x0001113c       0x43 ./Sources/utils/test.o
+ .debug_macro   0x0001117f       0x20 ./Sources/utils/test.o
+ .debug_macro   0x0001119f      0x187 ./Sources/utils/test.o
+ .debug_macro   0x00011326      0x353 ./Sources/utils/test.o
+ .debug_macro   0x00011679       0x10 ./Sources/utils/test.o
+ .debug_macro   0x00011689       0x35 ./Sources/utils/test.o
+ .debug_macro   0x000116be       0x16 ./Sources/utils/test.o
+ .debug_macro   0x000116d4       0x16 ./Sources/utils/test.o
+ .debug_macro   0x000116ea       0x10 ./Sources/utils/test.o
+ .debug_macro   0x000116fa       0x10 ./Sources/utils/test.o
+ .debug_macro   0x0001170a       0x1c ./Sources/utils/test.o
+ .debug_macro   0x00011726      0x181 ./Sources/utils/util.o
+ .debug_macro   0x000118a7       0x52 ./Sources/utils/util.o
+ .debug_macro   0x000118f9       0x55 ./Sources/utils/util.o
+ .debug_macro   0x0001194e       0x16 ./Sources/utils/util.o
+ .debug_macro   0x00011964      0x10e ./Sources/utils/util.o
+ .debug_macro   0x00011a72       0x86 ./Sources/utils/util.o
+ .debug_macro   0x00011af8       0x57 ./Sources/utils/util.o
+ .debug_macro   0x00011b4f       0x22 ./Sources/utils/util.o
+ .debug_macro   0x00011b71       0xd2 ./Sources/timer/ftm0.o
+ .debug_macro   0x00011c43       0xd2 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00011d15       0x10 ./Sources/timer/ftm1quad.o
+ .debug_macro   0x00011d25       0xd2 ./Sources/timer/ftm2.o
+ .debug_macro   0x00011df7       0x16 ./Sources/timer/ftm2.o
+ .debug_macro   0x00011e0d       0xd2 ./Sources/timer/ftm3.o
+ .debug_macro   0x00011edf       0x16 ./Sources/timer/ftm3.o
+ .debug_macro   0x00011ef5      0x1fc ./Sources/sensors/accel.o
+ .debug_macro   0x000120f1      0x19c ./Sources/sensors/beep.o
+ .debug_macro   0x0001228d      0x1b4 ./Sources/sensors/encoder.o
+ .debug_macro   0x00012441       0x10 ./Sources/sensors/encoder.o
+ .debug_macro   0x00012451       0xc7 ./Sources/sensors/switch.o
+ .debug_macro   0x00012518      0x19d ./Sources/sensors/tof.o
+ .debug_macro   0x000126b5       0xdf ./Sources/i2c/i2c.o
+ .debug_macro   0x00012794      0x19e ./Sources/drive/drive.o
+ .debug_macro   0x00012932       0x16 ./Sources/drive/drive.o
+ .debug_macro   0x00012948      0x1b3 ./Sources/drive/motor.o
+ .debug_macro   0x00012afb      0x1a1 ./Sources/drive/servo.o
+ .debug_macro   0x00012c9c       0x28 ./Sources/drive/servo.o
+ .debug_macro   0x00012cc4      0x1b0 ./Sources/drive/spindle.o
+ .debug_macro   0x00012e74      0x1d3 ./Sources/cube/cube.o
+ .debug_macro   0x00013047       0xd2 ./Sources/com/lpuart0.o
+ .debug_macro   0x00013119       0x7c ./Sources/com/lpuart0.o
+ .debug_macro   0x00013195      0x18c ./Sources/com/term.o
+ .debug_macro   0x00013321       0xd2 ./Sources/com/uart0.o
+ .debug_macro   0x000133f3       0xc6 ./Sources/com/uart1.o
+ .debug_macro   0x000134b9      0x187 ./Sources/main.o
+ .debug_macro   0x00013640       0xa9 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_macro   0x000136e9       0x67 ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_line     0x00000000     0x605c
+ .debug_line    0x00000000      0x4a7 ./Sources/utils/test.o
+ .debug_line    0x000004a7      0x5ba ./Sources/utils/util.o
+ .debug_line    0x00000a61      0x347 ./Sources/timer/ftm0.o
+ .debug_line    0x00000da8      0x325 ./Sources/timer/ftm1quad.o
+ .debug_line    0x000010cd      0x30f ./Sources/timer/ftm2.o
+ .debug_line    0x000013dc      0x347 ./Sources/timer/ftm3.o
+ .debug_line    0x00001723      0x423 ./Sources/sensors/accel.o
+ .debug_line    0x00001b46      0x3e6 ./Sources/sensors/beep.o
+ .debug_line    0x00001f2c      0x499 ./Sources/sensors/encoder.o
+ .debug_line    0x000023c5      0x2d7 ./Sources/sensors/switch.o
+ .debug_line    0x0000269c      0x475 ./Sources/sensors/tof.o
+ .debug_line    0x00002b11      0x42e ./Sources/i2c/i2c.o
+ .debug_line    0x00002f3f      0x50e ./Sources/drive/drive.o
+ .debug_line    0x0000344d      0x45e ./Sources/drive/motor.o
+ .debug_line    0x000038ab      0x3fd ./Sources/drive/servo.o
+ .debug_line    0x00003ca8      0x42c ./Sources/drive/spindle.o
+ .debug_line    0x000040d4      0x4f2 ./Sources/cube/cube.o
+ .debug_line    0x000045c6      0x433 ./Sources/com/lpuart0.o
+ .debug_line    0x000049f9      0x45c ./Sources/com/term.o
+ .debug_line    0x00004e55      0x44d ./Sources/com/uart0.o
+ .debug_line    0x000052a2      0x44d ./Sources/com/uart1.o
+ .debug_line    0x000056ef      0x4d8 ./Sources/main.o
+ .debug_line    0x00005bc7       0xe9 ./Project_Settings/Startup_Code/startup_MK22F51212.o
+ .debug_line    0x00005cb0      0x3ac ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_str      0x00000000    0x644b5
+ .debug_str     0x00000000    0x62471 ./Sources/utils/test.o
+                              0x62720 (size before relaxing)
+ .debug_str     0x00062471      0x1fb ./Sources/utils/util.o
+                              0x626aa (size before relaxing)
+ .debug_str     0x0006266c      0x76b ./Sources/timer/ftm0.o
+                              0x5fc62 (size before relaxing)
+ .debug_str     0x00062dd7       0x9c ./Sources/timer/ftm1quad.o
+                              0x5fc84 (size before relaxing)
+ .debug_str     0x00062e73       0x84 ./Sources/timer/ftm2.o
+                              0x5fc6c (size before relaxing)
+ .debug_str     0x00062ef7       0x7e ./Sources/timer/ftm3.o
+                              0x5fc66 (size before relaxing)
+ .debug_str     0x00062f75      0x1c4 ./Sources/sensors/accel.o
+                              0x62734 (size before relaxing)
+ .debug_str     0x00063139       0xd6 ./Sources/sensors/beep.o
+                              0x626e3 (size before relaxing)
+ .debug_str     0x0006320f      0x18a ./Sources/sensors/encoder.o
+                              0x627da (size before relaxing)
+ .debug_str     0x00063399       0x48 ./Sources/sensors/switch.o
+                              0x5f559 (size before relaxing)
+ .debug_str     0x000633e1       0x89 ./Sources/sensors/tof.o
+                              0x62684 (size before relaxing)
+ .debug_str     0x0006346a       0xe8 ./Sources/i2c/i2c.o
+                              0x5f6d5 (size before relaxing)
+ .debug_str     0x00063552      0x1bb ./Sources/drive/drive.o
+                              0x62795 (size before relaxing)
+ .debug_str     0x0006370d      0x1a6 ./Sources/drive/motor.o
+                              0x62829 (size before relaxing)
+ .debug_str     0x000638b3      0x110 ./Sources/drive/servo.o
+                              0x62795 (size before relaxing)
+ .debug_str     0x000639c3      0x131 ./Sources/drive/spindle.o
+                              0x62838 (size before relaxing)
+ .debug_str     0x00063af4      0x126 ./Sources/cube/cube.o
+                              0x62809 (size before relaxing)
+ .debug_str     0x00063c1a      0x2da ./Sources/com/lpuart0.o
+                              0x5fe79 (size before relaxing)
+ .debug_str     0x00063ef4       0xf3 ./Sources/com/term.o
+                              0x62772 (size before relaxing)
+ .debug_str     0x00063fe7      0x186 ./Sources/com/uart0.o
+                              0x5ff31 (size before relaxing)
+ .debug_str     0x0006416d       0xb7 ./Sources/com/uart1.o
+                              0x5feb7 (size before relaxing)
+ .debug_str     0x00064224       0x8d ./Sources/main.o
+                              0x5fe48 (size before relaxing)
+ .debug_str     0x000642b1      0x204 ./Project_Settings/Startup_Code/system_MK22F51212.o
+                              0x5f8cb (size before relaxing)
+
+.comment        0x00000000       0x7f
+ .comment       0x00000000       0x7f ./Sources/utils/test.o
+                                 0x80 (size before relaxing)
+ .comment       0x0000007f       0x80 ./Sources/utils/util.o
+ .comment       0x0000007f       0x80 ./Sources/timer/ftm0.o
+ .comment       0x0000007f       0x80 ./Sources/timer/ftm1quad.o
+ .comment       0x0000007f       0x80 ./Sources/timer/ftm2.o
+ .comment       0x0000007f       0x80 ./Sources/timer/ftm3.o
+ .comment       0x0000007f       0x80 ./Sources/sensors/accel.o
+ .comment       0x0000007f       0x80 ./Sources/sensors/beep.o
+ .comment       0x0000007f       0x80 ./Sources/sensors/encoder.o
+ .comment       0x0000007f       0x80 ./Sources/sensors/switch.o
+ .comment       0x0000007f       0x80 ./Sources/sensors/tof.o
+ .comment       0x0000007f       0x80 ./Sources/i2c/i2c.o
+ .comment       0x0000007f       0x80 ./Sources/drive/drive.o
+ .comment       0x0000007f       0x80 ./Sources/drive/motor.o
+ .comment       0x0000007f       0x80 ./Sources/drive/servo.o
+ .comment       0x0000007f       0x80 ./Sources/drive/spindle.o
+ .comment       0x0000007f       0x80 ./Sources/cube/cube.o
+ .comment       0x0000007f       0x80 ./Sources/com/lpuart0.o
+ .comment       0x0000007f       0x80 ./Sources/com/term.o
+ .comment       0x0000007f       0x80 ./Sources/com/uart0.o
+ .comment       0x0000007f       0x80 ./Sources/com/uart1.o
+ .comment       0x0000007f       0x80 ./Sources/main.o
+ .comment       0x0000007f       0x80 ./Project_Settings/Startup_Code/system_MK22F51212.o
+
+.debug_frame    0x00000000     0x1aa0
+ .debug_frame   0x00000000       0x70 ./Sources/utils/test.o
+ .debug_frame   0x00000070      0x240 ./Sources/utils/util.o
+ .debug_frame   0x000002b0       0xbc ./Sources/timer/ftm0.o
+ .debug_frame   0x0000036c       0xbc ./Sources/timer/ftm1quad.o
+ .debug_frame   0x00000428       0xbc ./Sources/timer/ftm2.o
+ .debug_frame   0x000004e4       0xbc ./Sources/timer/ftm3.o
+ .debug_frame   0x000005a0      0x128 ./Sources/sensors/accel.o
+ .debug_frame   0x000006c8       0x78 ./Sources/sensors/beep.o
+ .debug_frame   0x00000740      0x184 ./Sources/sensors/encoder.o
+ .debug_frame   0x000008c4       0x80 ./Sources/sensors/switch.o
+ .debug_frame   0x00000944      0x100 ./Sources/sensors/tof.o
+ .debug_frame   0x00000a44      0x198 ./Sources/i2c/i2c.o
+ .debug_frame   0x00000bdc      0x1d4 ./Sources/drive/drive.o
+ .debug_frame   0x00000db0       0xe8 ./Sources/drive/motor.o
+ .debug_frame   0x00000e98       0xa0 ./Sources/drive/servo.o
+ .debug_frame   0x00000f38       0xa4 ./Sources/drive/spindle.o
+ .debug_frame   0x00000fdc       0x70 ./Sources/cube/cube.o
+ .debug_frame   0x0000104c      0x214 ./Sources/com/lpuart0.o
+ .debug_frame   0x00001260      0x1a4 ./Sources/com/term.o
+ .debug_frame   0x00001404      0x238 ./Sources/com/uart0.o
+ .debug_frame   0x0000163c      0x238 ./Sources/com/uart1.o
+ .debug_frame   0x00001874       0x8c ./Sources/main.o
+ .debug_frame   0x00001900       0x98 ./Project_Settings/Startup_Code/system_MK22F51212.o
+ .debug_frame   0x00001998       0x28 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-exit.o)
+ .debug_frame   0x000019c0       0x2c c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-init.o)
+ .debug_frame   0x000019ec       0x20 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-memset.o)
+ .debug_frame   0x00001a0c       0x20 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strcmp.o)
+ .debug_frame   0x00001a2c       0x28 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncmp.o)
+ .debug_frame   0x00001a54       0x2c c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libg_nano.a(lib_a-strncpy.o)
+ .debug_frame   0x00001a80       0x20 c:/program files (x86)/gnu tools arm embedded/6 2017-q2-update/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libnosys.a(_exit.o)

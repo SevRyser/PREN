@@ -1,0 +1,213 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"switch.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.switchStateClose,"ax",%progbits
+  18              		.align	1
+  19              		.global	switchStateClose
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	switchStateClose:
+  26              	.LFB125:
+  27              		.file 1 "../Sources/sensors/switch.c"
+   1:../Sources/sensors/switch.c **** /*
+   2:../Sources/sensors/switch.c ****  * switch.c
+   3:../Sources/sensors/switch.c ****  *
+   4:../Sources/sensors/switch.c ****  *  Created on: 16.05.2019
+   5:../Sources/sensors/switch.c ****  *      Author: Blub
+   6:../Sources/sensors/switch.c ****  */
+   7:../Sources/sensors/switch.c **** 
+   8:../Sources/sensors/switch.c **** #include "platform.h"
+   9:../Sources/sensors/switch.c **** #include "switch.h"
+  10:../Sources/sensors/switch.c **** 
+  11:../Sources/sensors/switch.c **** uint8_t switchStateClose(void)
+  12:../Sources/sensors/switch.c **** {
+  28              		.loc 1 12 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 80B4     		push	{r7}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 7, -4
+  36 0002 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  13:../Sources/sensors/switch.c ****   return (GPIOE_PDIR & (1<<0));
+  38              		.loc 1 13 0
+  39 0004 054B     		ldr	r3, .L3
+  40 0006 1B69     		ldr	r3, [r3, #16]
+  41 0008 DBB2     		uxtb	r3, r3
+  42 000a 03F00103 		and	r3, r3, #1
+  43 000e DBB2     		uxtb	r3, r3
+  14:../Sources/sensors/switch.c **** }
+  44              		.loc 1 14 0
+  45 0010 1846     		mov	r0, r3
+  46 0012 BD46     		mov	sp, r7
+  47              		.cfi_def_cfa_register 13
+  48              		@ sp needed
+  49 0014 5DF8047B 		ldr	r7, [sp], #4
+  50              		.cfi_restore 7
+  51              		.cfi_def_cfa_offset 0
+  52 0018 7047     		bx	lr
+  53              	.L4:
+  54 001a 00BF     		.align	2
+  55              	.L3:
+  56 001c 00F10F40 		.word	1074786560
+  57              		.cfi_endproc
+  58              	.LFE125:
+  60              		.section	.text.switchStateOpen,"ax",%progbits
+  61              		.align	1
+  62              		.global	switchStateOpen
+  63              		.syntax unified
+  64              		.thumb
+  65              		.thumb_func
+  66              		.fpu fpv4-sp-d16
+  68              	switchStateOpen:
+  69              	.LFB126:
+  15:../Sources/sensors/switch.c **** 
+  16:../Sources/sensors/switch.c **** uint8_t switchStateOpen(void)
+  17:../Sources/sensors/switch.c **** {
+  70              		.loc 1 17 0
+  71              		.cfi_startproc
+  72              		@ args = 0, pretend = 0, frame = 8
+  73              		@ frame_needed = 1, uses_anonymous_args = 0
+  74              		@ link register save eliminated.
+  75 0000 80B4     		push	{r7}
+  76              		.cfi_def_cfa_offset 4
+  77              		.cfi_offset 7, -4
+  78 0002 83B0     		sub	sp, sp, #12
+  79              		.cfi_def_cfa_offset 16
+  80 0004 00AF     		add	r7, sp, #0
+  81              		.cfi_def_cfa_register 7
+  18:../Sources/sensors/switch.c ****   uint16_t result = (GPIOC_PDIR & (1<<11))>>11;
+  82              		.loc 1 18 0
+  83 0006 074B     		ldr	r3, .L7
+  84 0008 1B69     		ldr	r3, [r3, #16]
+  85 000a DB0A     		lsrs	r3, r3, #11
+  86 000c 9BB2     		uxth	r3, r3
+  87 000e 03F00103 		and	r3, r3, #1
+  88 0012 FB80     		strh	r3, [r7, #6]	@ movhi
+  19:../Sources/sensors/switch.c **** 
+  20:../Sources/sensors/switch.c ****   return (uint8_t)result;
+  89              		.loc 1 20 0
+  90 0014 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  91 0016 DBB2     		uxtb	r3, r3
+  21:../Sources/sensors/switch.c **** }
+  92              		.loc 1 21 0
+  93 0018 1846     		mov	r0, r3
+  94 001a 0C37     		adds	r7, r7, #12
+  95              		.cfi_def_cfa_offset 4
+  96 001c BD46     		mov	sp, r7
+  97              		.cfi_def_cfa_register 13
+  98              		@ sp needed
+  99 001e 5DF8047B 		ldr	r7, [sp], #4
+ 100              		.cfi_restore 7
+ 101              		.cfi_def_cfa_offset 0
+ 102 0022 7047     		bx	lr
+ 103              	.L8:
+ 104              		.align	2
+ 105              	.L7:
+ 106 0024 80F00F40 		.word	1074786432
+ 107              		.cfi_endproc
+ 108              	.LFE126:
+ 110              		.section	.text.switchInit,"ax",%progbits
+ 111              		.align	1
+ 112              		.global	switchInit
+ 113              		.syntax unified
+ 114              		.thumb
+ 115              		.thumb_func
+ 116              		.fpu fpv4-sp-d16
+ 118              	switchInit:
+ 119              	.LFB127:
+  22:../Sources/sensors/switch.c **** 
+  23:../Sources/sensors/switch.c **** 
+  24:../Sources/sensors/switch.c **** void switchInit(void)
+  25:../Sources/sensors/switch.c **** {
+ 120              		.loc 1 25 0
+ 121              		.cfi_startproc
+ 122              		@ args = 0, pretend = 0, frame = 0
+ 123              		@ frame_needed = 1, uses_anonymous_args = 0
+ 124              		@ link register save eliminated.
+ 125 0000 80B4     		push	{r7}
+ 126              		.cfi_def_cfa_offset 4
+ 127              		.cfi_offset 7, -4
+ 128 0002 00AF     		add	r7, sp, #0
+ 129              		.cfi_def_cfa_register 7
+  26:../Sources/sensors/switch.c ****   PORTE_PCR0 = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(1);
+ 130              		.loc 1 26 0
+ 131 0004 064B     		ldr	r3, .L10
+ 132 0006 40F20312 		movw	r2, #259
+ 133 000a 1A60     		str	r2, [r3]
+  27:../Sources/sensors/switch.c ****   PORTC_PCR11 = PORT_PCR_MUX(1) | PORT_PCR_PE(1) | PORT_PCR_PS(1);
+ 134              		.loc 1 27 0
+ 135 000c 054B     		ldr	r3, .L10+4
+ 136 000e 40F20312 		movw	r2, #259
+ 137 0012 DA62     		str	r2, [r3, #44]
+  28:../Sources/sensors/switch.c **** }
+ 138              		.loc 1 28 0
+ 139 0014 00BF     		nop
+ 140 0016 BD46     		mov	sp, r7
+ 141              		.cfi_def_cfa_register 13
+ 142              		@ sp needed
+ 143 0018 5DF8047B 		ldr	r7, [sp], #4
+ 144              		.cfi_restore 7
+ 145              		.cfi_def_cfa_offset 0
+ 146 001c 7047     		bx	lr
+ 147              	.L11:
+ 148 001e 00BF     		.align	2
+ 149              	.L10:
+ 150 0020 00D00440 		.word	1074057216
+ 151 0024 00B00440 		.word	1074049024
+ 152              		.cfi_endproc
+ 153              	.LFE127:
+ 155              		.text
+ 156              	.Letext0:
+ 157              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 158              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 159              		.file 4 "../Includes/core_cm4.h"
+ 160              		.file 5 "../Includes/system_MK22F51212.h"
+ 161              		.file 6 "../Includes/MK22F51212.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 switch.c
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:18     .text.switchStateClose:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:25     .text.switchStateClose:00000000 switchStateClose
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:56     .text.switchStateClose:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:61     .text.switchStateOpen:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:68     .text.switchStateOpen:00000000 switchStateOpen
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:106    .text.switchStateOpen:00000024 $d
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:111    .text.switchInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:118    .text.switchInit:00000000 switchInit
+C:\Users\Blub\AppData\Local\Temp\ccwc7CpV.s:150    .text.switchInit:00000020 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,571 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"adc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.adcGet16BitValue,"ax",%progbits
+  18              		.align	1
+  19              		.global	adcGet16BitValue
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	adcGet16BitValue:
+  26              	.LFB125:
+  27              		.file 1 "../Sources/adc/adc.c"
+   1:../Sources/adc/adc.c **** /**
+   2:../Sources/adc/adc.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/adc/adc.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/adc/adc.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/adc/adc.c ****  *
+   6:../Sources/adc/adc.c ****  * \brief         ADC-Driver for the MC-Car
+   7:../Sources/adc/adc.c ****  * \file
+   8:../Sources/adc/adc.c ****  * \author        Christian Jost, christian.jost@hslu.ch
+   9:../Sources/adc/adc.c ****  * \date          23.04.2018
+  10:../Sources/adc/adc.c ****  *
+  11:../Sources/adc/adc.c ****  * $Id: adcML.c 113 2018-05-07 08:27:36Z zajost $
+  12:../Sources/adc/adc.c ****  *
+  13:../Sources/adc/adc.c ****  *--------------------------------------------------------------------
+  14:../Sources/adc/adc.c ****  */
+  15:../Sources/adc/adc.c **** 
+  16:../Sources/adc/adc.c **** #include "platform.h"
+  17:../Sources/adc/adc.c **** #include "adc.h"
+  18:../Sources/adc/adc.c **** #include "util.h"
+  19:../Sources/adc/adc.c **** #if !SOLUTION
+  20:../Sources/adc/adc.c **** 
+  21:../Sources/adc/adc.c **** 
+  22:../Sources/adc/adc.c **** #define REFERENCE_VOLTAGE    1195000  // 1'195'000uV = 1.195V
+  23:../Sources/adc/adc.c **** 
+  24:../Sources/adc/adc.c **** 
+  25:../Sources/adc/adc.c **** /**
+  26:../Sources/adc/adc.c ****  * Performs one A/D conversion for the specified channel with 16 bit resolution.
+  27:../Sources/adc/adc.c ****  * The function blocks until the conversion has been finished.
+  28:../Sources/adc/adc.c ****  *
+  29:../Sources/adc/adc.c ****  * @param[in]
+  30:../Sources/adc/adc.c ****  *   the channel number to convert
+  31:../Sources/adc/adc.c ****  * @return
+  32:../Sources/adc/adc.c ****  *   a 16bit value
+  33:../Sources/adc/adc.c ****  */
+  34:../Sources/adc/adc.c **** uint16_t adcGet16BitValue(uint8_t channel)
+  35:../Sources/adc/adc.c **** {
+  28              		.loc 1 35 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 80B4     		push	{r7}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 7, -4
+  36 0002 83B0     		sub	sp, sp, #12
+  37              		.cfi_def_cfa_offset 16
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  40 0006 0346     		mov	r3, r0
+  41 0008 FB71     		strb	r3, [r7, #7]
+  36:../Sources/adc/adc.c ****   // _todo ML#11.06 implement the function code as follows:
+  37:../Sources/adc/adc.c ****   // 1. start a conversion
+  38:../Sources/adc/adc.c ****   // 2. wait until conversion has been finished
+  39:../Sources/adc/adc.c ****   // 3. return the result.
+  40:../Sources/adc/adc.c ****   ADC1_SC1A = channel;
+  42              		.loc 1 40 0
+  43 000a 094A     		ldr	r2, .L4
+  44 000c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  45 000e 1360     		str	r3, [r2]
+  41:../Sources/adc/adc.c ****   while (!(ADC1_SC1A & ADC_SC1_COCO_MASK)){}  // wait until conversion has been finished
+  46              		.loc 1 41 0
+  47 0010 00BF     		nop
+  48              	.L2:
+  49              		.loc 1 41 0 is_stmt 0 discriminator 1
+  50 0012 074B     		ldr	r3, .L4
+  51 0014 1B68     		ldr	r3, [r3]
+  52 0016 03F08003 		and	r3, r3, #128
+  53 001a 002B     		cmp	r3, #0
+  54 001c F9D0     		beq	.L2
+  42:../Sources/adc/adc.c ****   return ADC1_RA;
+  55              		.loc 1 42 0 is_stmt 1
+  56 001e 044B     		ldr	r3, .L4
+  57 0020 1B69     		ldr	r3, [r3, #16]
+  58 0022 9BB2     		uxth	r3, r3
+  43:../Sources/adc/adc.c **** }
+  59              		.loc 1 43 0
+  60 0024 1846     		mov	r0, r3
+  61 0026 0C37     		adds	r7, r7, #12
+  62              		.cfi_def_cfa_offset 4
+  63 0028 BD46     		mov	sp, r7
+  64              		.cfi_def_cfa_register 13
+  65              		@ sp needed
+  66 002a 5DF8047B 		ldr	r7, [sp], #4
+  67              		.cfi_restore 7
+  68              		.cfi_def_cfa_offset 0
+  69 002e 7047     		bx	lr
+  70              	.L5:
+  71              		.align	2
+  72              	.L4:
+  73 0030 00700240 		.word	1073901568
+  74              		.cfi_endproc
+  75              	.LFE125:
+  77              		.global	__aeabi_uldivmod
+  78              		.section	.text.adcGetVoltage,"ax",%progbits
+  79              		.align	1
+  80              		.global	adcGetVoltage
+  81              		.syntax unified
+  82              		.thumb
+  83              		.thumb_func
+  84              		.fpu fpv4-sp-d16
+  86              	adcGetVoltage:
+  87              	.LFB126:
+  44:../Sources/adc/adc.c **** 
+  45:../Sources/adc/adc.c **** 
+  46:../Sources/adc/adc.c **** /**
+  47:../Sources/adc/adc.c ****  * Performs a A/D conversation and returns the measured voltage of this channel.
+  48:../Sources/adc/adc.c ****  * The maximum voltage is the REFERENCE_VOLTAGE defined above.
+  49:../Sources/adc/adc.c ****  *
+  50:../Sources/adc/adc.c ****  * @param[in]
+  51:../Sources/adc/adc.c ****  *   the channel number to convert
+  52:../Sources/adc/adc.c ****  * @return
+  53:../Sources/adc/adc.c ****  *   the measured voltage in uV (0..REFERENCE_VOLTAGE)
+  54:../Sources/adc/adc.c ****  */
+  55:../Sources/adc/adc.c **** uint32_t adcGetVoltage(uint8_t channel)
+  56:../Sources/adc/adc.c **** {
+  88              		.loc 1 56 0
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 24
+  91              		@ frame_needed = 1, uses_anonymous_args = 0
+  92 0000 90B5     		push	{r4, r7, lr}
+  93              		.cfi_def_cfa_offset 12
+  94              		.cfi_offset 4, -12
+  95              		.cfi_offset 7, -8
+  96              		.cfi_offset 14, -4
+  97 0002 87B0     		sub	sp, sp, #28
+  98              		.cfi_def_cfa_offset 40
+  99 0004 00AF     		add	r7, sp, #0
+ 100              		.cfi_def_cfa_register 7
+ 101 0006 0346     		mov	r3, r0
+ 102 0008 FB71     		strb	r3, [r7, #7]
+  57:../Sources/adc/adc.c ****   // _todo ML#11.07 calculate the measured voltage
+  58:../Sources/adc/adc.c ****   // 1. perform a conversion of the desired channel
+  59:../Sources/adc/adc.c ****   // 2. calculate and return the voltage in uV.
+  60:../Sources/adc/adc.c ****   uint16_t value = adcGet16BitValue(channel);
+ 103              		.loc 1 60 0
+ 104 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 105 000c 1846     		mov	r0, r3
+ 106 000e FFF7FEFF 		bl	adcGet16BitValue
+ 107 0012 0346     		mov	r3, r0
+ 108 0014 FB82     		strh	r3, [r7, #22]	@ movhi
+  61:../Sources/adc/adc.c ****   uint64_t uV = ((uint64_t)REFERENCE_VOLTAGE * value) / 65535;
+ 109              		.loc 1 61 0
+ 110 0016 FB8A     		ldrh	r3, [r7, #22]
+ 111 0018 4FF00004 		mov	r4, #0
+ 112 001c 0D4A     		ldr	r2, .L8
+ 113 001e 02FB04F1 		mul	r1, r2, r4
+ 114 0022 0022     		movs	r2, #0
+ 115 0024 02FB03F2 		mul	r2, r2, r3
+ 116 0028 0A44     		add	r2, r2, r1
+ 117 002a 0A49     		ldr	r1, .L8
+ 118 002c A3FB0101 		umull	r0, r1, r3, r1
+ 119 0030 5318     		adds	r3, r2, r1
+ 120 0032 1946     		mov	r1, r3
+ 121 0034 4FF6FF72 		movw	r2, #65535
+ 122 0038 4FF00003 		mov	r3, #0
+ 123 003c FFF7FEFF 		bl	__aeabi_uldivmod
+ 124              	.LVL0:
+ 125 0040 0346     		mov	r3, r0
+ 126 0042 0C46     		mov	r4, r1
+ 127 0044 C7E90234 		strd	r3, [r7, #8]
+  62:../Sources/adc/adc.c ****   return (uint32_t)uV;
+ 128              		.loc 1 62 0
+ 129 0048 BB68     		ldr	r3, [r7, #8]
+  63:../Sources/adc/adc.c **** }
+ 130              		.loc 1 63 0
+ 131 004a 1846     		mov	r0, r3
+ 132 004c 1C37     		adds	r7, r7, #28
+ 133              		.cfi_def_cfa_offset 12
+ 134 004e BD46     		mov	sp, r7
+ 135              		.cfi_def_cfa_register 13
+ 136              		@ sp needed
+ 137 0050 90BD     		pop	{r4, r7, pc}
+ 138              	.L9:
+ 139 0052 00BF     		.align	2
+ 140              	.L8:
+ 141 0054 F83B1200 		.word	1195000
+ 142              		.cfi_endproc
+ 143              	.LFE126:
+ 145              		.section	.text.adcGetTemperature,"ax",%progbits
+ 146              		.align	1
+ 147              		.global	adcGetTemperature
+ 148              		.syntax unified
+ 149              		.thumb
+ 150              		.thumb_func
+ 151              		.fpu fpv4-sp-d16
+ 153              	adcGetTemperature:
+ 154              	.LFB127:
+  64:../Sources/adc/adc.c **** 
+  65:../Sources/adc/adc.c **** 
+  66:../Sources/adc/adc.c **** /**
+  67:../Sources/adc/adc.c ****  * Reads and returns the temperature of the microcontroller
+  68:../Sources/adc/adc.c ****  *
+  69:../Sources/adc/adc.c ****  * @returns
+  70:../Sources/adc/adc.c ****  *   the temperature in 0.1°C => 237 = 23.7°C
+  71:../Sources/adc/adc.c ****  */
+  72:../Sources/adc/adc.c **** int16_t adcGetTemperature(void)
+  73:../Sources/adc/adc.c **** {
+ 155              		.loc 1 73 0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 8
+ 158              		@ frame_needed = 1, uses_anonymous_args = 0
+ 159 0000 80B5     		push	{r7, lr}
+ 160              		.cfi_def_cfa_offset 8
+ 161              		.cfi_offset 7, -8
+ 162              		.cfi_offset 14, -4
+ 163 0002 82B0     		sub	sp, sp, #8
+ 164              		.cfi_def_cfa_offset 16
+ 165 0004 00AF     		add	r7, sp, #0
+ 166              		.cfi_def_cfa_register 7
+  74:../Sources/adc/adc.c ****   // _todo ML#11.08 determine the temperature of the microcontroller
+  75:../Sources/adc/adc.c ****   // 1. perform a adc conversion
+  76:../Sources/adc/adc.c ****   // 2. calculate the temperatur. KRM804 & MK22 Datasheet p42
+  77:../Sources/adc/adc.c ****   int32_t vTemp = adcGetVoltage(ADC_CH_TEMPERATURE);
+ 167              		.loc 1 77 0
+ 168 0006 1A20     		movs	r0, #26
+ 169 0008 FFF7FEFF 		bl	adcGetVoltage
+ 170 000c 0346     		mov	r3, r0
+ 171 000e 7B60     		str	r3, [r7, #4]
+  78:../Sources/adc/adc.c ****   int16_t temp = 250 - ((vTemp - 716000) / 162);
+ 172              		.loc 1 78 0
+ 173 0010 7B68     		ldr	r3, [r7, #4]
+ 174 0012 A3F52E23 		sub	r3, r3, #712704
+ 175 0016 A3F54E63 		sub	r3, r3, #3296
+ 176 001a 084A     		ldr	r2, .L12
+ 177 001c 82FB0312 		smull	r1, r2, r2, r3
+ 178 0020 1211     		asrs	r2, r2, #4
+ 179 0022 DB17     		asrs	r3, r3, #31
+ 180 0024 9B1A     		subs	r3, r3, r2
+ 181 0026 9BB2     		uxth	r3, r3
+ 182 0028 FA33     		adds	r3, r3, #250
+ 183 002a 9BB2     		uxth	r3, r3
+ 184 002c 7B80     		strh	r3, [r7, #2]	@ movhi
+  79:../Sources/adc/adc.c ****   return temp;
+ 185              		.loc 1 79 0
+ 186 002e B7F90230 		ldrsh	r3, [r7, #2]
+  80:../Sources/adc/adc.c **** }
+ 187              		.loc 1 80 0
+ 188 0032 1846     		mov	r0, r3
+ 189 0034 0837     		adds	r7, r7, #8
+ 190              		.cfi_def_cfa_offset 8
+ 191 0036 BD46     		mov	sp, r7
+ 192              		.cfi_def_cfa_register 13
+ 193              		@ sp needed
+ 194 0038 80BD     		pop	{r7, pc}
+ 195              	.L13:
+ 196 003a 00BF     		.align	2
+ 197              	.L12:
+ 198 003c FDB04819 		.word	424194301
+ 199              		.cfi_endproc
+ 200              	.LFE127:
+ 202              		.section	.text.adcInit,"ax",%progbits
+ 203              		.align	1
+ 204              		.global	adcInit
+ 205              		.syntax unified
+ 206              		.thumb
+ 207              		.thumb_func
+ 208              		.fpu fpv4-sp-d16
+ 210              	adcInit:
+ 211              	.LFB128:
+  81:../Sources/adc/adc.c **** 
+  82:../Sources/adc/adc.c **** 
+  83:../Sources/adc/adc.c **** /**
+  84:../Sources/adc/adc.c ****  * Initializes the ADC1.
+  85:../Sources/adc/adc.c ****  */
+  86:../Sources/adc/adc.c **** void adcInit(void)
+  87:../Sources/adc/adc.c **** {
+ 212              		.loc 1 87 0
+ 213              		.cfi_startproc
+ 214              		@ args = 0, pretend = 0, frame = 8
+ 215              		@ frame_needed = 1, uses_anonymous_args = 0
+ 216 0000 80B5     		push	{r7, lr}
+ 217              		.cfi_def_cfa_offset 8
+ 218              		.cfi_offset 7, -8
+ 219              		.cfi_offset 14, -4
+ 220 0002 82B0     		sub	sp, sp, #8
+ 221              		.cfi_def_cfa_offset 16
+ 222 0004 00AF     		add	r7, sp, #0
+ 223              		.cfi_def_cfa_register 7
+  88:../Sources/adc/adc.c ****   uint16_t calib;
+  89:../Sources/adc/adc.c **** 
+  90:../Sources/adc/adc.c ****   // init voltage reference module
+  91:../Sources/adc/adc.c ****   SIM_SCGC4 |= SIM_SCGC4_VREF_MASK;           // clock gating
+ 224              		.loc 1 91 0
+ 225 0006 4F49     		ldr	r1, .L16
+ 226 0008 4E4B     		ldr	r3, .L16
+ 227 000a 03F58153 		add	r3, r3, #4128
+ 228 000e 1433     		adds	r3, r3, #20
+ 229 0010 1B68     		ldr	r3, [r3]
+ 230 0012 43F48012 		orr	r2, r3, #1048576
+ 231 0016 01F58153 		add	r3, r1, #4128
+ 232 001a 1433     		adds	r3, r3, #20
+ 233 001c 1A60     		str	r2, [r3]
+  92:../Sources/adc/adc.c ****   VREF_TRM |= VREF_TRM_CHOPEN(1);             // Chop oscillator enable
+ 234              		.loc 1 92 0
+ 235 001e 4A4A     		ldr	r2, .L16+4
+ 236 0020 494B     		ldr	r3, .L16+4
+ 237 0022 1B78     		ldrb	r3, [r3]
+ 238 0024 DBB2     		uxtb	r3, r3
+ 239 0026 43F04003 		orr	r3, r3, #64
+ 240 002a DBB2     		uxtb	r3, r3
+ 241 002c 1370     		strb	r3, [r2]
+  93:../Sources/adc/adc.c ****   VREF_SC = VREF_SC_VREFEN(1)                 // internal voltage reference enable
+ 242              		.loc 1 93 0
+ 243 002e 464B     		ldr	r3, .L16+4
+ 244 0030 A122     		movs	r2, #161
+ 245 0032 5A70     		strb	r2, [r3, #1]
+  94:../Sources/adc/adc.c ****       | VREF_SC_ICOMPEN(1)                    // second order curvature compensation enable
+  95:../Sources/adc/adc.c ****       | VREF_SC_MODE_LV(1);                   // buffer mode: high power
+  96:../Sources/adc/adc.c ****   utilWaitUs(1);                              // Wait >300ns
+ 246              		.loc 1 96 0
+ 247 0034 0120     		movs	r0, #1
+ 248 0036 FFF7FEFF 		bl	utilWaitUs
+  97:../Sources/adc/adc.c ****   VREF_SC |= VREF_SC_REGEN(1);                // 1.75V regulator enable
+ 249              		.loc 1 97 0
+ 250 003a 434A     		ldr	r2, .L16+4
+ 251 003c 424B     		ldr	r3, .L16+4
+ 252 003e 5B78     		ldrb	r3, [r3, #1]
+ 253 0040 DBB2     		uxtb	r3, r3
+ 254 0042 43F04003 		orr	r3, r3, #64
+ 255 0046 DBB2     		uxtb	r3, r3
+ 256 0048 5370     		strb	r3, [r2, #1]
+  98:../Sources/adc/adc.c ****   utilWaitUs(35000);                          // Wait 35ms
+ 257              		.loc 1 98 0
+ 258 004a 48F6B800 		movw	r0, #35000
+ 259 004e FFF7FEFF 		bl	utilWaitUs
+  99:../Sources/adc/adc.c **** 
+ 100:../Sources/adc/adc.c ****   // init adc
+ 101:../Sources/adc/adc.c **** 
+ 102:../Sources/adc/adc.c ****   // _todo ML#11.02 configure clock gating
+ 103:../Sources/adc/adc.c ****   SIM_SCGC6 |= SIM_SCGC6_ADC1_MASK;
+ 260              		.loc 1 103 0
+ 261 0052 3C49     		ldr	r1, .L16
+ 262 0054 3B4B     		ldr	r3, .L16
+ 263 0056 03F58153 		add	r3, r3, #4128
+ 264 005a 1C33     		adds	r3, r3, #28
+ 265 005c 1B68     		ldr	r3, [r3]
+ 266 005e 43F08002 		orr	r2, r3, #128
+ 267 0062 01F58153 		add	r3, r1, #4128
+ 268 0066 1C33     		adds	r3, r3, #28
+ 269 0068 1A60     		str	r2, [r3]
+ 104:../Sources/adc/adc.c **** 
+ 105:../Sources/adc/adc.c ****   // _todo ML#11.03 configure adc as follows:
+ 106:../Sources/adc/adc.c ****   // set the ADCK to 7.5 MHz using the busClock
+ 107:../Sources/adc/adc.c ****   // and configure 16 bit conversion with long sample time
+ 108:../Sources/adc/adc.c ****   ADC1_CFG1 = ADC_CFG1_ADIV(3)                // Div 8 => ADCK = 60MHz/8 = 7.5MHz
+ 270              		.loc 1 108 0
+ 271 006a 384B     		ldr	r3, .L16+8
+ 272 006c 7C22     		movs	r2, #124
+ 273 006e 9A60     		str	r2, [r3, #8]
+ 109:../Sources/adc/adc.c ****       | ADC_CFG1_ADLSMP(1)                    // Long sample time
+ 110:../Sources/adc/adc.c ****       | ADC_CFG1_MODE(3)                      // 16 bit conversion
+ 111:../Sources/adc/adc.c ****       | ADC_CFG1_ADICLK(0);                   // clock = Busclock
+ 112:../Sources/adc/adc.c ****   ADC1_CFG2 = 0;
+ 274              		.loc 1 112 0
+ 275 0070 364B     		ldr	r3, .L16+8
+ 276 0072 0022     		movs	r2, #0
+ 277 0074 DA60     		str	r2, [r3, #12]
+ 113:../Sources/adc/adc.c **** 
+ 114:../Sources/adc/adc.c ****   // _todo ML#11.04 select the alternate reference source (VREF)
+ 115:../Sources/adc/adc.c ****   ADC1_SC2 = ADC_SC2_REFSEL(0x01);                            // alternate reference source (VREF)
+ 278              		.loc 1 115 0
+ 279 0076 354B     		ldr	r3, .L16+8
+ 280 0078 0122     		movs	r2, #1
+ 281 007a 1A62     		str	r2, [r3, #32]
+ 116:../Sources/adc/adc.c **** 
+ 117:../Sources/adc/adc.c ****   // _todo ML#11.05 configure hardware average of 32 samples
+ 118:../Sources/adc/adc.c ****   ADC1_SC3 = (ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(0x03));        // hardware average enable, 32 sample
+ 282              		.loc 1 118 0
+ 283 007c 334B     		ldr	r3, .L16+8
+ 284 007e 0722     		movs	r2, #7
+ 285 0080 5A62     		str	r2, [r3, #36]
+ 119:../Sources/adc/adc.c **** 
+ 120:../Sources/adc/adc.c ****   // adc calibration
+ 121:../Sources/adc/adc.c ****   ADC1_SC3 |= ADC_SC3_CAL(1);                 // Start calibration
+ 286              		.loc 1 121 0
+ 287 0082 324A     		ldr	r2, .L16+8
+ 288 0084 314B     		ldr	r3, .L16+8
+ 289 0086 5B6A     		ldr	r3, [r3, #36]
+ 290 0088 43F08003 		orr	r3, r3, #128
+ 291 008c 5362     		str	r3, [r2, #36]
+ 122:../Sources/adc/adc.c ****   while (!(ADC1_SC1A & ADC_SC1_COCO_MASK)){}  // wait until calibration has been finished
+ 292              		.loc 1 122 0
+ 293 008e 00BF     		nop
+ 294              	.L15:
+ 295              		.loc 1 122 0 is_stmt 0 discriminator 1
+ 296 0090 2E4B     		ldr	r3, .L16+8
+ 297 0092 1B68     		ldr	r3, [r3]
+ 298 0094 03F08003 		and	r3, r3, #128
+ 299 0098 002B     		cmp	r3, #0
+ 300 009a F9D0     		beq	.L15
+ 123:../Sources/adc/adc.c **** 
+ 124:../Sources/adc/adc.c ****   // set calib data
+ 125:../Sources/adc/adc.c ****   calib = ADC1_CLP0 + ADC1_CLP1 + ADC1_CLP2 + ADC1_CLP3 + ADC1_CLP4 + ADC1_CLPS;
+ 301              		.loc 1 125 0 is_stmt 1
+ 302 009c 2B4B     		ldr	r3, .L16+8
+ 303 009e DB6C     		ldr	r3, [r3, #76]
+ 304 00a0 9AB2     		uxth	r2, r3
+ 305 00a2 2A4B     		ldr	r3, .L16+8
+ 306 00a4 9B6C     		ldr	r3, [r3, #72]
+ 307 00a6 9BB2     		uxth	r3, r3
+ 308 00a8 1344     		add	r3, r3, r2
+ 309 00aa 9AB2     		uxth	r2, r3
+ 310 00ac 274B     		ldr	r3, .L16+8
+ 311 00ae 5B6C     		ldr	r3, [r3, #68]
+ 312 00b0 9BB2     		uxth	r3, r3
+ 313 00b2 1344     		add	r3, r3, r2
+ 314 00b4 9AB2     		uxth	r2, r3
+ 315 00b6 254B     		ldr	r3, .L16+8
+ 316 00b8 1B6C     		ldr	r3, [r3, #64]
+ 317 00ba 9BB2     		uxth	r3, r3
+ 318 00bc 1344     		add	r3, r3, r2
+ 319 00be 9AB2     		uxth	r2, r3
+ 320 00c0 224B     		ldr	r3, .L16+8
+ 321 00c2 DB6B     		ldr	r3, [r3, #60]
+ 322 00c4 9BB2     		uxth	r3, r3
+ 323 00c6 1344     		add	r3, r3, r2
+ 324 00c8 9AB2     		uxth	r2, r3
+ 325 00ca 204B     		ldr	r3, .L16+8
+ 326 00cc 9B6B     		ldr	r3, [r3, #56]
+ 327 00ce 9BB2     		uxth	r3, r3
+ 328 00d0 1344     		add	r3, r3, r2
+ 329 00d2 FB80     		strh	r3, [r7, #6]	@ movhi
+ 126:../Sources/adc/adc.c ****   calib = calib / 2;
+ 330              		.loc 1 126 0
+ 331 00d4 FB88     		ldrh	r3, [r7, #6]
+ 332 00d6 5B08     		lsrs	r3, r3, #1
+ 333 00d8 FB80     		strh	r3, [r7, #6]	@ movhi
+ 127:../Sources/adc/adc.c ****   calib = calib | 0x8000;
+ 334              		.loc 1 127 0
+ 335 00da FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 336 00dc 6FEA4343 		mvn	r3, r3, lsl #17
+ 337 00e0 6FEA5343 		mvn	r3, r3, lsr #17
+ 338 00e4 FB80     		strh	r3, [r7, #6]	@ movhi
+ 128:../Sources/adc/adc.c ****   ADC1_PG = calib;
+ 339              		.loc 1 128 0
+ 340 00e6 194A     		ldr	r2, .L16+8
+ 341 00e8 FB88     		ldrh	r3, [r7, #6]
+ 342 00ea D362     		str	r3, [r2, #44]
+ 129:../Sources/adc/adc.c **** 
+ 130:../Sources/adc/adc.c ****   calib = ADC1_CLM0 + ADC1_CLM1 + ADC1_CLM2 + ADC1_CLM3 + ADC1_CLM4 + ADC1_CLMS;
+ 343              		.loc 1 130 0
+ 344 00ec 174B     		ldr	r3, .L16+8
+ 345 00ee DB6E     		ldr	r3, [r3, #108]
+ 346 00f0 9AB2     		uxth	r2, r3
+ 347 00f2 164B     		ldr	r3, .L16+8
+ 348 00f4 9B6E     		ldr	r3, [r3, #104]
+ 349 00f6 9BB2     		uxth	r3, r3
+ 350 00f8 1344     		add	r3, r3, r2
+ 351 00fa 9AB2     		uxth	r2, r3
+ 352 00fc 134B     		ldr	r3, .L16+8
+ 353 00fe 5B6E     		ldr	r3, [r3, #100]
+ 354 0100 9BB2     		uxth	r3, r3
+ 355 0102 1344     		add	r3, r3, r2
+ 356 0104 9AB2     		uxth	r2, r3
+ 357 0106 114B     		ldr	r3, .L16+8
+ 358 0108 1B6E     		ldr	r3, [r3, #96]
+ 359 010a 9BB2     		uxth	r3, r3
+ 360 010c 1344     		add	r3, r3, r2
+ 361 010e 9AB2     		uxth	r2, r3
+ 362 0110 0E4B     		ldr	r3, .L16+8
+ 363 0112 DB6D     		ldr	r3, [r3, #92]
+ 364 0114 9BB2     		uxth	r3, r3
+ 365 0116 1344     		add	r3, r3, r2
+ 366 0118 9AB2     		uxth	r2, r3
+ 367 011a 0C4B     		ldr	r3, .L16+8
+ 368 011c 9B6D     		ldr	r3, [r3, #88]
+ 369 011e 9BB2     		uxth	r3, r3
+ 370 0120 1344     		add	r3, r3, r2
+ 371 0122 FB80     		strh	r3, [r7, #6]	@ movhi
+ 131:../Sources/adc/adc.c ****   calib = calib / 2;
+ 372              		.loc 1 131 0
+ 373 0124 FB88     		ldrh	r3, [r7, #6]
+ 374 0126 5B08     		lsrs	r3, r3, #1
+ 375 0128 FB80     		strh	r3, [r7, #6]	@ movhi
+ 132:../Sources/adc/adc.c ****   calib = calib | 0x8000;
+ 376              		.loc 1 132 0
+ 377 012a FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 378 012c 6FEA4343 		mvn	r3, r3, lsl #17
+ 379 0130 6FEA5343 		mvn	r3, r3, lsr #17
+ 380 0134 FB80     		strh	r3, [r7, #6]	@ movhi
+ 133:../Sources/adc/adc.c ****   ADC1_MG = calib;
+ 381              		.loc 1 133 0
+ 382 0136 054A     		ldr	r2, .L16+8
+ 383 0138 FB88     		ldrh	r3, [r7, #6]
+ 384 013a 1363     		str	r3, [r2, #48]
+ 134:../Sources/adc/adc.c **** }
+ 385              		.loc 1 134 0
+ 386 013c 00BF     		nop
+ 387 013e 0837     		adds	r7, r7, #8
+ 388              		.cfi_def_cfa_offset 8
+ 389 0140 BD46     		mov	sp, r7
+ 390              		.cfi_def_cfa_register 13
+ 391              		@ sp needed
+ 392 0142 80BD     		pop	{r7, pc}
+ 393              	.L17:
+ 394              		.align	2
+ 395              	.L16:
+ 396 0144 00700440 		.word	1074032640
+ 397 0148 00400740 		.word	1074216960
+ 398 014c 00700240 		.word	1073901568
+ 399              		.cfi_endproc
+ 400              	.LFE128:
+ 402              		.text
+ 403              	.Letext0:
+ 404              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 405              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 406              		.file 4 "../Includes/core_cm4.h"
+ 407              		.file 5 "../Includes/system_MK22F51212.h"
+ 408              		.file 6 "../Includes/MK22F51212.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc.c
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:18     .text.adcGet16BitValue:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:25     .text.adcGet16BitValue:00000000 adcGet16BitValue
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:73     .text.adcGet16BitValue:00000030 $d
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:79     .text.adcGetVoltage:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:86     .text.adcGetVoltage:00000000 adcGetVoltage
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:141    .text.adcGetVoltage:00000054 $d
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:146    .text.adcGetTemperature:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:153    .text.adcGetTemperature:00000000 adcGetTemperature
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:198    .text.adcGetTemperature:0000003c $d
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:203    .text.adcInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:210    .text.adcInit:00000000 adcInit
+C:\Users\Blub\AppData\Local\Temp\ccn56PdA.s:396    .text.adcInit:00000144 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.adc.h.17.71b6e89417f6845c08a3ffa07854b038
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+
+UNDEFINED SYMBOLS
+__aeabi_uldivmod
+utilWaitUs

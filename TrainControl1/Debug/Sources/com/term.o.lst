@@ -1,0 +1,1096 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"term.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.destination,"aw",%nobits
+  20              	destination:
+  21 0000 00       		.space	1
+  22              		.section	.bss.head,"aw",%nobits
+  23              		.align	2
+  26              	head:
+  27 0000 00000000 		.space	4
+  28              		.section	.rodata
+  29              		.align	2
+  30              	.LC0:
+  31 0000 3A00     		.ascii	":\000"
+  32              		.section	.text.termRegisterCommandLineHandler,"ax",%progbits
+  33              		.align	1
+  34              		.global	termRegisterCommandLineHandler
+  35              		.syntax unified
+  36              		.thumb
+  37              		.thumb_func
+  38              		.fpu fpv4-sp-d16
+  40              	termRegisterCommandLineHandler:
+  41              	.LFB125:
+  42              		.file 1 "../Sources/com/term.c"
+   1:../Sources/com/term.c **** /**
+   2:../Sources/com/term.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/com/term.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/com/term.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/com/term.c ****  *
+   6:../Sources/com/term.c ****  * \brief         terminal program
+   7:../Sources/com/term.c ****  * \file
+   8:../Sources/com/term.c ****  * \author        Christian Jost, christian.jost@hslu.ch
+   9:../Sources/com/term.c ****  * \date          19.03.2018
+  10:../Sources/com/term.c ****  *
+  11:../Sources/com/term.c ****  * $Id: term.c 94 2018-04-25 11:07:33Z zajost $
+  12:../Sources/com/term.c ****  *
+  13:../Sources/com/term.c ****  *--------------------------------------------------------------------
+  14:../Sources/com/term.c ****  */
+  15:../Sources/com/term.c **** #include "platform.h"
+  16:../Sources/com/term.c **** #include "term.h"
+  17:../Sources/com/term.c **** #include "uart.h"
+  18:../Sources/com/term.c **** #include "string.h"
+  19:../Sources/com/term.c **** #include "util.h"
+  20:../Sources/com/term.c **** 
+  21:../Sources/com/term.c **** typedef enum
+  22:../Sources/com/term.c **** {
+  23:../Sources/com/term.c ****   uart0 = 1,  //Raspberry
+  24:../Sources/com/term.c ****   uart1 = 2,  //PC
+  25:../Sources/com/term.c ****   lpuart0 = 4,
+  26:../Sources/com/term.c ****   uartAll = (uart0 | uart1 | lpuart0)
+  27:../Sources/com/term.c **** } tUart;
+  28:../Sources/com/term.c **** 
+  29:../Sources/com/term.c **** 
+  30:../Sources/com/term.c **** static tUart destination;
+  31:../Sources/com/term.c **** static tCommandLineHandler *head = NULL;
+  32:../Sources/com/term.c **** 
+  33:../Sources/com/term.c **** void termRegisterCommandLineHandler(tCommandLineHandler *clh, unsigned char* cmd, unsigned char *cm
+  34:../Sources/com/term.c **** {
+  43              		.loc 1 34 0
+  44              		.cfi_startproc
+  45              		@ args = 0, pretend = 0, frame = 16
+  46              		@ frame_needed = 1, uses_anonymous_args = 0
+  47 0000 90B5     		push	{r4, r7, lr}
+  48              		.cfi_def_cfa_offset 12
+  49              		.cfi_offset 4, -12
+  50              		.cfi_offset 7, -8
+  51              		.cfi_offset 14, -4
+  52 0002 85B0     		sub	sp, sp, #20
+  53              		.cfi_def_cfa_offset 32
+  54 0004 00AF     		add	r7, sp, #0
+  55              		.cfi_def_cfa_register 7
+  56 0006 F860     		str	r0, [r7, #12]
+  57 0008 B960     		str	r1, [r7, #8]
+  58 000a 7A60     		str	r2, [r7, #4]
+  59 000c 3B60     		str	r3, [r7]
+  35:../Sources/com/term.c ****   clh->next = head;
+  60              		.loc 1 35 0
+  61 000e 134B     		ldr	r3, .L2
+  62 0010 1A68     		ldr	r2, [r3]
+  63 0012 FB68     		ldr	r3, [r7, #12]
+  64 0014 5A63     		str	r2, [r3, #52]
+  36:../Sources/com/term.c ****   head = clh;
+  65              		.loc 1 36 0
+  66 0016 114A     		ldr	r2, .L2
+  67 0018 FB68     		ldr	r3, [r7, #12]
+  68 001a 1360     		str	r3, [r2]
+  37:../Sources/com/term.c **** 
+  38:../Sources/com/term.c ****   strncpy(clh->cmd, cmd, sizeof(clh->cmd));
+  69              		.loc 1 38 0
+  70 001c FB68     		ldr	r3, [r7, #12]
+  71 001e 1022     		movs	r2, #16
+  72 0020 B968     		ldr	r1, [r7, #8]
+  73 0022 1846     		mov	r0, r3
+  74 0024 FFF7FEFF 		bl	strncpy
+  39:../Sources/com/term.c ****   strcat(clh->cmd, ":");
+  75              		.loc 1 39 0
+  76 0028 FC68     		ldr	r4, [r7, #12]
+  77 002a 2046     		mov	r0, r4
+  78 002c FFF7FEFF 		bl	strlen
+  79 0030 0346     		mov	r3, r0
+  80 0032 2344     		add	r3, r3, r4
+  81 0034 0A49     		ldr	r1, .L2+4
+  82 0036 1A46     		mov	r2, r3
+  83 0038 0B46     		mov	r3, r1
+  84 003a 1B88     		ldrh	r3, [r3]	@ unaligned
+  85 003c 1380     		strh	r3, [r2]	@ unaligned
+  40:../Sources/com/term.c ****   strncpy(clh->cmdDesc, cmdDesc, sizeof(clh->cmdDesc));
+  86              		.loc 1 40 0
+  87 003e FB68     		ldr	r3, [r7, #12]
+  88 0040 1033     		adds	r3, r3, #16
+  89 0042 2022     		movs	r2, #32
+  90 0044 7968     		ldr	r1, [r7, #4]
+  91 0046 1846     		mov	r0, r3
+  92 0048 FFF7FEFF 		bl	strncpy
+  41:../Sources/com/term.c ****   clh->cmdHandler = h;
+  93              		.loc 1 41 0
+  94 004c FB68     		ldr	r3, [r7, #12]
+  95 004e 3A68     		ldr	r2, [r7]
+  96 0050 1A63     		str	r2, [r3, #48]
+  42:../Sources/com/term.c **** }
+  97              		.loc 1 42 0
+  98 0052 00BF     		nop
+  99 0054 1437     		adds	r7, r7, #20
+ 100              		.cfi_def_cfa_offset 12
+ 101 0056 BD46     		mov	sp, r7
+ 102              		.cfi_def_cfa_register 13
+ 103              		@ sp needed
+ 104 0058 90BD     		pop	{r4, r7, pc}
+ 105              	.L3:
+ 106 005a 00BF     		.align	2
+ 107              	.L2:
+ 108 005c 00000000 		.word	head
+ 109 0060 00000000 		.word	.LC0
+ 110              		.cfi_endproc
+ 111              	.LFE125:
+ 113              		.section	.text.termWriteChar,"ax",%progbits
+ 114              		.align	1
+ 115              		.global	termWriteChar
+ 116              		.syntax unified
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.fpu fpv4-sp-d16
+ 121              	termWriteChar:
+ 122              	.LFB126:
+  43:../Sources/com/term.c **** 
+  44:../Sources/com/term.c **** /**
+  45:../Sources/com/term.c ****  * Writes a character to the uart
+  46:../Sources/com/term.c ****  * The output is sent to the uart which received the last command
+  47:../Sources/com/term.c ****  *
+  48:../Sources/com/term.c ****  * @param[in] ch
+  49:../Sources/com/term.c ****  *   the character to send
+  50:../Sources/com/term.c ****  */
+  51:../Sources/com/term.c **** void termWriteChar(char ch)
+  52:../Sources/com/term.c **** {
+ 123              		.loc 1 52 0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 8
+ 126              		@ frame_needed = 1, uses_anonymous_args = 0
+ 127 0000 80B5     		push	{r7, lr}
+ 128              		.cfi_def_cfa_offset 8
+ 129              		.cfi_offset 7, -8
+ 130              		.cfi_offset 14, -4
+ 131 0002 82B0     		sub	sp, sp, #8
+ 132              		.cfi_def_cfa_offset 16
+ 133 0004 00AF     		add	r7, sp, #0
+ 134              		.cfi_def_cfa_register 7
+ 135 0006 0346     		mov	r3, r0
+ 136 0008 FB71     		strb	r3, [r7, #7]
+  53:../Sources/com/term.c ****     //Terminal Tiny - RaspberryPi
+  54:../Sources/com/term.c ****     // check if uart0 is enabled
+  55:../Sources/com/term.c ****     #if (UART0_EN)
+  56:../Sources/com/term.c ****       if (destination & uart0) uart0WriteChar(ch);
+ 137              		.loc 1 56 0
+ 138 000a 0D4B     		ldr	r3, .L8
+ 139 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 140 000e 03F00103 		and	r3, r3, #1
+ 141 0012 002B     		cmp	r3, #0
+ 142 0014 04D0     		beq	.L5
+ 143              		.loc 1 56 0 is_stmt 0 discriminator 1
+ 144 0016 97F90730 		ldrsb	r3, [r7, #7]
+ 145 001a 1846     		mov	r0, r3
+ 146 001c FFF7FEFF 		bl	uart0WriteChar
+ 147              	.L5:
+  57:../Sources/com/term.c ****     #endif
+  58:../Sources/com/term.c **** 
+  59:../Sources/com/term.c ****     //Terminal Tiny - PC
+  60:../Sources/com/term.c ****     // check if uart1 is enabled
+  61:../Sources/com/term.c ****     #if (UART1_EN)
+  62:../Sources/com/term.c ****       if (destination & uart1) uart1WriteChar(ch);
+ 148              		.loc 1 62 0 is_stmt 1
+ 149 0020 074B     		ldr	r3, .L8
+ 150 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 151 0024 03F00203 		and	r3, r3, #2
+ 152 0028 002B     		cmp	r3, #0
+ 153 002a 04D0     		beq	.L7
+ 154              		.loc 1 62 0 is_stmt 0 discriminator 1
+ 155 002c 97F90730 		ldrsb	r3, [r7, #7]
+ 156 0030 1846     		mov	r0, r3
+ 157 0032 FFF7FEFF 		bl	uart1WriteChar
+ 158              	.L7:
+  63:../Sources/com/term.c ****     #endif
+  64:../Sources/com/term.c **** }
+ 159              		.loc 1 64 0 is_stmt 1
+ 160 0036 00BF     		nop
+ 161 0038 0837     		adds	r7, r7, #8
+ 162              		.cfi_def_cfa_offset 8
+ 163 003a BD46     		mov	sp, r7
+ 164              		.cfi_def_cfa_register 13
+ 165              		@ sp needed
+ 166 003c 80BD     		pop	{r7, pc}
+ 167              	.L9:
+ 168 003e 00BF     		.align	2
+ 169              	.L8:
+ 170 0040 00000000 		.word	destination
+ 171              		.cfi_endproc
+ 172              	.LFE126:
+ 174              		.section	.text.termWrite,"ax",%progbits
+ 175              		.align	1
+ 176              		.global	termWrite
+ 177              		.syntax unified
+ 178              		.thumb
+ 179              		.thumb_func
+ 180              		.fpu fpv4-sp-d16
+ 182              	termWrite:
+ 183              	.LFB127:
+  65:../Sources/com/term.c **** 
+  66:../Sources/com/term.c **** /**
+  67:../Sources/com/term.c ****  * Writes a null terminated string in the send buffer. If the
+  68:../Sources/com/term.c ****  * string is null, the function returns immediately.
+  69:../Sources/com/term.c ****  *
+  70:../Sources/com/term.c ****  * @param[in] str
+  71:../Sources/com/term.c ****  *   the null terminated string to send
+  72:../Sources/com/term.c ****  */
+  73:../Sources/com/term.c **** void termWrite(const char *str)
+  74:../Sources/com/term.c **** {
+ 184              		.loc 1 74 0
+ 185              		.cfi_startproc
+ 186              		@ args = 0, pretend = 0, frame = 8
+ 187              		@ frame_needed = 1, uses_anonymous_args = 0
+ 188 0000 80B5     		push	{r7, lr}
+ 189              		.cfi_def_cfa_offset 8
+ 190              		.cfi_offset 7, -8
+ 191              		.cfi_offset 14, -4
+ 192 0002 82B0     		sub	sp, sp, #8
+ 193              		.cfi_def_cfa_offset 16
+ 194 0004 00AF     		add	r7, sp, #0
+ 195              		.cfi_def_cfa_register 7
+ 196 0006 7860     		str	r0, [r7, #4]
+  75:../Sources/com/term.c ****   if (str == NULL) return;
+ 197              		.loc 1 75 0
+ 198 0008 7B68     		ldr	r3, [r7, #4]
+ 199 000a 002B     		cmp	r3, #0
+ 200 000c 0ED0     		beq	.L15
+  76:../Sources/com/term.c ****   while (*str != '\0') termWriteChar(*str++);
+ 201              		.loc 1 76 0
+ 202 000e 07E0     		b	.L13
+ 203              	.L14:
+ 204              		.loc 1 76 0 is_stmt 0 discriminator 2
+ 205 0010 7B68     		ldr	r3, [r7, #4]
+ 206 0012 5A1C     		adds	r2, r3, #1
+ 207 0014 7A60     		str	r2, [r7, #4]
+ 208 0016 93F90030 		ldrsb	r3, [r3]
+ 209 001a 1846     		mov	r0, r3
+ 210 001c FFF7FEFF 		bl	termWriteChar
+ 211              	.L13:
+ 212              		.loc 1 76 0 discriminator 1
+ 213 0020 7B68     		ldr	r3, [r7, #4]
+ 214 0022 93F90030 		ldrsb	r3, [r3]
+ 215 0026 002B     		cmp	r3, #0
+ 216 0028 F2D1     		bne	.L14
+ 217 002a 00E0     		b	.L10
+ 218              	.L15:
+  75:../Sources/com/term.c ****   if (str == NULL) return;
+ 219              		.loc 1 75 0 is_stmt 1
+ 220 002c 00BF     		nop
+ 221              	.L10:
+  77:../Sources/com/term.c **** }
+ 222              		.loc 1 77 0
+ 223 002e 0837     		adds	r7, r7, #8
+ 224              		.cfi_def_cfa_offset 8
+ 225 0030 BD46     		mov	sp, r7
+ 226              		.cfi_def_cfa_register 13
+ 227              		@ sp needed
+ 228 0032 80BD     		pop	{r7, pc}
+ 229              		.cfi_endproc
+ 230              	.LFE127:
+ 232              		.section	.text.termWriteNum32s,"ax",%progbits
+ 233              		.align	1
+ 234              		.global	termWriteNum32s
+ 235              		.syntax unified
+ 236              		.thumb
+ 237              		.thumb_func
+ 238              		.fpu fpv4-sp-d16
+ 240              	termWriteNum32s:
+ 241              	.LFB128:
+  78:../Sources/com/term.c **** 
+  79:../Sources/com/term.c **** void termWriteNum32s(int32_t value)
+  80:../Sources/com/term.c **** {
+ 242              		.loc 1 80 0
+ 243              		.cfi_startproc
+ 244              		@ args = 0, pretend = 0, frame = 24
+ 245              		@ frame_needed = 1, uses_anonymous_args = 0
+ 246 0000 80B5     		push	{r7, lr}
+ 247              		.cfi_def_cfa_offset 8
+ 248              		.cfi_offset 7, -8
+ 249              		.cfi_offset 14, -4
+ 250 0002 86B0     		sub	sp, sp, #24
+ 251              		.cfi_def_cfa_offset 32
+ 252 0004 00AF     		add	r7, sp, #0
+ 253              		.cfi_def_cfa_register 7
+ 254 0006 7860     		str	r0, [r7, #4]
+  81:../Sources/com/term.c ****   char str[sizeof("-2147483648")];
+  82:../Sources/com/term.c ****   utilNum32sToStr(str, sizeof(str), value);
+ 255              		.loc 1 82 0
+ 256 0008 07F10C03 		add	r3, r7, #12
+ 257 000c 7A68     		ldr	r2, [r7, #4]
+ 258 000e 0C21     		movs	r1, #12
+ 259 0010 1846     		mov	r0, r3
+ 260 0012 FFF7FEFF 		bl	utilNum32sToStr
+  83:../Sources/com/term.c ****   termWrite(str);
+ 261              		.loc 1 83 0
+ 262 0016 07F10C03 		add	r3, r7, #12
+ 263 001a 1846     		mov	r0, r3
+ 264 001c FFF7FEFF 		bl	termWrite
+  84:../Sources/com/term.c **** }
+ 265              		.loc 1 84 0
+ 266 0020 00BF     		nop
+ 267 0022 1837     		adds	r7, r7, #24
+ 268              		.cfi_def_cfa_offset 8
+ 269 0024 BD46     		mov	sp, r7
+ 270              		.cfi_def_cfa_register 13
+ 271              		@ sp needed
+ 272 0026 80BD     		pop	{r7, pc}
+ 273              		.cfi_endproc
+ 274              	.LFE128:
+ 276              		.section	.text.termWriteNum16s,"ax",%progbits
+ 277              		.align	1
+ 278              		.global	termWriteNum16s
+ 279              		.syntax unified
+ 280              		.thumb
+ 281              		.thumb_func
+ 282              		.fpu fpv4-sp-d16
+ 284              	termWriteNum16s:
+ 285              	.LFB129:
+  85:../Sources/com/term.c **** 
+  86:../Sources/com/term.c **** void termWriteNum16s(int16_t value)
+  87:../Sources/com/term.c **** {
+ 286              		.loc 1 87 0
+ 287              		.cfi_startproc
+ 288              		@ args = 0, pretend = 0, frame = 16
+ 289              		@ frame_needed = 1, uses_anonymous_args = 0
+ 290 0000 80B5     		push	{r7, lr}
+ 291              		.cfi_def_cfa_offset 8
+ 292              		.cfi_offset 7, -8
+ 293              		.cfi_offset 14, -4
+ 294 0002 84B0     		sub	sp, sp, #16
+ 295              		.cfi_def_cfa_offset 24
+ 296 0004 00AF     		add	r7, sp, #0
+ 297              		.cfi_def_cfa_register 7
+ 298 0006 0346     		mov	r3, r0
+ 299 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  88:../Sources/com/term.c ****   char str[sizeof("-32768")];
+  89:../Sources/com/term.c ****   utilNum16sToStr(str, sizeof(str), value);
+ 300              		.loc 1 89 0
+ 301 000a B7F90620 		ldrsh	r2, [r7, #6]
+ 302 000e 07F10803 		add	r3, r7, #8
+ 303 0012 0721     		movs	r1, #7
+ 304 0014 1846     		mov	r0, r3
+ 305 0016 FFF7FEFF 		bl	utilNum16sToStr
+  90:../Sources/com/term.c ****   termWrite(str);
+ 306              		.loc 1 90 0
+ 307 001a 07F10803 		add	r3, r7, #8
+ 308 001e 1846     		mov	r0, r3
+ 309 0020 FFF7FEFF 		bl	termWrite
+  91:../Sources/com/term.c **** }
+ 310              		.loc 1 91 0
+ 311 0024 00BF     		nop
+ 312 0026 1037     		adds	r7, r7, #16
+ 313              		.cfi_def_cfa_offset 8
+ 314 0028 BD46     		mov	sp, r7
+ 315              		.cfi_def_cfa_register 13
+ 316              		@ sp needed
+ 317 002a 80BD     		pop	{r7, pc}
+ 318              		.cfi_endproc
+ 319              	.LFE129:
+ 321              		.section	.text.termWriteLine,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	termWriteLine
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 327              		.fpu fpv4-sp-d16
+ 329              	termWriteLine:
+ 330              	.LFB130:
+  92:../Sources/com/term.c **** 
+  93:../Sources/com/term.c **** /**
+  94:../Sources/com/term.c ****  * Writes a null terminated string in the send buffer. If the
+  95:../Sources/com/term.c ****  * string is null, only a new new line character is sent.
+  96:../Sources/com/term.c ****  *
+  97:../Sources/com/term.c ****  * @param[in] str
+  98:../Sources/com/term.c ****  *   the null terminated string to send
+  99:../Sources/com/term.c ****  */
+ 100:../Sources/com/term.c **** void termWriteLine(const char *str)
+ 101:../Sources/com/term.c **** {
+ 331              		.loc 1 101 0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 8
+ 334              		@ frame_needed = 1, uses_anonymous_args = 0
+ 335 0000 80B5     		push	{r7, lr}
+ 336              		.cfi_def_cfa_offset 8
+ 337              		.cfi_offset 7, -8
+ 338              		.cfi_offset 14, -4
+ 339 0002 82B0     		sub	sp, sp, #8
+ 340              		.cfi_def_cfa_offset 16
+ 341 0004 00AF     		add	r7, sp, #0
+ 342              		.cfi_def_cfa_register 7
+ 343 0006 7860     		str	r0, [r7, #4]
+ 102:../Sources/com/term.c ****   termWrite(str);
+ 344              		.loc 1 102 0
+ 345 0008 7868     		ldr	r0, [r7, #4]
+ 346 000a FFF7FEFF 		bl	termWrite
+ 103:../Sources/com/term.c **** //  if (destination & uart0) termWriteChar(END_SIGNAL);
+ 104:../Sources/com/term.c **** //  if (destination & uart1) termWriteChar(NEW_LINE);
+ 105:../Sources/com/term.c ****   termWriteChar(NEW_LINE);
+ 347              		.loc 1 105 0
+ 348 000e 0A20     		movs	r0, #10
+ 349 0010 FFF7FEFF 		bl	termWriteChar
+ 106:../Sources/com/term.c **** 
+ 107:../Sources/com/term.c **** }
+ 350              		.loc 1 107 0
+ 351 0014 00BF     		nop
+ 352 0016 0837     		adds	r7, r7, #8
+ 353              		.cfi_def_cfa_offset 8
+ 354 0018 BD46     		mov	sp, r7
+ 355              		.cfi_def_cfa_register 13
+ 356              		@ sp needed
+ 357 001a 80BD     		pop	{r7, pc}
+ 358              		.cfi_endproc
+ 359              	.LFE130:
+ 361              		.section	.text.termWriteSubString,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	termWriteSubString
+ 364              		.syntax unified
+ 365              		.thumb
+ 366              		.thumb_func
+ 367              		.fpu fpv4-sp-d16
+ 369              	termWriteSubString:
+ 370              	.LFB131:
+ 108:../Sources/com/term.c **** 
+ 109:../Sources/com/term.c **** /**
+ 110:../Sources/com/term.c ****  * Writes a substring in the send buffer.
+ 111:../Sources/com/term.c ****  *
+ 112:../Sources/com/term.c ****  * @param[in] str
+ 113:../Sources/com/term.c ****  *   the null terminated string to send
+ 114:../Sources/com/term.c ****  * @param[in] start
+ 115:../Sources/com/term.c ****  *   the start position of the substring to send
+ 116:../Sources/com/term.c ****  * @param[in] length
+ 117:../Sources/com/term.c ****  *   the number of characters to send
+ 118:../Sources/com/term.c ****  */
+ 119:../Sources/com/term.c **** void termWriteSubString(char *str, uint8_t start, uint8_t length)
+ 120:../Sources/com/term.c **** {
+ 371              		.loc 1 120 0
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 8
+ 374              		@ frame_needed = 1, uses_anonymous_args = 0
+ 375 0000 80B5     		push	{r7, lr}
+ 376              		.cfi_def_cfa_offset 8
+ 377              		.cfi_offset 7, -8
+ 378              		.cfi_offset 14, -4
+ 379 0002 82B0     		sub	sp, sp, #8
+ 380              		.cfi_def_cfa_offset 16
+ 381 0004 00AF     		add	r7, sp, #0
+ 382              		.cfi_def_cfa_register 7
+ 383 0006 7860     		str	r0, [r7, #4]
+ 384 0008 0B46     		mov	r3, r1
+ 385 000a FB70     		strb	r3, [r7, #3]
+ 386 000c 1346     		mov	r3, r2
+ 387 000e BB70     		strb	r3, [r7, #2]
+ 121:../Sources/com/term.c ****   str += start;
+ 388              		.loc 1 121 0
+ 389 0010 FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 390 0012 7A68     		ldr	r2, [r7, #4]
+ 391 0014 1344     		add	r3, r3, r2
+ 392 0016 7B60     		str	r3, [r7, #4]
+ 122:../Sources/com/term.c ****   while(length--) termWriteChar(*str++);
+ 393              		.loc 1 122 0
+ 394 0018 07E0     		b	.L20
+ 395              	.L21:
+ 396              		.loc 1 122 0 is_stmt 0 discriminator 2
+ 397 001a 7B68     		ldr	r3, [r7, #4]
+ 398 001c 5A1C     		adds	r2, r3, #1
+ 399 001e 7A60     		str	r2, [r7, #4]
+ 400 0020 93F90030 		ldrsb	r3, [r3]
+ 401 0024 1846     		mov	r0, r3
+ 402 0026 FFF7FEFF 		bl	termWriteChar
+ 403              	.L20:
+ 404              		.loc 1 122 0 discriminator 1
+ 405 002a BB78     		ldrb	r3, [r7, #2]	@ zero_extendqisi2
+ 406 002c 5A1E     		subs	r2, r3, #1
+ 407 002e BA70     		strb	r2, [r7, #2]
+ 408 0030 002B     		cmp	r3, #0
+ 409 0032 F2D1     		bne	.L21
+ 123:../Sources/com/term.c **** }
+ 410              		.loc 1 123 0 is_stmt 1
+ 411 0034 00BF     		nop
+ 412 0036 0837     		adds	r7, r7, #8
+ 413              		.cfi_def_cfa_offset 8
+ 414 0038 BD46     		mov	sp, r7
+ 415              		.cfi_def_cfa_register 13
+ 416              		@ sp needed
+ 417 003a 80BD     		pop	{r7, pc}
+ 418              		.cfi_endproc
+ 419              	.LFE131:
+ 421              		.section	.rodata
+ 422 0002 0000     		.align	2
+ 423              	.LC1:
+ 424 0004 68656C70 		.ascii	"help\000"
+ 424      00
+ 425 0009 000000   		.align	2
+ 426              	.LC2:
+ 427 000c 3E3E3E20 		.ascii	">>> TinyK22 v2 terminal ready <<<\000"
+ 427      54696E79 
+ 427      4B323220 
+ 427      76322074 
+ 427      65726D69 
+ 428 002e 0000     		.align	2
+ 429              	.LC3:
+ 430 0030 76616C69 		.ascii	"valid commands are:\000"
+ 430      6420636F 
+ 430      6D6D616E 
+ 430      64732061 
+ 430      72653A00 
+ 431              		.align	2
+ 432              	.LC4:
+ 433 0044 202000   		.ascii	"  \000"
+ 434 0047 00       		.align	2
+ 435              	.LC5:
+ 436 0048 2000     		.ascii	" \000"
+ 437 004a 0000     		.align	2
+ 438              	.LC6:
+ 439 004c 3A20636F 		.ascii	": command not found!\000"
+ 439      6D6D616E 
+ 439      64206E6F 
+ 439      7420666F 
+ 439      756E6421 
+ 440 0061 000000   		.align	2
+ 441              	.LC7:
+ 442 0064 4572726F 		.ascii	"Error Code: \000"
+ 442      7220436F 
+ 442      64653A20 
+ 442      00
+ 443 0071 000000   		.align	2
+ 444              	.LC8:
+ 445 0074 456E7465 		.ascii	"Enter '\000"
+ 445      72202700 
+ 446              		.align	2
+ 447              	.LC9:
+ 448 007c 68656C70 		.ascii	"help' for a list of valid commands.\000"
+ 448      2720666F 
+ 448      72206120 
+ 448      6C697374 
+ 448      206F6620 
+ 449              		.section	.text.termParseCommand,"ax",%progbits
+ 450              		.align	1
+ 451              		.global	termParseCommand
+ 452              		.syntax unified
+ 453              		.thumb
+ 454              		.thumb_func
+ 455              		.fpu fpv4-sp-d16
+ 457              	termParseCommand:
+ 458              	.LFB132:
+ 124:../Sources/com/term.c **** 
+ 125:../Sources/com/term.c **** /**
+ 126:../Sources/com/term.c ****  * Parses one command line and executes the appropriate command.
+ 127:../Sources/com/term.c ****  *
+ 128:../Sources/com/term.c ****  * @param[in] cmd
+ 129:../Sources/com/term.c ****  *   the null terminated string to process
+ 130:../Sources/com/term.c ****  */
+ 131:../Sources/com/term.c **** void termParseCommand(char *cmd)
+ 132:../Sources/com/term.c **** {
+ 459              		.loc 1 132 0
+ 460              		.cfi_startproc
+ 461              		@ args = 0, pretend = 0, frame = 32
+ 462              		@ frame_needed = 1, uses_anonymous_args = 0
+ 463 0000 90B5     		push	{r4, r7, lr}
+ 464              		.cfi_def_cfa_offset 12
+ 465              		.cfi_offset 4, -12
+ 466              		.cfi_offset 7, -8
+ 467              		.cfi_offset 14, -4
+ 468 0002 89B0     		sub	sp, sp, #36
+ 469              		.cfi_def_cfa_offset 48
+ 470 0004 00AF     		add	r7, sp, #0
+ 471              		.cfi_def_cfa_register 7
+ 472 0006 7860     		str	r0, [r7, #4]
+ 133:../Sources/com/term.c ****   uint8_t subCmdLength = 0;
+ 473              		.loc 1 133 0
+ 474 0008 0023     		movs	r3, #0
+ 475 000a FB77     		strb	r3, [r7, #31]
+ 134:../Sources/com/term.c ****   tError result = EC_INVALID_CMD;
+ 476              		.loc 1 134 0
+ 477 000c 0223     		movs	r3, #2
+ 478 000e BB77     		strb	r3, [r7, #30]
+ 135:../Sources/com/term.c ****   tCommandLineHandler *clh = head;
+ 479              		.loc 1 135 0
+ 480 0010 404B     		ldr	r3, .L32
+ 481 0012 1B68     		ldr	r3, [r3]
+ 482 0014 BB61     		str	r3, [r7, #24]
+ 136:../Sources/com/term.c ****   char buf[16];
+ 137:../Sources/com/term.c **** 
+ 138:../Sources/com/term.c ****   if (strcmp(cmd, "help") == 0)
+ 483              		.loc 1 138 0
+ 484 0016 4049     		ldr	r1, .L32+4
+ 485 0018 7868     		ldr	r0, [r7, #4]
+ 486 001a FFF7FEFF 		bl	strcmp
+ 487 001e 0346     		mov	r3, r0
+ 488 0020 002B     		cmp	r3, #0
+ 489 0022 46D1     		bne	.L27
+ 139:../Sources/com/term.c ****   {
+ 140:../Sources/com/term.c ****     termWriteLine(NULL);
+ 490              		.loc 1 140 0
+ 491 0024 0020     		movs	r0, #0
+ 492 0026 FFF7FEFF 		bl	termWriteLine
+ 141:../Sources/com/term.c ****     termWriteLine(">>> TinyK22 v2 terminal ready <<<");
+ 493              		.loc 1 141 0
+ 494 002a 3C48     		ldr	r0, .L32+8
+ 495 002c FFF7FEFF 		bl	termWriteLine
+ 142:../Sources/com/term.c ****     termWriteLine("valid commands are:");
+ 496              		.loc 1 142 0
+ 497 0030 3B48     		ldr	r0, .L32+12
+ 498 0032 FFF7FEFF 		bl	termWriteLine
+ 143:../Sources/com/term.c ****     while(clh != NULL)
+ 499              		.loc 1 143 0
+ 500 0036 11E0     		b	.L24
+ 501              	.L25:
+ 144:../Sources/com/term.c ****     {
+ 145:../Sources/com/term.c ****       termWrite("  ");
+ 502              		.loc 1 145 0
+ 503 0038 3A48     		ldr	r0, .L32+16
+ 504 003a FFF7FEFF 		bl	termWrite
+ 146:../Sources/com/term.c ****       termWrite(clh->cmd);
+ 505              		.loc 1 146 0
+ 506 003e BB69     		ldr	r3, [r7, #24]
+ 507 0040 1846     		mov	r0, r3
+ 508 0042 FFF7FEFF 		bl	termWrite
+ 147:../Sources/com/term.c ****       termWrite(" ");
+ 509              		.loc 1 147 0
+ 510 0046 3848     		ldr	r0, .L32+20
+ 511 0048 FFF7FEFF 		bl	termWrite
+ 148:../Sources/com/term.c ****       termWriteLine(clh->cmdDesc);
+ 512              		.loc 1 148 0
+ 513 004c BB69     		ldr	r3, [r7, #24]
+ 514 004e 1033     		adds	r3, r3, #16
+ 515 0050 1846     		mov	r0, r3
+ 516 0052 FFF7FEFF 		bl	termWriteLine
+ 149:../Sources/com/term.c ****       clh = clh->next;
+ 517              		.loc 1 149 0
+ 518 0056 BB69     		ldr	r3, [r7, #24]
+ 519 0058 5B6B     		ldr	r3, [r3, #52]
+ 520 005a BB61     		str	r3, [r7, #24]
+ 521              	.L24:
+ 143:../Sources/com/term.c ****     {
+ 522              		.loc 1 143 0
+ 523 005c BB69     		ldr	r3, [r7, #24]
+ 524 005e 002B     		cmp	r3, #0
+ 525 0060 EAD1     		bne	.L25
+ 150:../Sources/com/term.c ****     }
+ 151:../Sources/com/term.c ****     result = EC_SUCCESS;
+ 526              		.loc 1 151 0
+ 527 0062 0023     		movs	r3, #0
+ 528 0064 BB77     		strb	r3, [r7, #30]
+ 529 0066 27E0     		b	.L26
+ 530              	.L29:
+ 152:../Sources/com/term.c ****   }
+ 153:../Sources/com/term.c ****   else
+ 154:../Sources/com/term.c ****   {
+ 155:../Sources/com/term.c ****     while(clh != NULL)
+ 156:../Sources/com/term.c ****     {
+ 157:../Sources/com/term.c ****       if (strncmp(cmd, clh->cmd, strlen(clh->cmd)) == 0)
+ 531              		.loc 1 157 0
+ 532 0068 BC69     		ldr	r4, [r7, #24]
+ 533 006a BB69     		ldr	r3, [r7, #24]
+ 534 006c 1846     		mov	r0, r3
+ 535 006e FFF7FEFF 		bl	strlen
+ 536 0072 0346     		mov	r3, r0
+ 537 0074 1A46     		mov	r2, r3
+ 538 0076 2146     		mov	r1, r4
+ 539 0078 7868     		ldr	r0, [r7, #4]
+ 540 007a FFF7FEFF 		bl	strncmp
+ 541 007e 0346     		mov	r3, r0
+ 542 0080 002B     		cmp	r3, #0
+ 543 0082 13D1     		bne	.L28
+ 158:../Sources/com/term.c ****       {
+ 159:../Sources/com/term.c ****         subCmdLength = strlen(clh->cmd);
+ 544              		.loc 1 159 0
+ 545 0084 BB69     		ldr	r3, [r7, #24]
+ 546 0086 1846     		mov	r0, r3
+ 547 0088 FFF7FEFF 		bl	strlen
+ 548 008c 0346     		mov	r3, r0
+ 549 008e FB77     		strb	r3, [r7, #31]
+ 160:../Sources/com/term.c ****         result = clh->cmdHandler(cmd + strlen(clh->cmd));
+ 550              		.loc 1 160 0
+ 551 0090 BB69     		ldr	r3, [r7, #24]
+ 552 0092 1C6B     		ldr	r4, [r3, #48]
+ 553 0094 BB69     		ldr	r3, [r7, #24]
+ 554 0096 1846     		mov	r0, r3
+ 555 0098 FFF7FEFF 		bl	strlen
+ 556 009c 0246     		mov	r2, r0
+ 557 009e 7B68     		ldr	r3, [r7, #4]
+ 558 00a0 1344     		add	r3, r3, r2
+ 559 00a2 1846     		mov	r0, r3
+ 560 00a4 A047     		blx	r4
+ 561              	.LVL0:
+ 562 00a6 0346     		mov	r3, r0
+ 563 00a8 BB77     		strb	r3, [r7, #30]
+ 161:../Sources/com/term.c ****         break;
+ 564              		.loc 1 161 0
+ 565 00aa 05E0     		b	.L26
+ 566              	.L28:
+ 162:../Sources/com/term.c ****       }
+ 163:../Sources/com/term.c ****       clh = clh->next;
+ 567              		.loc 1 163 0
+ 568 00ac BB69     		ldr	r3, [r7, #24]
+ 569 00ae 5B6B     		ldr	r3, [r3, #52]
+ 570 00b0 BB61     		str	r3, [r7, #24]
+ 571              	.L27:
+ 155:../Sources/com/term.c ****     {
+ 572              		.loc 1 155 0
+ 573 00b2 BB69     		ldr	r3, [r7, #24]
+ 574 00b4 002B     		cmp	r3, #0
+ 575 00b6 D7D1     		bne	.L29
+ 576              	.L26:
+ 164:../Sources/com/term.c ****     }
+ 165:../Sources/com/term.c ****   }
+ 166:../Sources/com/term.c **** 
+ 167:../Sources/com/term.c ****   if (result != EC_SUCCESS)
+ 577              		.loc 1 167 0
+ 578 00b8 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 579 00ba 002B     		cmp	r3, #0
+ 580 00bc 26D0     		beq	.L31
+ 168:../Sources/com/term.c ****   {
+ 169:../Sources/com/term.c ****     //NOT ACK!
+ 170:../Sources/com/term.c ****     termWriteLine(NULL);
+ 581              		.loc 1 170 0
+ 582 00be 0020     		movs	r0, #0
+ 583 00c0 FFF7FEFF 		bl	termWriteLine
+ 171:../Sources/com/term.c ****     termWrite(cmd);
+ 584              		.loc 1 171 0
+ 585 00c4 7868     		ldr	r0, [r7, #4]
+ 586 00c6 FFF7FEFF 		bl	termWrite
+ 172:../Sources/com/term.c ****     termWriteLine(": command not found!");
+ 587              		.loc 1 172 0
+ 588 00ca 1848     		ldr	r0, .L32+24
+ 589 00cc FFF7FEFF 		bl	termWriteLine
+ 173:../Sources/com/term.c ****     termWrite("Error Code: ");
+ 590              		.loc 1 173 0
+ 591 00d0 1748     		ldr	r0, .L32+28
+ 592 00d2 FFF7FEFF 		bl	termWrite
+ 174:../Sources/com/term.c ****     buf[0] = '\0';
+ 593              		.loc 1 174 0
+ 594 00d6 0023     		movs	r3, #0
+ 595 00d8 3B72     		strb	r3, [r7, #8]
+ 175:../Sources/com/term.c ****     utilNum16uToStr(buf, sizeof(buf), result);
+ 596              		.loc 1 175 0
+ 597 00da BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 598 00dc 9AB2     		uxth	r2, r3
+ 599 00de 07F10803 		add	r3, r7, #8
+ 600 00e2 1021     		movs	r1, #16
+ 601 00e4 1846     		mov	r0, r3
+ 602 00e6 FFF7FEFF 		bl	utilNum16uToStr
+ 176:../Sources/com/term.c ****     termWriteLine(buf);
+ 603              		.loc 1 176 0
+ 604 00ea 07F10803 		add	r3, r7, #8
+ 605 00ee 1846     		mov	r0, r3
+ 606 00f0 FFF7FEFF 		bl	termWriteLine
+ 177:../Sources/com/term.c ****     termWrite("Enter '");
+ 607              		.loc 1 177 0
+ 608 00f4 0F48     		ldr	r0, .L32+32
+ 609 00f6 FFF7FEFF 		bl	termWrite
+ 178:../Sources/com/term.c ****     termWriteSubString(cmd, 0, subCmdLength);
+ 610              		.loc 1 178 0
+ 611 00fa FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 612 00fc 1A46     		mov	r2, r3
+ 613 00fe 0021     		movs	r1, #0
+ 614 0100 7868     		ldr	r0, [r7, #4]
+ 615 0102 FFF7FEFF 		bl	termWriteSubString
+ 179:../Sources/com/term.c ****     termWriteLine("help' for a list of valid commands.");
+ 616              		.loc 1 179 0
+ 617 0106 0C48     		ldr	r0, .L32+36
+ 618 0108 FFF7FEFF 		bl	termWriteLine
+ 619              	.L31:
+ 180:../Sources/com/term.c ****   }
+ 181:../Sources/com/term.c **** }
+ 620              		.loc 1 181 0
+ 621 010c 00BF     		nop
+ 622 010e 2437     		adds	r7, r7, #36
+ 623              		.cfi_def_cfa_offset 12
+ 624 0110 BD46     		mov	sp, r7
+ 625              		.cfi_def_cfa_register 13
+ 626              		@ sp needed
+ 627 0112 90BD     		pop	{r4, r7, pc}
+ 628              	.L33:
+ 629              		.align	2
+ 630              	.L32:
+ 631 0114 00000000 		.word	head
+ 632 0118 04000000 		.word	.LC1
+ 633 011c 0C000000 		.word	.LC2
+ 634 0120 30000000 		.word	.LC3
+ 635 0124 44000000 		.word	.LC4
+ 636 0128 48000000 		.word	.LC5
+ 637 012c 4C000000 		.word	.LC6
+ 638 0130 64000000 		.word	.LC7
+ 639 0134 74000000 		.word	.LC8
+ 640 0138 7C000000 		.word	.LC9
+ 641              		.cfi_endproc
+ 642              	.LFE132:
+ 644              		.section	.text.termDoWork,"ax",%progbits
+ 645              		.align	1
+ 646              		.global	termDoWork
+ 647              		.syntax unified
+ 648              		.thumb
+ 649              		.thumb_func
+ 650              		.fpu fpv4-sp-d16
+ 652              	termDoWork:
+ 653              	.LFB133:
+ 182:../Sources/com/term.c **** 
+ 183:../Sources/com/term.c **** 
+ 184:../Sources/com/term.c **** 
+ 185:../Sources/com/term.c **** 
+ 186:../Sources/com/term.c **** /**
+ 187:../Sources/com/term.c ****  * @brief Terminal do work
+ 188:../Sources/com/term.c ****  *
+ 189:../Sources/com/term.c ****  * This function reads a line from the uart and calls the
+ 190:../Sources/com/term.c ****  * termParseCommand function to process the command.
+ 191:../Sources/com/term.c ****  */
+ 192:../Sources/com/term.c **** void termDoWork(void)
+ 193:../Sources/com/term.c **** {
+ 654              		.loc 1 193 0
+ 655              		.cfi_startproc
+ 656              		@ args = 0, pretend = 0, frame = 512
+ 657              		@ frame_needed = 1, uses_anonymous_args = 0
+ 658 0000 80B5     		push	{r7, lr}
+ 659              		.cfi_def_cfa_offset 8
+ 660              		.cfi_offset 7, -8
+ 661              		.cfi_offset 14, -4
+ 662 0002 ADF5007D 		sub	sp, sp, #512
+ 663              		.cfi_def_cfa_offset 520
+ 664 0006 00AF     		add	r7, sp, #0
+ 665              		.cfi_def_cfa_register 7
+ 194:../Sources/com/term.c ****   char cmd[512];
+ 195:../Sources/com/term.c ****   #if (UART0_EN)
+ 196:../Sources/com/term.c ****     if (uart0HasLineReceived())                   // process uart data from debug interface
+ 666              		.loc 1 196 0
+ 667 0008 FFF7FEFF 		bl	uart0HasLineReceived
+ 668 000c 0346     		mov	r3, r0
+ 669 000e 002B     		cmp	r3, #0
+ 670 0010 0CD0     		beq	.L35
+ 197:../Sources/com/term.c ****     {
+ 198:../Sources/com/term.c ****       destination = uartAll;//uart0;
+ 671              		.loc 1 198 0
+ 672 0012 124B     		ldr	r3, .L38
+ 673 0014 0722     		movs	r2, #7
+ 674 0016 1A70     		strb	r2, [r3]
+ 199:../Sources/com/term.c ****       uart0ReadLine(cmd, sizeof(cmd));   //end term with \_\_ ->see uart.h
+ 675              		.loc 1 199 0
+ 676 0018 3B46     		mov	r3, r7
+ 677 001a 4FF40071 		mov	r1, #512
+ 678 001e 1846     		mov	r0, r3
+ 679 0020 FFF7FEFF 		bl	uart0ReadLine
+ 200:../Sources/com/term.c ****       termParseCommand(cmd);
+ 680              		.loc 1 200 0
+ 681 0024 3B46     		mov	r3, r7
+ 682 0026 1846     		mov	r0, r3
+ 683 0028 FFF7FEFF 		bl	termParseCommand
+ 684              	.L35:
+ 201:../Sources/com/term.c ****     }
+ 202:../Sources/com/term.c ****   #endif
+ 203:../Sources/com/term.c **** 
+ 204:../Sources/com/term.c ****     #if (UART1_EN)
+ 205:../Sources/com/term.c ****       if (uart1HasLineReceived())                   // process uart data from debug interface
+ 685              		.loc 1 205 0
+ 686 002c FFF7FEFF 		bl	uart1HasLineReceived
+ 687 0030 0346     		mov	r3, r0
+ 688 0032 002B     		cmp	r3, #0
+ 689 0034 0CD0     		beq	.L37
+ 206:../Sources/com/term.c ****       {
+ 207:../Sources/com/term.c ****         destination = uartAll;//uart1;              //end term with \n
+ 690              		.loc 1 207 0
+ 691 0036 094B     		ldr	r3, .L38
+ 692 0038 0722     		movs	r2, #7
+ 693 003a 1A70     		strb	r2, [r3]
+ 208:../Sources/com/term.c ****         uart1ReadLine(cmd, sizeof(cmd));
+ 694              		.loc 1 208 0
+ 695 003c 3B46     		mov	r3, r7
+ 696 003e 4FF40071 		mov	r1, #512
+ 697 0042 1846     		mov	r0, r3
+ 698 0044 FFF7FEFF 		bl	uart1ReadLine
+ 209:../Sources/com/term.c ****         termParseCommand(cmd);
+ 699              		.loc 1 209 0
+ 700 0048 3B46     		mov	r3, r7
+ 701 004a 1846     		mov	r0, r3
+ 702 004c FFF7FEFF 		bl	termParseCommand
+ 703              	.L37:
+ 210:../Sources/com/term.c ****       }
+ 211:../Sources/com/term.c ****     #endif
+ 212:../Sources/com/term.c **** 
+ 213:../Sources/com/term.c **** 
+ 214:../Sources/com/term.c **** }
+ 704              		.loc 1 214 0
+ 705 0050 00BF     		nop
+ 706 0052 07F50077 		add	r7, r7, #512
+ 707              		.cfi_def_cfa_offset 8
+ 708 0056 BD46     		mov	sp, r7
+ 709              		.cfi_def_cfa_register 13
+ 710              		@ sp needed
+ 711 0058 80BD     		pop	{r7, pc}
+ 712              	.L39:
+ 713 005a 00BF     		.align	2
+ 714              	.L38:
+ 715 005c 00000000 		.word	destination
+ 716              		.cfi_endproc
+ 717              	.LFE133:
+ 719              		.section	.text.termInit,"ax",%progbits
+ 720              		.align	1
+ 721              		.global	termInit
+ 722              		.syntax unified
+ 723              		.thumb
+ 724              		.thumb_func
+ 725              		.fpu fpv4-sp-d16
+ 727              	termInit:
+ 728              	.LFB134:
+ 215:../Sources/com/term.c **** 
+ 216:../Sources/com/term.c **** /**
+ 217:../Sources/com/term.c ****  * Initialize the terminal with the desired baudrate.
+ 218:../Sources/com/term.c ****  *
+ 219:../Sources/com/term.c ****  * @param[in] baudrate
+ 220:../Sources/com/term.c ****  *   the desired baudrate (for example: 9600, 19200, 57600...)
+ 221:../Sources/com/term.c ****  */
+ 222:../Sources/com/term.c **** void termInit(uint16_t baudrate)
+ 223:../Sources/com/term.c **** {
+ 729              		.loc 1 223 0
+ 730              		.cfi_startproc
+ 731              		@ args = 0, pretend = 0, frame = 8
+ 732              		@ frame_needed = 1, uses_anonymous_args = 0
+ 733 0000 80B5     		push	{r7, lr}
+ 734              		.cfi_def_cfa_offset 8
+ 735              		.cfi_offset 7, -8
+ 736              		.cfi_offset 14, -4
+ 737 0002 82B0     		sub	sp, sp, #8
+ 738              		.cfi_def_cfa_offset 16
+ 739 0004 00AF     		add	r7, sp, #0
+ 740              		.cfi_def_cfa_register 7
+ 741 0006 0346     		mov	r3, r0
+ 742 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 224:../Sources/com/term.c ****   destination = uartAll;
+ 743              		.loc 1 224 0
+ 744 000a 074B     		ldr	r3, .L41
+ 745 000c 0722     		movs	r2, #7
+ 746 000e 1A70     		strb	r2, [r3]
+ 225:../Sources/com/term.c ****     // initialize uart1 only if the uart is enabled
+ 226:../Sources/com/term.c ****     #if (UART0_EN)
+ 227:../Sources/com/term.c ****       uart0Init(baudrate);
+ 747              		.loc 1 227 0
+ 748 0010 FB88     		ldrh	r3, [r7, #6]
+ 749 0012 1846     		mov	r0, r3
+ 750 0014 FFF7FEFF 		bl	uart0Init
+ 228:../Sources/com/term.c ****     #endif
+ 229:../Sources/com/term.c ****     #if (UART1_EN)
+ 230:../Sources/com/term.c ****       uart1Init(baudrate);
+ 751              		.loc 1 230 0
+ 752 0018 FB88     		ldrh	r3, [r7, #6]
+ 753 001a 1846     		mov	r0, r3
+ 754 001c FFF7FEFF 		bl	uart1Init
+ 231:../Sources/com/term.c ****     #endif
+ 232:../Sources/com/term.c **** 
+ 233:../Sources/com/term.c **** 
+ 234:../Sources/com/term.c ****     //termWriteLine("tinyk22 ready... :-)");
+ 235:../Sources/com/term.c **** 
+ 236:../Sources/com/term.c **** }
+ 755              		.loc 1 236 0
+ 756 0020 00BF     		nop
+ 757 0022 0837     		adds	r7, r7, #8
+ 758              		.cfi_def_cfa_offset 8
+ 759 0024 BD46     		mov	sp, r7
+ 760              		.cfi_def_cfa_register 13
+ 761              		@ sp needed
+ 762 0026 80BD     		pop	{r7, pc}
+ 763              	.L42:
+ 764              		.align	2
+ 765              	.L41:
+ 766 0028 00000000 		.word	destination
+ 767              		.cfi_endproc
+ 768              	.LFE134:
+ 770              		.text
+ 771              	.Letext0:
+ 772              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 773              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 774              		.file 4 "../Includes/core_cm4.h"
+ 775              		.file 5 "../Includes/system_MK22F51212.h"
+ 776              		.file 6 "../Includes/platform.h"
+ 777              		.file 7 "../Sources/com/term.h"
+ 778              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 779              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 780              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 781              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+DEFINED SYMBOLS
+                            *ABS*:00000000 term.c
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:20     .bss.destination:00000000 destination
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:21     .bss.destination:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:23     .bss.head:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:26     .bss.head:00000000 head
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:29     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:33     .text.termRegisterCommandLineHandler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:40     .text.termRegisterCommandLineHandler:00000000 termRegisterCommandLineHandler
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:108    .text.termRegisterCommandLineHandler:0000005c $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:114    .text.termWriteChar:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:121    .text.termWriteChar:00000000 termWriteChar
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:170    .text.termWriteChar:00000040 $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:175    .text.termWrite:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:182    .text.termWrite:00000000 termWrite
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:233    .text.termWriteNum32s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:240    .text.termWriteNum32s:00000000 termWriteNum32s
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:277    .text.termWriteNum16s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:284    .text.termWriteNum16s:00000000 termWriteNum16s
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:322    .text.termWriteLine:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:329    .text.termWriteLine:00000000 termWriteLine
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:362    .text.termWriteSubString:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:369    .text.termWriteSubString:00000000 termWriteSubString
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:450    .text.termParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:457    .text.termParseCommand:00000000 termParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:631    .text.termParseCommand:00000114 $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:645    .text.termDoWork:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:652    .text.termDoWork:00000000 termDoWork
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:715    .text.termDoWork:0000005c $d
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:720    .text.termInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:727    .text.termInit:00000000 termInit
+C:\Users\Blub\AppData\Local\Temp\ccC1Qpfq.s:766    .text.termInit:00000028 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.uart.h.20.bc12b72a70305b4e40bc10b02a9fc1fa
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+
+UNDEFINED SYMBOLS
+strncpy
+strlen
+uart0WriteChar
+uart1WriteChar
+utilNum32sToStr
+utilNum16sToStr
+strcmp
+strncmp
+utilNum16uToStr
+uart0HasLineReceived
+uart0ReadLine
+uart1HasLineReceived
+uart1ReadLine
+uart0Init
+uart1Init

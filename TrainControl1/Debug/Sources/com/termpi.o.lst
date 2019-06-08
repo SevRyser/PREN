@@ -1,0 +1,1012 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"termpi.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.data.destination,"aw",%progbits
+  20              	destination:
+  21 0000 01       		.byte	1
+  22              		.section	.bss.head,"aw",%nobits
+  23              		.align	2
+  26              	head:
+  27 0000 00000000 		.space	4
+  28              		.section	.rodata
+  29              		.align	2
+  30              	.LC0:
+  31 0000 2000     		.ascii	" \000"
+  32              		.section	.text.termpiRegisterCommandLineHandler,"ax",%progbits
+  33              		.align	1
+  34              		.global	termpiRegisterCommandLineHandler
+  35              		.syntax unified
+  36              		.thumb
+  37              		.thumb_func
+  38              		.fpu fpv4-sp-d16
+  40              	termpiRegisterCommandLineHandler:
+  41              	.LFB125:
+  42              		.file 1 "../Sources/com/termpi.c"
+   1:../Sources/com/termpi.c **** /**
+   2:../Sources/com/termpi.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/com/termpi.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/com/termpi.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/com/termpi.c ****  *
+   6:../Sources/com/termpi.c ****  * \brief         terminal program for UART to RaspberryPi
+   7:../Sources/com/termpi.c ****  * \file
+   8:../Sources/com/termpi.c ****  * \author        Severin Ryser
+   9:../Sources/com/termpi.c ****  * \date          19.03.2019
+  10:../Sources/com/termpi.c ****  *
+  11:../Sources/com/termpi.c ****  *--------------------------------------------------------------------
+  12:../Sources/com/termpi.c ****  */
+  13:../Sources/com/termpi.c **** #include "platform.h"
+  14:../Sources/com/termpi.c **** #include "util.h"
+  15:../Sources/com/termpi.c **** #include "termpi.h"
+  16:../Sources/com/termpi.c **** 
+  17:../Sources/com/termpi.c **** #include "uart.h"
+  18:../Sources/com/termpi.c **** #include "string.h"
+  19:../Sources/com/termpi.c **** 
+  20:../Sources/com/termpi.c **** 
+  21:../Sources/com/termpi.c **** typedef enum
+  22:../Sources/com/termpi.c **** {
+  23:../Sources/com/termpi.c ****   uart0 = 1,
+  24:../Sources/com/termpi.c ****   uart1 = 2,
+  25:../Sources/com/termpi.c ****   lpuart0 = 4,
+  26:../Sources/com/termpi.c ****   uartAll = (uart0 | uart1 | lpuart0)
+  27:../Sources/com/termpi.c **** } tUart;
+  28:../Sources/com/termpi.c **** 
+  29:../Sources/com/termpi.c **** 
+  30:../Sources/com/termpi.c **** 
+  31:../Sources/com/termpi.c **** 
+  32:../Sources/com/termpi.c **** static tUart destination =1;
+  33:../Sources/com/termpi.c **** static tCommandLineHandlerPi *head = NULL;
+  34:../Sources/com/termpi.c **** 
+  35:../Sources/com/termpi.c **** void termpiRegisterCommandLineHandler(tCommandLineHandlerPi *clh, unsigned char* cmd, unsigned char
+  36:../Sources/com/termpi.c **** {
+  43              		.loc 1 36 0
+  44              		.cfi_startproc
+  45              		@ args = 0, pretend = 0, frame = 16
+  46              		@ frame_needed = 1, uses_anonymous_args = 0
+  47 0000 90B5     		push	{r4, r7, lr}
+  48              		.cfi_def_cfa_offset 12
+  49              		.cfi_offset 4, -12
+  50              		.cfi_offset 7, -8
+  51              		.cfi_offset 14, -4
+  52 0002 85B0     		sub	sp, sp, #20
+  53              		.cfi_def_cfa_offset 32
+  54 0004 00AF     		add	r7, sp, #0
+  55              		.cfi_def_cfa_register 7
+  56 0006 F860     		str	r0, [r7, #12]
+  57 0008 B960     		str	r1, [r7, #8]
+  58 000a 7A60     		str	r2, [r7, #4]
+  59 000c 3B60     		str	r3, [r7]
+  37:../Sources/com/termpi.c ****   clh->next = head;
+  60              		.loc 1 37 0
+  61 000e 134B     		ldr	r3, .L2
+  62 0010 1A68     		ldr	r2, [r3]
+  63 0012 FB68     		ldr	r3, [r7, #12]
+  64 0014 5A63     		str	r2, [r3, #52]
+  38:../Sources/com/termpi.c ****   head = clh;
+  65              		.loc 1 38 0
+  66 0016 114A     		ldr	r2, .L2
+  67 0018 FB68     		ldr	r3, [r7, #12]
+  68 001a 1360     		str	r3, [r2]
+  39:../Sources/com/termpi.c **** 
+  40:../Sources/com/termpi.c ****   strncpy(clh->cmd, cmd, sizeof(clh->cmd));
+  69              		.loc 1 40 0
+  70 001c FB68     		ldr	r3, [r7, #12]
+  71 001e 1022     		movs	r2, #16
+  72 0020 B968     		ldr	r1, [r7, #8]
+  73 0022 1846     		mov	r0, r3
+  74 0024 FFF7FEFF 		bl	strncpy
+  41:../Sources/com/termpi.c ****   strcat(clh->cmd, " ");
+  75              		.loc 1 41 0
+  76 0028 FC68     		ldr	r4, [r7, #12]
+  77 002a 2046     		mov	r0, r4
+  78 002c FFF7FEFF 		bl	strlen
+  79 0030 0346     		mov	r3, r0
+  80 0032 2344     		add	r3, r3, r4
+  81 0034 0A49     		ldr	r1, .L2+4
+  82 0036 1A46     		mov	r2, r3
+  83 0038 0B46     		mov	r3, r1
+  84 003a 1B88     		ldrh	r3, [r3]	@ unaligned
+  85 003c 1380     		strh	r3, [r2]	@ unaligned
+  42:../Sources/com/termpi.c ****   strncpy(clh->cmdDesc, cmdDesc, sizeof(clh->cmdDesc));
+  86              		.loc 1 42 0
+  87 003e FB68     		ldr	r3, [r7, #12]
+  88 0040 1033     		adds	r3, r3, #16
+  89 0042 2022     		movs	r2, #32
+  90 0044 7968     		ldr	r1, [r7, #4]
+  91 0046 1846     		mov	r0, r3
+  92 0048 FFF7FEFF 		bl	strncpy
+  43:../Sources/com/termpi.c ****   clh->cmdHandler = h;
+  93              		.loc 1 43 0
+  94 004c FB68     		ldr	r3, [r7, #12]
+  95 004e 3A68     		ldr	r2, [r7]
+  96 0050 1A63     		str	r2, [r3, #48]
+  44:../Sources/com/termpi.c **** }
+  97              		.loc 1 44 0
+  98 0052 00BF     		nop
+  99 0054 1437     		adds	r7, r7, #20
+ 100              		.cfi_def_cfa_offset 12
+ 101 0056 BD46     		mov	sp, r7
+ 102              		.cfi_def_cfa_register 13
+ 103              		@ sp needed
+ 104 0058 90BD     		pop	{r4, r7, pc}
+ 105              	.L3:
+ 106 005a 00BF     		.align	2
+ 107              	.L2:
+ 108 005c 00000000 		.word	head
+ 109 0060 00000000 		.word	.LC0
+ 110              		.cfi_endproc
+ 111              	.LFE125:
+ 113              		.section	.text.termpiWriteChar,"ax",%progbits
+ 114              		.align	1
+ 115              		.global	termpiWriteChar
+ 116              		.syntax unified
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.fpu fpv4-sp-d16
+ 121              	termpiWriteChar:
+ 122              	.LFB126:
+  45:../Sources/com/termpi.c **** 
+  46:../Sources/com/termpi.c **** /**
+  47:../Sources/com/termpi.c ****  * Writes a character to the uart
+  48:../Sources/com/termpi.c ****  * The output is sent to the uart which received the last command
+  49:../Sources/com/termpi.c ****  *
+  50:../Sources/com/termpi.c ****  * @param[in] ch
+  51:../Sources/com/termpi.c ****  *   the character to send
+  52:../Sources/com/termpi.c ****  */
+  53:../Sources/com/termpi.c **** void termpiWriteChar(char ch)
+  54:../Sources/com/termpi.c **** {
+ 123              		.loc 1 54 0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 8
+ 126              		@ frame_needed = 1, uses_anonymous_args = 0
+ 127 0000 80B5     		push	{r7, lr}
+ 128              		.cfi_def_cfa_offset 8
+ 129              		.cfi_offset 7, -8
+ 130              		.cfi_offset 14, -4
+ 131 0002 82B0     		sub	sp, sp, #8
+ 132              		.cfi_def_cfa_offset 16
+ 133 0004 00AF     		add	r7, sp, #0
+ 134              		.cfi_def_cfa_register 7
+ 135 0006 0346     		mov	r3, r0
+ 136 0008 FB71     		strb	r3, [r7, #7]
+  55:../Sources/com/termpi.c ****   // check if uart1 is enabled
+  56:../Sources/com/termpi.c ****       if (destination & uart0) uart0WriteChar(ch);
+ 137              		.loc 1 56 0
+ 138 000a 074B     		ldr	r3, .L7
+ 139 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 140 000e 03F00103 		and	r3, r3, #1
+ 141 0012 002B     		cmp	r3, #0
+ 142 0014 04D0     		beq	.L6
+ 143              		.loc 1 56 0 is_stmt 0 discriminator 1
+ 144 0016 97F90730 		ldrsb	r3, [r7, #7]
+ 145 001a 1846     		mov	r0, r3
+ 146 001c FFF7FEFF 		bl	uart0WriteChar
+ 147              	.L6:
+  57:../Sources/com/termpi.c **** 
+  58:../Sources/com/termpi.c **** }
+ 148              		.loc 1 58 0 is_stmt 1
+ 149 0020 00BF     		nop
+ 150 0022 0837     		adds	r7, r7, #8
+ 151              		.cfi_def_cfa_offset 8
+ 152 0024 BD46     		mov	sp, r7
+ 153              		.cfi_def_cfa_register 13
+ 154              		@ sp needed
+ 155 0026 80BD     		pop	{r7, pc}
+ 156              	.L8:
+ 157              		.align	2
+ 158              	.L7:
+ 159 0028 00000000 		.word	destination
+ 160              		.cfi_endproc
+ 161              	.LFE126:
+ 163              		.section	.text.termpiWrite,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	termpiWrite
+ 166              		.syntax unified
+ 167              		.thumb
+ 168              		.thumb_func
+ 169              		.fpu fpv4-sp-d16
+ 171              	termpiWrite:
+ 172              	.LFB127:
+  59:../Sources/com/termpi.c **** 
+  60:../Sources/com/termpi.c **** /**
+  61:../Sources/com/termpi.c ****  * Writes a null terminated string in the send buffer. If the
+  62:../Sources/com/termpi.c ****  * string is null, the function returns immediately.
+  63:../Sources/com/termpi.c ****  *
+  64:../Sources/com/termpi.c ****  * @param[in] str
+  65:../Sources/com/termpi.c ****  *   the null terminated string to send
+  66:../Sources/com/termpi.c ****  */
+  67:../Sources/com/termpi.c **** void termpiWrite(const char *str)
+  68:../Sources/com/termpi.c **** {
+ 173              		.loc 1 68 0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 8
+ 176              		@ frame_needed = 1, uses_anonymous_args = 0
+ 177 0000 80B5     		push	{r7, lr}
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 7, -8
+ 180              		.cfi_offset 14, -4
+ 181 0002 82B0     		sub	sp, sp, #8
+ 182              		.cfi_def_cfa_offset 16
+ 183 0004 00AF     		add	r7, sp, #0
+ 184              		.cfi_def_cfa_register 7
+ 185 0006 7860     		str	r0, [r7, #4]
+  69:../Sources/com/termpi.c ****   if (str == NULL) return;
+ 186              		.loc 1 69 0
+ 187 0008 7B68     		ldr	r3, [r7, #4]
+ 188 000a 002B     		cmp	r3, #0
+ 189 000c 0ED0     		beq	.L14
+  70:../Sources/com/termpi.c ****   while (*str != '\0') termpiWriteChar(*str++);
+ 190              		.loc 1 70 0
+ 191 000e 07E0     		b	.L12
+ 192              	.L13:
+ 193              		.loc 1 70 0 is_stmt 0 discriminator 2
+ 194 0010 7B68     		ldr	r3, [r7, #4]
+ 195 0012 5A1C     		adds	r2, r3, #1
+ 196 0014 7A60     		str	r2, [r7, #4]
+ 197 0016 93F90030 		ldrsb	r3, [r3]
+ 198 001a 1846     		mov	r0, r3
+ 199 001c FFF7FEFF 		bl	termpiWriteChar
+ 200              	.L12:
+ 201              		.loc 1 70 0 discriminator 1
+ 202 0020 7B68     		ldr	r3, [r7, #4]
+ 203 0022 93F90030 		ldrsb	r3, [r3]
+ 204 0026 002B     		cmp	r3, #0
+ 205 0028 F2D1     		bne	.L13
+ 206 002a 00E0     		b	.L9
+ 207              	.L14:
+  69:../Sources/com/termpi.c ****   if (str == NULL) return;
+ 208              		.loc 1 69 0 is_stmt 1
+ 209 002c 00BF     		nop
+ 210              	.L9:
+  71:../Sources/com/termpi.c **** }
+ 211              		.loc 1 71 0
+ 212 002e 0837     		adds	r7, r7, #8
+ 213              		.cfi_def_cfa_offset 8
+ 214 0030 BD46     		mov	sp, r7
+ 215              		.cfi_def_cfa_register 13
+ 216              		@ sp needed
+ 217 0032 80BD     		pop	{r7, pc}
+ 218              		.cfi_endproc
+ 219              	.LFE127:
+ 221              		.section	.text.termpiWriteNum32s,"ax",%progbits
+ 222              		.align	1
+ 223              		.global	termpiWriteNum32s
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 227              		.fpu fpv4-sp-d16
+ 229              	termpiWriteNum32s:
+ 230              	.LFB128:
+  72:../Sources/com/termpi.c **** 
+  73:../Sources/com/termpi.c **** void termpiWriteNum32s(int32_t value)
+  74:../Sources/com/termpi.c **** {
+ 231              		.loc 1 74 0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 24
+ 234              		@ frame_needed = 1, uses_anonymous_args = 0
+ 235 0000 80B5     		push	{r7, lr}
+ 236              		.cfi_def_cfa_offset 8
+ 237              		.cfi_offset 7, -8
+ 238              		.cfi_offset 14, -4
+ 239 0002 86B0     		sub	sp, sp, #24
+ 240              		.cfi_def_cfa_offset 32
+ 241 0004 00AF     		add	r7, sp, #0
+ 242              		.cfi_def_cfa_register 7
+ 243 0006 7860     		str	r0, [r7, #4]
+  75:../Sources/com/termpi.c ****   char str[sizeof("-2147483648")];
+  76:../Sources/com/termpi.c ****   utilNum32sToStr(str, sizeof(str), value);
+ 244              		.loc 1 76 0
+ 245 0008 07F10C03 		add	r3, r7, #12
+ 246 000c 7A68     		ldr	r2, [r7, #4]
+ 247 000e 0C21     		movs	r1, #12
+ 248 0010 1846     		mov	r0, r3
+ 249 0012 FFF7FEFF 		bl	utilNum32sToStr
+  77:../Sources/com/termpi.c ****   termpiWrite(str);
+ 250              		.loc 1 77 0
+ 251 0016 07F10C03 		add	r3, r7, #12
+ 252 001a 1846     		mov	r0, r3
+ 253 001c FFF7FEFF 		bl	termpiWrite
+  78:../Sources/com/termpi.c **** }
+ 254              		.loc 1 78 0
+ 255 0020 00BF     		nop
+ 256 0022 1837     		adds	r7, r7, #24
+ 257              		.cfi_def_cfa_offset 8
+ 258 0024 BD46     		mov	sp, r7
+ 259              		.cfi_def_cfa_register 13
+ 260              		@ sp needed
+ 261 0026 80BD     		pop	{r7, pc}
+ 262              		.cfi_endproc
+ 263              	.LFE128:
+ 265              		.section	.text.termpiWriteNum16s,"ax",%progbits
+ 266              		.align	1
+ 267              		.global	termpiWriteNum16s
+ 268              		.syntax unified
+ 269              		.thumb
+ 270              		.thumb_func
+ 271              		.fpu fpv4-sp-d16
+ 273              	termpiWriteNum16s:
+ 274              	.LFB129:
+  79:../Sources/com/termpi.c **** 
+  80:../Sources/com/termpi.c **** void termpiWriteNum16s(int16_t value)
+  81:../Sources/com/termpi.c **** {
+ 275              		.loc 1 81 0
+ 276              		.cfi_startproc
+ 277              		@ args = 0, pretend = 0, frame = 16
+ 278              		@ frame_needed = 1, uses_anonymous_args = 0
+ 279 0000 80B5     		push	{r7, lr}
+ 280              		.cfi_def_cfa_offset 8
+ 281              		.cfi_offset 7, -8
+ 282              		.cfi_offset 14, -4
+ 283 0002 84B0     		sub	sp, sp, #16
+ 284              		.cfi_def_cfa_offset 24
+ 285 0004 00AF     		add	r7, sp, #0
+ 286              		.cfi_def_cfa_register 7
+ 287 0006 0346     		mov	r3, r0
+ 288 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  82:../Sources/com/termpi.c ****   char str[sizeof("-32768")];
+  83:../Sources/com/termpi.c ****   utilNum16sToStr(str, sizeof(str), value);
+ 289              		.loc 1 83 0
+ 290 000a B7F90620 		ldrsh	r2, [r7, #6]
+ 291 000e 07F10803 		add	r3, r7, #8
+ 292 0012 0721     		movs	r1, #7
+ 293 0014 1846     		mov	r0, r3
+ 294 0016 FFF7FEFF 		bl	utilNum16sToStr
+  84:../Sources/com/termpi.c ****   termpiWrite(str);
+ 295              		.loc 1 84 0
+ 296 001a 07F10803 		add	r3, r7, #8
+ 297 001e 1846     		mov	r0, r3
+ 298 0020 FFF7FEFF 		bl	termpiWrite
+  85:../Sources/com/termpi.c **** }
+ 299              		.loc 1 85 0
+ 300 0024 00BF     		nop
+ 301 0026 1037     		adds	r7, r7, #16
+ 302              		.cfi_def_cfa_offset 8
+ 303 0028 BD46     		mov	sp, r7
+ 304              		.cfi_def_cfa_register 13
+ 305              		@ sp needed
+ 306 002a 80BD     		pop	{r7, pc}
+ 307              		.cfi_endproc
+ 308              	.LFE129:
+ 310              		.section	.text.termpiWriteLine,"ax",%progbits
+ 311              		.align	1
+ 312              		.global	termpiWriteLine
+ 313              		.syntax unified
+ 314              		.thumb
+ 315              		.thumb_func
+ 316              		.fpu fpv4-sp-d16
+ 318              	termpiWriteLine:
+ 319              	.LFB130:
+  86:../Sources/com/termpi.c **** 
+  87:../Sources/com/termpi.c **** /**
+  88:../Sources/com/termpi.c ****  * Writes a null terminated string in the send buffer. If the
+  89:../Sources/com/termpi.c ****  * string is null, only a new new line character is sent.
+  90:../Sources/com/termpi.c ****  *
+  91:../Sources/com/termpi.c ****  * @param[in] str
+  92:../Sources/com/termpi.c ****  *   the null terminated string to send
+  93:../Sources/com/termpi.c ****  */
+  94:../Sources/com/termpi.c **** void termpiWriteLine(const char *str)
+  95:../Sources/com/termpi.c **** {
+ 320              		.loc 1 95 0
+ 321              		.cfi_startproc
+ 322              		@ args = 0, pretend = 0, frame = 8
+ 323              		@ frame_needed = 1, uses_anonymous_args = 0
+ 324 0000 80B5     		push	{r7, lr}
+ 325              		.cfi_def_cfa_offset 8
+ 326              		.cfi_offset 7, -8
+ 327              		.cfi_offset 14, -4
+ 328 0002 82B0     		sub	sp, sp, #8
+ 329              		.cfi_def_cfa_offset 16
+ 330 0004 00AF     		add	r7, sp, #0
+ 331              		.cfi_def_cfa_register 7
+ 332 0006 7860     		str	r0, [r7, #4]
+  96:../Sources/com/termpi.c ****   termpiWrite(str);
+ 333              		.loc 1 96 0
+ 334 0008 7868     		ldr	r0, [r7, #4]
+ 335 000a FFF7FEFF 		bl	termpiWrite
+  97:../Sources/com/termpi.c ****   termpiWriteChar(NEW_LINE);
+ 336              		.loc 1 97 0
+ 337 000e 0A20     		movs	r0, #10
+ 338 0010 FFF7FEFF 		bl	termpiWriteChar
+  98:../Sources/com/termpi.c **** }
+ 339              		.loc 1 98 0
+ 340 0014 00BF     		nop
+ 341 0016 0837     		adds	r7, r7, #8
+ 342              		.cfi_def_cfa_offset 8
+ 343 0018 BD46     		mov	sp, r7
+ 344              		.cfi_def_cfa_register 13
+ 345              		@ sp needed
+ 346 001a 80BD     		pop	{r7, pc}
+ 347              		.cfi_endproc
+ 348              	.LFE130:
+ 350              		.section	.text.termpiWriteSubString,"ax",%progbits
+ 351              		.align	1
+ 352              		.global	termpiWriteSubString
+ 353              		.syntax unified
+ 354              		.thumb
+ 355              		.thumb_func
+ 356              		.fpu fpv4-sp-d16
+ 358              	termpiWriteSubString:
+ 359              	.LFB131:
+  99:../Sources/com/termpi.c **** 
+ 100:../Sources/com/termpi.c **** /**
+ 101:../Sources/com/termpi.c ****  * Writes a substring in the send buffer.
+ 102:../Sources/com/termpi.c ****  *
+ 103:../Sources/com/termpi.c ****  * @param[in] str
+ 104:../Sources/com/termpi.c ****  *   the null terminated string to send
+ 105:../Sources/com/termpi.c ****  * @param[in] start
+ 106:../Sources/com/termpi.c ****  *   the start position of the substring to send
+ 107:../Sources/com/termpi.c ****  * @param[in] length
+ 108:../Sources/com/termpi.c ****  *   the number of characters to send
+ 109:../Sources/com/termpi.c ****  */
+ 110:../Sources/com/termpi.c **** void termpiWriteSubString(char *str, uint8_t start, uint8_t length)
+ 111:../Sources/com/termpi.c **** {
+ 360              		.loc 1 111 0
+ 361              		.cfi_startproc
+ 362              		@ args = 0, pretend = 0, frame = 8
+ 363              		@ frame_needed = 1, uses_anonymous_args = 0
+ 364 0000 80B5     		push	{r7, lr}
+ 365              		.cfi_def_cfa_offset 8
+ 366              		.cfi_offset 7, -8
+ 367              		.cfi_offset 14, -4
+ 368 0002 82B0     		sub	sp, sp, #8
+ 369              		.cfi_def_cfa_offset 16
+ 370 0004 00AF     		add	r7, sp, #0
+ 371              		.cfi_def_cfa_register 7
+ 372 0006 7860     		str	r0, [r7, #4]
+ 373 0008 0B46     		mov	r3, r1
+ 374 000a FB70     		strb	r3, [r7, #3]
+ 375 000c 1346     		mov	r3, r2
+ 376 000e BB70     		strb	r3, [r7, #2]
+ 112:../Sources/com/termpi.c ****   str += start;
+ 377              		.loc 1 112 0
+ 378 0010 FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 379 0012 7A68     		ldr	r2, [r7, #4]
+ 380 0014 1344     		add	r3, r3, r2
+ 381 0016 7B60     		str	r3, [r7, #4]
+ 113:../Sources/com/termpi.c ****   while(length--) termpiWriteChar(*str++);
+ 382              		.loc 1 113 0
+ 383 0018 07E0     		b	.L19
+ 384              	.L20:
+ 385              		.loc 1 113 0 is_stmt 0 discriminator 2
+ 386 001a 7B68     		ldr	r3, [r7, #4]
+ 387 001c 5A1C     		adds	r2, r3, #1
+ 388 001e 7A60     		str	r2, [r7, #4]
+ 389 0020 93F90030 		ldrsb	r3, [r3]
+ 390 0024 1846     		mov	r0, r3
+ 391 0026 FFF7FEFF 		bl	termpiWriteChar
+ 392              	.L19:
+ 393              		.loc 1 113 0 discriminator 1
+ 394 002a BB78     		ldrb	r3, [r7, #2]	@ zero_extendqisi2
+ 395 002c 5A1E     		subs	r2, r3, #1
+ 396 002e BA70     		strb	r2, [r7, #2]
+ 397 0030 002B     		cmp	r3, #0
+ 398 0032 F2D1     		bne	.L20
+ 114:../Sources/com/termpi.c **** }
+ 399              		.loc 1 114 0 is_stmt 1
+ 400 0034 00BF     		nop
+ 401 0036 0837     		adds	r7, r7, #8
+ 402              		.cfi_def_cfa_offset 8
+ 403 0038 BD46     		mov	sp, r7
+ 404              		.cfi_def_cfa_register 13
+ 405              		@ sp needed
+ 406 003a 80BD     		pop	{r7, pc}
+ 407              		.cfi_endproc
+ 408              	.LFE131:
+ 410              		.section	.rodata
+ 411 0002 0000     		.align	2
+ 412              	.LC1:
+ 413 0004 68656C70 		.ascii	"help\000"
+ 413      00
+ 414 0009 000000   		.align	2
+ 415              	.LC2:
+ 416 000c 3E3E3E20 		.ascii	">>> MC-Car v2 terminal ready <<<\000"
+ 416      4D432D43 
+ 416      61722076 
+ 416      32207465 
+ 416      726D696E 
+ 417 002d 000000   		.align	2
+ 418              	.LC3:
+ 419 0030 76616C69 		.ascii	"valid commands are:\000"
+ 419      6420636F 
+ 419      6D6D616E 
+ 419      64732061 
+ 419      72653A00 
+ 420              		.align	2
+ 421              	.LC4:
+ 422 0044 202000   		.ascii	"  \000"
+ 423 0047 00       		.align	2
+ 424              	.LC5:
+ 425 0048 3A20636F 		.ascii	": command not found!\000"
+ 425      6D6D616E 
+ 425      64206E6F 
+ 425      7420666F 
+ 425      756E6421 
+ 426 005d 000000   		.align	2
+ 427              	.LC6:
+ 428 0060 4572726F 		.ascii	"Error Code: \000"
+ 428      7220436F 
+ 428      64653A20 
+ 428      00
+ 429 006d 000000   		.align	2
+ 430              	.LC7:
+ 431 0070 456E7465 		.ascii	"Enter '\000"
+ 431      72202700 
+ 432              		.align	2
+ 433              	.LC8:
+ 434 0078 68656C70 		.ascii	"help' for a list of valid commands.\000"
+ 434      2720666F 
+ 434      72206120 
+ 434      6C697374 
+ 434      206F6620 
+ 435              		.section	.text.termpiParseCommand,"ax",%progbits
+ 436              		.align	1
+ 437              		.global	termpiParseCommand
+ 438              		.syntax unified
+ 439              		.thumb
+ 440              		.thumb_func
+ 441              		.fpu fpv4-sp-d16
+ 443              	termpiParseCommand:
+ 444              	.LFB132:
+ 115:../Sources/com/termpi.c **** 
+ 116:../Sources/com/termpi.c **** /**
+ 117:../Sources/com/termpi.c ****  * Parses one command line and executes the appropriate command.
+ 118:../Sources/com/termpi.c ****  *
+ 119:../Sources/com/termpi.c ****  * @param[in] cmd
+ 120:../Sources/com/termpi.c ****  *   the null terminated string to process
+ 121:../Sources/com/termpi.c ****  */
+ 122:../Sources/com/termpi.c **** void termpiParseCommand(char *cmd)
+ 123:../Sources/com/termpi.c **** {
+ 445              		.loc 1 123 0
+ 446              		.cfi_startproc
+ 447              		@ args = 0, pretend = 0, frame = 32
+ 448              		@ frame_needed = 1, uses_anonymous_args = 0
+ 449 0000 90B5     		push	{r4, r7, lr}
+ 450              		.cfi_def_cfa_offset 12
+ 451              		.cfi_offset 4, -12
+ 452              		.cfi_offset 7, -8
+ 453              		.cfi_offset 14, -4
+ 454 0002 89B0     		sub	sp, sp, #36
+ 455              		.cfi_def_cfa_offset 48
+ 456 0004 00AF     		add	r7, sp, #0
+ 457              		.cfi_def_cfa_register 7
+ 458 0006 7860     		str	r0, [r7, #4]
+ 124:../Sources/com/termpi.c ****   uint8_t subCmdLength = 0;
+ 459              		.loc 1 124 0
+ 460 0008 0023     		movs	r3, #0
+ 461 000a FB77     		strb	r3, [r7, #31]
+ 125:../Sources/com/termpi.c ****   tError result = EC_INVALID_CMD;
+ 462              		.loc 1 125 0
+ 463 000c 0223     		movs	r3, #2
+ 464 000e BB77     		strb	r3, [r7, #30]
+ 126:../Sources/com/termpi.c ****   tCommandLineHandlerPi *clh = head;
+ 465              		.loc 1 126 0
+ 466 0010 404B     		ldr	r3, .L31
+ 467 0012 1B68     		ldr	r3, [r3]
+ 468 0014 BB61     		str	r3, [r7, #24]
+ 127:../Sources/com/termpi.c ****   char buf[16];
+ 128:../Sources/com/termpi.c **** 
+ 129:../Sources/com/termpi.c ****   if (strcmp(cmd, "help") == 0)
+ 469              		.loc 1 129 0
+ 470 0016 4049     		ldr	r1, .L31+4
+ 471 0018 7868     		ldr	r0, [r7, #4]
+ 472 001a FFF7FEFF 		bl	strcmp
+ 473 001e 0346     		mov	r3, r0
+ 474 0020 002B     		cmp	r3, #0
+ 475 0022 46D1     		bne	.L26
+ 130:../Sources/com/termpi.c ****   {
+ 131:../Sources/com/termpi.c ****     termpiWriteLine(NULL);
+ 476              		.loc 1 131 0
+ 477 0024 0020     		movs	r0, #0
+ 478 0026 FFF7FEFF 		bl	termpiWriteLine
+ 132:../Sources/com/termpi.c ****     termpiWriteLine(">>> MC-Car v2 terminal ready <<<");
+ 479              		.loc 1 132 0
+ 480 002a 3C48     		ldr	r0, .L31+8
+ 481 002c FFF7FEFF 		bl	termpiWriteLine
+ 133:../Sources/com/termpi.c ****     termpiWriteLine("valid commands are:");
+ 482              		.loc 1 133 0
+ 483 0030 3B48     		ldr	r0, .L31+12
+ 484 0032 FFF7FEFF 		bl	termpiWriteLine
+ 134:../Sources/com/termpi.c ****     while(clh != NULL)
+ 485              		.loc 1 134 0
+ 486 0036 11E0     		b	.L23
+ 487              	.L24:
+ 135:../Sources/com/termpi.c ****     {
+ 136:../Sources/com/termpi.c ****       termpiWrite("  ");
+ 488              		.loc 1 136 0
+ 489 0038 3A48     		ldr	r0, .L31+16
+ 490 003a FFF7FEFF 		bl	termpiWrite
+ 137:../Sources/com/termpi.c ****       termpiWrite(clh->cmd);
+ 491              		.loc 1 137 0
+ 492 003e BB69     		ldr	r3, [r7, #24]
+ 493 0040 1846     		mov	r0, r3
+ 494 0042 FFF7FEFF 		bl	termpiWrite
+ 138:../Sources/com/termpi.c ****       termpiWrite(" ");
+ 495              		.loc 1 138 0
+ 496 0046 3848     		ldr	r0, .L31+20
+ 497 0048 FFF7FEFF 		bl	termpiWrite
+ 139:../Sources/com/termpi.c ****       termpiWriteLine(clh->cmdDesc);
+ 498              		.loc 1 139 0
+ 499 004c BB69     		ldr	r3, [r7, #24]
+ 500 004e 1033     		adds	r3, r3, #16
+ 501 0050 1846     		mov	r0, r3
+ 502 0052 FFF7FEFF 		bl	termpiWriteLine
+ 140:../Sources/com/termpi.c ****       clh = clh->next;
+ 503              		.loc 1 140 0
+ 504 0056 BB69     		ldr	r3, [r7, #24]
+ 505 0058 5B6B     		ldr	r3, [r3, #52]
+ 506 005a BB61     		str	r3, [r7, #24]
+ 507              	.L23:
+ 134:../Sources/com/termpi.c ****     {
+ 508              		.loc 1 134 0
+ 509 005c BB69     		ldr	r3, [r7, #24]
+ 510 005e 002B     		cmp	r3, #0
+ 511 0060 EAD1     		bne	.L24
+ 141:../Sources/com/termpi.c ****     }
+ 142:../Sources/com/termpi.c ****     result = EC_SUCCESS;
+ 512              		.loc 1 142 0
+ 513 0062 0023     		movs	r3, #0
+ 514 0064 BB77     		strb	r3, [r7, #30]
+ 515 0066 27E0     		b	.L25
+ 516              	.L28:
+ 143:../Sources/com/termpi.c ****   }
+ 144:../Sources/com/termpi.c ****   else
+ 145:../Sources/com/termpi.c ****   {
+ 146:../Sources/com/termpi.c ****     while(clh != NULL)
+ 147:../Sources/com/termpi.c ****     {
+ 148:../Sources/com/termpi.c ****       if (strncmp(cmd, clh->cmd, strlen(clh->cmd)) == 0)
+ 517              		.loc 1 148 0
+ 518 0068 BC69     		ldr	r4, [r7, #24]
+ 519 006a BB69     		ldr	r3, [r7, #24]
+ 520 006c 1846     		mov	r0, r3
+ 521 006e FFF7FEFF 		bl	strlen
+ 522 0072 0346     		mov	r3, r0
+ 523 0074 1A46     		mov	r2, r3
+ 524 0076 2146     		mov	r1, r4
+ 525 0078 7868     		ldr	r0, [r7, #4]
+ 526 007a FFF7FEFF 		bl	strncmp
+ 527 007e 0346     		mov	r3, r0
+ 528 0080 002B     		cmp	r3, #0
+ 529 0082 13D1     		bne	.L27
+ 149:../Sources/com/termpi.c ****       {
+ 150:../Sources/com/termpi.c ****         subCmdLength = strlen(clh->cmd);
+ 530              		.loc 1 150 0
+ 531 0084 BB69     		ldr	r3, [r7, #24]
+ 532 0086 1846     		mov	r0, r3
+ 533 0088 FFF7FEFF 		bl	strlen
+ 534 008c 0346     		mov	r3, r0
+ 535 008e FB77     		strb	r3, [r7, #31]
+ 151:../Sources/com/termpi.c ****         result = clh->cmdHandler(cmd + strlen(clh->cmd));
+ 536              		.loc 1 151 0
+ 537 0090 BB69     		ldr	r3, [r7, #24]
+ 538 0092 1C6B     		ldr	r4, [r3, #48]
+ 539 0094 BB69     		ldr	r3, [r7, #24]
+ 540 0096 1846     		mov	r0, r3
+ 541 0098 FFF7FEFF 		bl	strlen
+ 542 009c 0246     		mov	r2, r0
+ 543 009e 7B68     		ldr	r3, [r7, #4]
+ 544 00a0 1344     		add	r3, r3, r2
+ 545 00a2 1846     		mov	r0, r3
+ 546 00a4 A047     		blx	r4
+ 547              	.LVL0:
+ 548 00a6 0346     		mov	r3, r0
+ 549 00a8 BB77     		strb	r3, [r7, #30]
+ 152:../Sources/com/termpi.c ****         break;
+ 550              		.loc 1 152 0
+ 551 00aa 05E0     		b	.L25
+ 552              	.L27:
+ 153:../Sources/com/termpi.c ****       }
+ 154:../Sources/com/termpi.c ****       clh = clh->next;
+ 553              		.loc 1 154 0
+ 554 00ac BB69     		ldr	r3, [r7, #24]
+ 555 00ae 5B6B     		ldr	r3, [r3, #52]
+ 556 00b0 BB61     		str	r3, [r7, #24]
+ 557              	.L26:
+ 146:../Sources/com/termpi.c ****     {
+ 558              		.loc 1 146 0
+ 559 00b2 BB69     		ldr	r3, [r7, #24]
+ 560 00b4 002B     		cmp	r3, #0
+ 561 00b6 D7D1     		bne	.L28
+ 562              	.L25:
+ 155:../Sources/com/termpi.c ****     }
+ 156:../Sources/com/termpi.c ****   }
+ 157:../Sources/com/termpi.c **** 
+ 158:../Sources/com/termpi.c ****   if (result != EC_SUCCESS)
+ 563              		.loc 1 158 0
+ 564 00b8 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 565 00ba 002B     		cmp	r3, #0
+ 566 00bc 26D0     		beq	.L30
+ 159:../Sources/com/termpi.c ****   {
+ 160:../Sources/com/termpi.c ****     termpiWriteLine(NULL);
+ 567              		.loc 1 160 0
+ 568 00be 0020     		movs	r0, #0
+ 569 00c0 FFF7FEFF 		bl	termpiWriteLine
+ 161:../Sources/com/termpi.c ****     termpiWrite(cmd);
+ 570              		.loc 1 161 0
+ 571 00c4 7868     		ldr	r0, [r7, #4]
+ 572 00c6 FFF7FEFF 		bl	termpiWrite
+ 162:../Sources/com/termpi.c ****     termpiWriteLine(": command not found!");
+ 573              		.loc 1 162 0
+ 574 00ca 1848     		ldr	r0, .L31+24
+ 575 00cc FFF7FEFF 		bl	termpiWriteLine
+ 163:../Sources/com/termpi.c ****     termpiWrite("Error Code: ");
+ 576              		.loc 1 163 0
+ 577 00d0 1748     		ldr	r0, .L31+28
+ 578 00d2 FFF7FEFF 		bl	termpiWrite
+ 164:../Sources/com/termpi.c ****     buf[0] = '\0';
+ 579              		.loc 1 164 0
+ 580 00d6 0023     		movs	r3, #0
+ 581 00d8 3B72     		strb	r3, [r7, #8]
+ 165:../Sources/com/termpi.c ****     utilNum16uToStr(buf, sizeof(buf), result);
+ 582              		.loc 1 165 0
+ 583 00da BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 584 00dc 9AB2     		uxth	r2, r3
+ 585 00de 07F10803 		add	r3, r7, #8
+ 586 00e2 1021     		movs	r1, #16
+ 587 00e4 1846     		mov	r0, r3
+ 588 00e6 FFF7FEFF 		bl	utilNum16uToStr
+ 166:../Sources/com/termpi.c ****     termpiWriteLine(buf);
+ 589              		.loc 1 166 0
+ 590 00ea 07F10803 		add	r3, r7, #8
+ 591 00ee 1846     		mov	r0, r3
+ 592 00f0 FFF7FEFF 		bl	termpiWriteLine
+ 167:../Sources/com/termpi.c ****     termpiWrite("Enter '");
+ 593              		.loc 1 167 0
+ 594 00f4 0F48     		ldr	r0, .L31+32
+ 595 00f6 FFF7FEFF 		bl	termpiWrite
+ 168:../Sources/com/termpi.c ****     termpiWriteSubString(cmd, 0, subCmdLength);
+ 596              		.loc 1 168 0
+ 597 00fa FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 598 00fc 1A46     		mov	r2, r3
+ 599 00fe 0021     		movs	r1, #0
+ 600 0100 7868     		ldr	r0, [r7, #4]
+ 601 0102 FFF7FEFF 		bl	termpiWriteSubString
+ 169:../Sources/com/termpi.c ****     termpiWriteLine("help' for a list of valid commands.");
+ 602              		.loc 1 169 0
+ 603 0106 0C48     		ldr	r0, .L31+36
+ 604 0108 FFF7FEFF 		bl	termpiWriteLine
+ 605              	.L30:
+ 170:../Sources/com/termpi.c ****   }
+ 171:../Sources/com/termpi.c **** }
+ 606              		.loc 1 171 0
+ 607 010c 00BF     		nop
+ 608 010e 2437     		adds	r7, r7, #36
+ 609              		.cfi_def_cfa_offset 12
+ 610 0110 BD46     		mov	sp, r7
+ 611              		.cfi_def_cfa_register 13
+ 612              		@ sp needed
+ 613 0112 90BD     		pop	{r4, r7, pc}
+ 614              	.L32:
+ 615              		.align	2
+ 616              	.L31:
+ 617 0114 00000000 		.word	head
+ 618 0118 04000000 		.word	.LC1
+ 619 011c 0C000000 		.word	.LC2
+ 620 0120 30000000 		.word	.LC3
+ 621 0124 44000000 		.word	.LC4
+ 622 0128 00000000 		.word	.LC0
+ 623 012c 48000000 		.word	.LC5
+ 624 0130 60000000 		.word	.LC6
+ 625 0134 70000000 		.word	.LC7
+ 626 0138 78000000 		.word	.LC8
+ 627              		.cfi_endproc
+ 628              	.LFE132:
+ 630              		.section	.text.termpiDoWork,"ax",%progbits
+ 631              		.align	1
+ 632              		.global	termpiDoWork
+ 633              		.syntax unified
+ 634              		.thumb
+ 635              		.thumb_func
+ 636              		.fpu fpv4-sp-d16
+ 638              	termpiDoWork:
+ 639              	.LFB133:
+ 172:../Sources/com/termpi.c **** 
+ 173:../Sources/com/termpi.c **** /**
+ 174:../Sources/com/termpi.c ****  * @brief Terminal do work
+ 175:../Sources/com/termpi.c ****  *
+ 176:../Sources/com/termpi.c ****  * This function reads a line from the uart and calls the
+ 177:../Sources/com/termpi.c ****  * termParseCommand function to process the command.
+ 178:../Sources/com/termpi.c ****  */
+ 179:../Sources/com/termpi.c **** void termpiDoWork(void)
+ 180:../Sources/com/termpi.c **** {
+ 640              		.loc 1 180 0
+ 641              		.cfi_startproc
+ 642              		@ args = 0, pretend = 0, frame = 512
+ 643              		@ frame_needed = 1, uses_anonymous_args = 0
+ 644 0000 80B5     		push	{r7, lr}
+ 645              		.cfi_def_cfa_offset 8
+ 646              		.cfi_offset 7, -8
+ 647              		.cfi_offset 14, -4
+ 648 0002 ADF5007D 		sub	sp, sp, #512
+ 649              		.cfi_def_cfa_offset 520
+ 650 0006 00AF     		add	r7, sp, #0
+ 651              		.cfi_def_cfa_register 7
+ 181:../Sources/com/termpi.c ****   char cmd[512];
+ 182:../Sources/com/termpi.c **** 
+ 183:../Sources/com/termpi.c ****       if (uart0HasLineReceived())
+ 652              		.loc 1 183 0
+ 653 0008 FFF7FEFF 		bl	uart0HasLineReceived
+ 654 000c 0346     		mov	r3, r0
+ 655 000e 002B     		cmp	r3, #0
+ 656 0010 0CD0     		beq	.L35
+ 184:../Sources/com/termpi.c ****       {
+ 185:../Sources/com/termpi.c ****         destination = uart0;
+ 657              		.loc 1 185 0
+ 658 0012 094B     		ldr	r3, .L36
+ 659 0014 0122     		movs	r2, #1
+ 660 0016 1A70     		strb	r2, [r3]
+ 186:../Sources/com/termpi.c ****         uart0ReadLine(cmd, sizeof(cmd));            // process uart data from debug interface
+ 661              		.loc 1 186 0
+ 662 0018 3B46     		mov	r3, r7
+ 663 001a 4FF40071 		mov	r1, #512
+ 664 001e 1846     		mov	r0, r3
+ 665 0020 FFF7FEFF 		bl	uart0ReadLine
+ 187:../Sources/com/termpi.c ****         termpiParseCommand(cmd);
+ 666              		.loc 1 187 0
+ 667 0024 3B46     		mov	r3, r7
+ 668 0026 1846     		mov	r0, r3
+ 669 0028 FFF7FEFF 		bl	termpiParseCommand
+ 670              	.L35:
+ 188:../Sources/com/termpi.c ****       }
+ 189:../Sources/com/termpi.c **** }
+ 671              		.loc 1 189 0
+ 672 002c 00BF     		nop
+ 673 002e 07F50077 		add	r7, r7, #512
+ 674              		.cfi_def_cfa_offset 8
+ 675 0032 BD46     		mov	sp, r7
+ 676              		.cfi_def_cfa_register 13
+ 677              		@ sp needed
+ 678 0034 80BD     		pop	{r7, pc}
+ 679              	.L37:
+ 680 0036 00BF     		.align	2
+ 681              	.L36:
+ 682 0038 00000000 		.word	destination
+ 683              		.cfi_endproc
+ 684              	.LFE133:
+ 686              		.section	.text.termpiInit,"ax",%progbits
+ 687              		.align	1
+ 688              		.global	termpiInit
+ 689              		.syntax unified
+ 690              		.thumb
+ 691              		.thumb_func
+ 692              		.fpu fpv4-sp-d16
+ 694              	termpiInit:
+ 695              	.LFB134:
+ 190:../Sources/com/termpi.c **** 
+ 191:../Sources/com/termpi.c **** /**
+ 192:../Sources/com/termpi.c ****  * Initialize the terminal with the desired baudrate.
+ 193:../Sources/com/termpi.c ****  *
+ 194:../Sources/com/termpi.c ****  * @param[in] baudrate
+ 195:../Sources/com/termpi.c ****  *   the desired baudrate (for example: 9600, 19200, 57600...)
+ 196:../Sources/com/termpi.c ****  */
+ 197:../Sources/com/termpi.c **** void termpiInit(uint16_t baudrate)
+ 198:../Sources/com/termpi.c **** {
+ 696              		.loc 1 198 0
+ 697              		.cfi_startproc
+ 698              		@ args = 0, pretend = 0, frame = 8
+ 699              		@ frame_needed = 1, uses_anonymous_args = 0
+ 700 0000 80B5     		push	{r7, lr}
+ 701              		.cfi_def_cfa_offset 8
+ 702              		.cfi_offset 7, -8
+ 703              		.cfi_offset 14, -4
+ 704 0002 82B0     		sub	sp, sp, #8
+ 705              		.cfi_def_cfa_offset 16
+ 706 0004 00AF     		add	r7, sp, #0
+ 707              		.cfi_def_cfa_register 7
+ 708 0006 0346     		mov	r3, r0
+ 709 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 199:../Sources/com/termpi.c ****     uart0Init(baudrate);
+ 710              		.loc 1 199 0
+ 711 000a FB88     		ldrh	r3, [r7, #6]
+ 712 000c 1846     		mov	r0, r3
+ 713 000e FFF7FEFF 		bl	uart0Init
+ 200:../Sources/com/termpi.c **** 
+ 201:../Sources/com/termpi.c ****     //termpiWriteLine(NULL);
+ 202:../Sources/com/termpi.c ****     //termpiWriteLine("Test");
+ 203:../Sources/com/termpi.c **** }
+ 714              		.loc 1 203 0
+ 715 0012 00BF     		nop
+ 716 0014 0837     		adds	r7, r7, #8
+ 717              		.cfi_def_cfa_offset 8
+ 718 0016 BD46     		mov	sp, r7
+ 719              		.cfi_def_cfa_register 13
+ 720              		@ sp needed
+ 721 0018 80BD     		pop	{r7, pc}
+ 722              		.cfi_endproc
+ 723              	.LFE134:
+ 725              		.text
+ 726              	.Letext0:
+ 727              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 728              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 729              		.file 4 "../Includes/core_cm4.h"
+ 730              		.file 5 "../Includes/system_MK22F51212.h"
+ 731              		.file 6 "../Includes/platform.h"
+ 732              		.file 7 "../Sources/com/termpi.h"
+ 733              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 734              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 735              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 736              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+DEFINED SYMBOLS
+                            *ABS*:00000000 termpi.c
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:20     .data.destination:00000000 destination
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:23     .bss.head:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:26     .bss.head:00000000 head
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:29     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:33     .text.termpiRegisterCommandLineHandler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:40     .text.termpiRegisterCommandLineHandler:00000000 termpiRegisterCommandLineHandler
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:108    .text.termpiRegisterCommandLineHandler:0000005c $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:114    .text.termpiWriteChar:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:121    .text.termpiWriteChar:00000000 termpiWriteChar
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:159    .text.termpiWriteChar:00000028 $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:164    .text.termpiWrite:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:171    .text.termpiWrite:00000000 termpiWrite
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:222    .text.termpiWriteNum32s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:229    .text.termpiWriteNum32s:00000000 termpiWriteNum32s
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:266    .text.termpiWriteNum16s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:273    .text.termpiWriteNum16s:00000000 termpiWriteNum16s
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:311    .text.termpiWriteLine:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:318    .text.termpiWriteLine:00000000 termpiWriteLine
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:351    .text.termpiWriteSubString:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:358    .text.termpiWriteSubString:00000000 termpiWriteSubString
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:436    .text.termpiParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:443    .text.termpiParseCommand:00000000 termpiParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:617    .text.termpiParseCommand:00000114 $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:631    .text.termpiDoWork:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:638    .text.termpiDoWork:00000000 termpiDoWork
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:682    .text.termpiDoWork:00000038 $d
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:687    .text.termpiInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccNKFtJb.s:694    .text.termpiInit:00000000 termpiInit
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.05b19af7cf98cc31f5571afaef4abded
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.uart.h.20.bc12b72a70305b4e40bc10b02a9fc1fa
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+
+UNDEFINED SYMBOLS
+strncpy
+strlen
+uart0WriteChar
+utilNum32sToStr
+utilNum16sToStr
+strcmp
+strncmp
+utilNum16uToStr
+uart0HasLineReceived
+uart0ReadLine
+uart0Init

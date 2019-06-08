@@ -1,0 +1,1662 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"drive.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.bss.targetSpeed,"aw",%nobits
+  24              		.align	2
+  27              	targetSpeed:
+  28 0000 00000000 		.space	4
+  29              		.section	.bss.targetDistance,"aw",%nobits
+  30              		.align	2
+  33              	targetDistance:
+  34 0000 00000000 		.space	4
+  35              		.section	.bss.kp,"aw",%nobits
+  38              	kp:
+  39 0000 00       		.space	1
+  40              		.section	.bss.ki,"aw",%nobits
+  43              	ki:
+  44 0000 00       		.space	1
+  45              		.section	.bss.kd,"aw",%nobits
+  48              	kd:
+  49 0000 00       		.space	1
+  50              		.section	.bss.Ta,"aw",%nobits
+  53              	Ta:
+  54 0000 00       		.space	1
+  55              		.section	.bss.val,"aw",%nobits
+  56              		.align	2
+  59              	val:
+  60 0000 00000000 		.space	4
+  61              		.section	.bss.motorBrake,"aw",%nobits
+  64              	motorBrake:
+  65 0000 00       		.space	1
+  66              		.section	.bss.startTicks,"aw",%nobits
+  67              		.align	1
+  70              	startTicks:
+  71 0000 0000     		.space	2
+  72              		.section	.bss.targetTicks,"aw",%nobits
+  73              		.align	1
+  76              	targetTicks:
+  77 0000 0000     		.space	2
+  78              		.section	.text.driveSetParameters,"ax",%progbits
+  79              		.align	1
+  80              		.global	driveSetParameters
+  81              		.syntax unified
+  82              		.thumb
+  83              		.thumb_func
+  84              		.fpu fpv4-sp-d16
+  86              	driveSetParameters:
+  87              	.LFB125:
+  88              		.file 1 "../Sources/drive/drive.c"
+   1:../Sources/drive/drive.c **** /*
+   2:../Sources/drive/drive.c ****  * drive.c
+   3:../Sources/drive/drive.c ****  *
+   4:../Sources/drive/drive.c ****  *  Created on: 02.05.2019
+   5:../Sources/drive/drive.c ****  *      Author: Blub
+   6:../Sources/drive/drive.c ****  */
+   7:../Sources/drive/drive.c **** 
+   8:../Sources/drive/drive.c **** #include "platform.h"
+   9:../Sources/drive/drive.c **** #include "term.h"
+  10:../Sources/drive/drive.c **** #include "util.h"
+  11:../Sources/drive/drive.c **** #include "string.h"
+  12:../Sources/drive/drive.c **** #include "drive.h"
+  13:../Sources/drive/drive.c **** #include "motor.h"
+  14:../Sources/drive/drive.c **** #include "encoder.h"
+  15:../Sources/drive/drive.c **** 
+  16:../Sources/drive/drive.c **** static tCommandLineHandler clh;       // terminal command line handler
+  17:../Sources/drive/drive.c **** 
+  18:../Sources/drive/drive.c **** static int32_t targetSpeed;
+  19:../Sources/drive/drive.c **** static int32_t targetDistance;
+  20:../Sources/drive/drive.c **** static uint8_t kp, ki, kd;
+  21:../Sources/drive/drive.c **** static uint8_t Ta;
+  22:../Sources/drive/drive.c **** static int32_t val;
+  23:../Sources/drive/drive.c **** static uint8_t motorBrake = 0;
+  24:../Sources/drive/drive.c **** static int16_t startTicks = 0;
+  25:../Sources/drive/drive.c **** static int16_t targetTicks = 0;
+  26:../Sources/drive/drive.c **** 
+  27:../Sources/drive/drive.c **** 
+  28:../Sources/drive/drive.c **** void driveSetParameters(uint8_t pKp, uint8_t pKi)
+  29:../Sources/drive/drive.c **** {
+  89              		.loc 1 29 0
+  90              		.cfi_startproc
+  91              		@ args = 0, pretend = 0, frame = 8
+  92              		@ frame_needed = 1, uses_anonymous_args = 0
+  93              		@ link register save eliminated.
+  94 0000 80B4     		push	{r7}
+  95              		.cfi_def_cfa_offset 4
+  96              		.cfi_offset 7, -4
+  97 0002 83B0     		sub	sp, sp, #12
+  98              		.cfi_def_cfa_offset 16
+  99 0004 00AF     		add	r7, sp, #0
+ 100              		.cfi_def_cfa_register 7
+ 101 0006 0346     		mov	r3, r0
+ 102 0008 0A46     		mov	r2, r1
+ 103 000a FB71     		strb	r3, [r7, #7]
+ 104 000c 1346     		mov	r3, r2
+ 105 000e BB71     		strb	r3, [r7, #6]
+  30:../Sources/drive/drive.c ****   kp = pKp;
+ 106              		.loc 1 30 0
+ 107 0010 054A     		ldr	r2, .L2
+ 108 0012 FB79     		ldrb	r3, [r7, #7]
+ 109 0014 1370     		strb	r3, [r2]
+  31:../Sources/drive/drive.c ****   ki = pKi;
+ 110              		.loc 1 31 0
+ 111 0016 054A     		ldr	r2, .L2+4
+ 112 0018 BB79     		ldrb	r3, [r7, #6]
+ 113 001a 1370     		strb	r3, [r2]
+  32:../Sources/drive/drive.c **** }
+ 114              		.loc 1 32 0
+ 115 001c 00BF     		nop
+ 116 001e 0C37     		adds	r7, r7, #12
+ 117              		.cfi_def_cfa_offset 4
+ 118 0020 BD46     		mov	sp, r7
+ 119              		.cfi_def_cfa_register 13
+ 120              		@ sp needed
+ 121 0022 5DF8047B 		ldr	r7, [sp], #4
+ 122              		.cfi_restore 7
+ 123              		.cfi_def_cfa_offset 0
+ 124 0026 7047     		bx	lr
+ 125              	.L3:
+ 126              		.align	2
+ 127              	.L2:
+ 128 0028 00000000 		.word	kp
+ 129 002c 00000000 		.word	ki
+ 130              		.cfi_endproc
+ 131              	.LFE125:
+ 133              		.section	.text.driveSetParameterKp,"ax",%progbits
+ 134              		.align	1
+ 135              		.global	driveSetParameterKp
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 139              		.fpu fpv4-sp-d16
+ 141              	driveSetParameterKp:
+ 142              	.LFB126:
+  33:../Sources/drive/drive.c **** void driveSetParameterKp(uint8_t pKp)
+  34:../Sources/drive/drive.c **** {
+ 143              		.loc 1 34 0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 8
+ 146              		@ frame_needed = 1, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+ 148 0000 80B4     		push	{r7}
+ 149              		.cfi_def_cfa_offset 4
+ 150              		.cfi_offset 7, -4
+ 151 0002 83B0     		sub	sp, sp, #12
+ 152              		.cfi_def_cfa_offset 16
+ 153 0004 00AF     		add	r7, sp, #0
+ 154              		.cfi_def_cfa_register 7
+ 155 0006 0346     		mov	r3, r0
+ 156 0008 FB71     		strb	r3, [r7, #7]
+  35:../Sources/drive/drive.c ****   kp = pKp;
+ 157              		.loc 1 35 0
+ 158 000a 044A     		ldr	r2, .L5
+ 159 000c FB79     		ldrb	r3, [r7, #7]
+ 160 000e 1370     		strb	r3, [r2]
+  36:../Sources/drive/drive.c **** }
+ 161              		.loc 1 36 0
+ 162 0010 00BF     		nop
+ 163 0012 0C37     		adds	r7, r7, #12
+ 164              		.cfi_def_cfa_offset 4
+ 165 0014 BD46     		mov	sp, r7
+ 166              		.cfi_def_cfa_register 13
+ 167              		@ sp needed
+ 168 0016 5DF8047B 		ldr	r7, [sp], #4
+ 169              		.cfi_restore 7
+ 170              		.cfi_def_cfa_offset 0
+ 171 001a 7047     		bx	lr
+ 172              	.L6:
+ 173              		.align	2
+ 174              	.L5:
+ 175 001c 00000000 		.word	kp
+ 176              		.cfi_endproc
+ 177              	.LFE126:
+ 179              		.section	.text.driveSetParameterKi,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	driveSetParameterKi
+ 182              		.syntax unified
+ 183              		.thumb
+ 184              		.thumb_func
+ 185              		.fpu fpv4-sp-d16
+ 187              	driveSetParameterKi:
+ 188              	.LFB127:
+  37:../Sources/drive/drive.c **** void driveSetParameterKi(uint8_t pKi)
+  38:../Sources/drive/drive.c **** {
+ 189              		.loc 1 38 0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 8
+ 192              		@ frame_needed = 1, uses_anonymous_args = 0
+ 193              		@ link register save eliminated.
+ 194 0000 80B4     		push	{r7}
+ 195              		.cfi_def_cfa_offset 4
+ 196              		.cfi_offset 7, -4
+ 197 0002 83B0     		sub	sp, sp, #12
+ 198              		.cfi_def_cfa_offset 16
+ 199 0004 00AF     		add	r7, sp, #0
+ 200              		.cfi_def_cfa_register 7
+ 201 0006 0346     		mov	r3, r0
+ 202 0008 FB71     		strb	r3, [r7, #7]
+  39:../Sources/drive/drive.c ****   ki = pKi;
+ 203              		.loc 1 39 0
+ 204 000a 044A     		ldr	r2, .L8
+ 205 000c FB79     		ldrb	r3, [r7, #7]
+ 206 000e 1370     		strb	r3, [r2]
+  40:../Sources/drive/drive.c **** }
+ 207              		.loc 1 40 0
+ 208 0010 00BF     		nop
+ 209 0012 0C37     		adds	r7, r7, #12
+ 210              		.cfi_def_cfa_offset 4
+ 211 0014 BD46     		mov	sp, r7
+ 212              		.cfi_def_cfa_register 13
+ 213              		@ sp needed
+ 214 0016 5DF8047B 		ldr	r7, [sp], #4
+ 215              		.cfi_restore 7
+ 216              		.cfi_def_cfa_offset 0
+ 217 001a 7047     		bx	lr
+ 218              	.L9:
+ 219              		.align	2
+ 220              	.L8:
+ 221 001c 00000000 		.word	ki
+ 222              		.cfi_endproc
+ 223              	.LFE127:
+ 225              		.section	.text.driveSetParameterKd,"ax",%progbits
+ 226              		.align	1
+ 227              		.global	driveSetParameterKd
+ 228              		.syntax unified
+ 229              		.thumb
+ 230              		.thumb_func
+ 231              		.fpu fpv4-sp-d16
+ 233              	driveSetParameterKd:
+ 234              	.LFB128:
+  41:../Sources/drive/drive.c **** void driveSetParameterKd(uint8_t pKd)
+  42:../Sources/drive/drive.c **** {
+ 235              		.loc 1 42 0
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 8
+ 238              		@ frame_needed = 1, uses_anonymous_args = 0
+ 239              		@ link register save eliminated.
+ 240 0000 80B4     		push	{r7}
+ 241              		.cfi_def_cfa_offset 4
+ 242              		.cfi_offset 7, -4
+ 243 0002 83B0     		sub	sp, sp, #12
+ 244              		.cfi_def_cfa_offset 16
+ 245 0004 00AF     		add	r7, sp, #0
+ 246              		.cfi_def_cfa_register 7
+ 247 0006 0346     		mov	r3, r0
+ 248 0008 FB71     		strb	r3, [r7, #7]
+  43:../Sources/drive/drive.c ****   kd = pKd;
+ 249              		.loc 1 43 0
+ 250 000a 044A     		ldr	r2, .L11
+ 251 000c FB79     		ldrb	r3, [r7, #7]
+ 252 000e 1370     		strb	r3, [r2]
+  44:../Sources/drive/drive.c **** }
+ 253              		.loc 1 44 0
+ 254 0010 00BF     		nop
+ 255 0012 0C37     		adds	r7, r7, #12
+ 256              		.cfi_def_cfa_offset 4
+ 257 0014 BD46     		mov	sp, r7
+ 258              		.cfi_def_cfa_register 13
+ 259              		@ sp needed
+ 260 0016 5DF8047B 		ldr	r7, [sp], #4
+ 261              		.cfi_restore 7
+ 262              		.cfi_def_cfa_offset 0
+ 263 001a 7047     		bx	lr
+ 264              	.L12:
+ 265              		.align	2
+ 266              	.L11:
+ 267 001c 00000000 		.word	kd
+ 268              		.cfi_endproc
+ 269              	.LFE128:
+ 271              		.section	.text.driveSetParameterTa,"ax",%progbits
+ 272              		.align	1
+ 273              		.global	driveSetParameterTa
+ 274              		.syntax unified
+ 275              		.thumb
+ 276              		.thumb_func
+ 277              		.fpu fpv4-sp-d16
+ 279              	driveSetParameterTa:
+ 280              	.LFB129:
+  45:../Sources/drive/drive.c **** void driveSetParameterTa(uint8_t pTa)
+  46:../Sources/drive/drive.c **** {
+ 281              		.loc 1 46 0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 8
+ 284              		@ frame_needed = 1, uses_anonymous_args = 0
+ 285              		@ link register save eliminated.
+ 286 0000 80B4     		push	{r7}
+ 287              		.cfi_def_cfa_offset 4
+ 288              		.cfi_offset 7, -4
+ 289 0002 83B0     		sub	sp, sp, #12
+ 290              		.cfi_def_cfa_offset 16
+ 291 0004 00AF     		add	r7, sp, #0
+ 292              		.cfi_def_cfa_register 7
+ 293 0006 0346     		mov	r3, r0
+ 294 0008 FB71     		strb	r3, [r7, #7]
+  47:../Sources/drive/drive.c ****   Ta = pTa;
+ 295              		.loc 1 47 0
+ 296 000a 044A     		ldr	r2, .L14
+ 297 000c FB79     		ldrb	r3, [r7, #7]
+ 298 000e 1370     		strb	r3, [r2]
+  48:../Sources/drive/drive.c **** }
+ 299              		.loc 1 48 0
+ 300 0010 00BF     		nop
+ 301 0012 0C37     		adds	r7, r7, #12
+ 302              		.cfi_def_cfa_offset 4
+ 303 0014 BD46     		mov	sp, r7
+ 304              		.cfi_def_cfa_register 13
+ 305              		@ sp needed
+ 306 0016 5DF8047B 		ldr	r7, [sp], #4
+ 307              		.cfi_restore 7
+ 308              		.cfi_def_cfa_offset 0
+ 309 001a 7047     		bx	lr
+ 310              	.L15:
+ 311              		.align	2
+ 312              	.L14:
+ 313 001c 00000000 		.word	Ta
+ 314              		.cfi_endproc
+ 315              	.LFE129:
+ 317              		.section	.text.driveSetSpeed,"ax",%progbits
+ 318              		.align	1
+ 319              		.global	driveSetSpeed
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 323              		.fpu fpv4-sp-d16
+ 325              	driveSetSpeed:
+ 326              	.LFB130:
+  49:../Sources/drive/drive.c **** 
+  50:../Sources/drive/drive.c **** void driveSetSpeed(int32_t speed)
+  51:../Sources/drive/drive.c **** {
+ 327              		.loc 1 51 0
+ 328              		.cfi_startproc
+ 329              		@ args = 0, pretend = 0, frame = 8
+ 330              		@ frame_needed = 1, uses_anonymous_args = 0
+ 331              		@ link register save eliminated.
+ 332 0000 80B4     		push	{r7}
+ 333              		.cfi_def_cfa_offset 4
+ 334              		.cfi_offset 7, -4
+ 335 0002 83B0     		sub	sp, sp, #12
+ 336              		.cfi_def_cfa_offset 16
+ 337 0004 00AF     		add	r7, sp, #0
+ 338              		.cfi_def_cfa_register 7
+ 339 0006 7860     		str	r0, [r7, #4]
+  52:../Sources/drive/drive.c ****   targetSpeed = speed;
+ 340              		.loc 1 52 0
+ 341 0008 044A     		ldr	r2, .L17
+ 342 000a 7B68     		ldr	r3, [r7, #4]
+ 343 000c 1360     		str	r3, [r2]
+  53:../Sources/drive/drive.c **** }
+ 344              		.loc 1 53 0
+ 345 000e 00BF     		nop
+ 346 0010 0C37     		adds	r7, r7, #12
+ 347              		.cfi_def_cfa_offset 4
+ 348 0012 BD46     		mov	sp, r7
+ 349              		.cfi_def_cfa_register 13
+ 350              		@ sp needed
+ 351 0014 5DF8047B 		ldr	r7, [sp], #4
+ 352              		.cfi_restore 7
+ 353              		.cfi_def_cfa_offset 0
+ 354 0018 7047     		bx	lr
+ 355              	.L18:
+ 356 001a 00BF     		.align	2
+ 357              	.L17:
+ 358 001c 00000000 		.word	targetSpeed
+ 359              		.cfi_endproc
+ 360              	.LFE130:
+ 362              		.section	.text.driveSetDistance,"ax",%progbits
+ 363              		.align	1
+ 364              		.global	driveSetDistance
+ 365              		.syntax unified
+ 366              		.thumb
+ 367              		.thumb_func
+ 368              		.fpu fpv4-sp-d16
+ 370              	driveSetDistance:
+ 371              	.LFB131:
+  54:../Sources/drive/drive.c **** 
+  55:../Sources/drive/drive.c **** void driveSetDistance(int32_t distance)
+  56:../Sources/drive/drive.c **** {
+ 372              		.loc 1 56 0
+ 373              		.cfi_startproc
+ 374              		@ args = 0, pretend = 0, frame = 8
+ 375              		@ frame_needed = 1, uses_anonymous_args = 0
+ 376 0000 80B5     		push	{r7, lr}
+ 377              		.cfi_def_cfa_offset 8
+ 378              		.cfi_offset 7, -8
+ 379              		.cfi_offset 14, -4
+ 380 0002 82B0     		sub	sp, sp, #8
+ 381              		.cfi_def_cfa_offset 16
+ 382 0004 00AF     		add	r7, sp, #0
+ 383              		.cfi_def_cfa_register 7
+ 384 0006 7860     		str	r0, [r7, #4]
+  57:../Sources/drive/drive.c ****   FTM1_C0SC = (FTM_CnSC_MSB(0)|FTM_CnSC_MSA(1)) | (FTM_CnSC_ELSB(1)|FTM_CnSC_ELSA(0)) | (FTM_CnSC_C
+ 385              		.loc 1 57 0
+ 386 0008 294B     		ldr	r3, .L25
+ 387 000a 5822     		movs	r2, #88
+ 388 000c DA60     		str	r2, [r3, #12]
+  58:../Sources/drive/drive.c **** 
+  59:../Sources/drive/drive.c ****   targetDistance = distance;
+ 389              		.loc 1 59 0
+ 390 000e 294A     		ldr	r2, .L25+4
+ 391 0010 7B68     		ldr	r3, [r7, #4]
+ 392 0012 1360     		str	r3, [r2]
+  60:../Sources/drive/drive.c ****   startTicks = encodergetTicks();
+ 393              		.loc 1 60 0
+ 394 0014 FFF7FEFF 		bl	encodergetTicks
+ 395 0018 0346     		mov	r3, r0
+ 396 001a 1A46     		mov	r2, r3
+ 397 001c 264B     		ldr	r3, .L25+8
+ 398 001e 1A80     		strh	r2, [r3]	@ movhi
+  61:../Sources/drive/drive.c ****   targetTicks = ((float) (1194 * distance) / 70);    //+ 40; ->nur fürs anfahren
+ 399              		.loc 1 61 0
+ 400 0020 7B68     		ldr	r3, [r7, #4]
+ 401 0022 40F2AA42 		movw	r2, #1194
+ 402 0026 02FB03F3 		mul	r3, r2, r3
+ 403 002a 07EE903A 		vmov	s15, r3	@ int
+ 404 002e B8EEE77A 		vcvt.f32.s32	s14, s15
+ 405 0032 DFED226A 		vldr.32	s13, .L25+12
+ 406 0036 C7EE267A 		vdiv.f32	s15, s14, s13
+ 407 003a FDEEE77A 		vcvt.s32.f32	s15, s15
+ 408 003e C7ED007A 		vstr.32	s15, [r7]	@ int
+ 409 0042 3B88     		ldrh	r3, [r7]	@ movhi
+ 410 0044 1AB2     		sxth	r2, r3
+ 411 0046 1E4B     		ldr	r3, .L25+16
+ 412 0048 1A80     		strh	r2, [r3]	@ movhi
+  62:../Sources/drive/drive.c ****   if (encodergetTicks10ms()==0)
+ 413              		.loc 1 62 0
+ 414 004a FFF7FEFF 		bl	encodergetTicks10ms
+ 415 004e 0346     		mov	r3, r0
+ 416 0050 002B     		cmp	r3, #0
+ 417 0052 15D1     		bne	.L20
+  63:../Sources/drive/drive.c ****   {
+  64:../Sources/drive/drive.c ****     if (distance > 0)
+ 418              		.loc 1 64 0
+ 419 0054 7B68     		ldr	r3, [r7, #4]
+ 420 0056 002B     		cmp	r3, #0
+ 421 0058 09DD     		ble	.L21
+  65:../Sources/drive/drive.c ****     {
+  66:../Sources/drive/drive.c ****       targetTicks += 40; //Offset wegen schlupf von anfang an
+ 422              		.loc 1 66 0
+ 423 005a 194B     		ldr	r3, .L25+16
+ 424 005c B3F90030 		ldrsh	r3, [r3]
+ 425 0060 9BB2     		uxth	r3, r3
+ 426 0062 2833     		adds	r3, r3, #40
+ 427 0064 9BB2     		uxth	r3, r3
+ 428 0066 1AB2     		sxth	r2, r3
+ 429 0068 154B     		ldr	r3, .L25+16
+ 430 006a 1A80     		strh	r2, [r3]	@ movhi
+ 431 006c 08E0     		b	.L20
+ 432              	.L21:
+  67:../Sources/drive/drive.c ****     }
+  68:../Sources/drive/drive.c ****     else
+  69:../Sources/drive/drive.c ****     {
+  70:../Sources/drive/drive.c ****       targetTicks -= 40; //Offset wegen schlupf von anfang an
+ 433              		.loc 1 70 0
+ 434 006e 144B     		ldr	r3, .L25+16
+ 435 0070 B3F90030 		ldrsh	r3, [r3]
+ 436 0074 9BB2     		uxth	r3, r3
+ 437 0076 283B     		subs	r3, r3, #40
+ 438 0078 9BB2     		uxth	r3, r3
+ 439 007a 1AB2     		sxth	r2, r3
+ 440 007c 104B     		ldr	r3, .L25+16
+ 441 007e 1A80     		strh	r2, [r3]	@ movhi
+ 442              	.L20:
+  71:../Sources/drive/drive.c ****     }
+  72:../Sources/drive/drive.c **** 
+  73:../Sources/drive/drive.c ****   }
+  74:../Sources/drive/drive.c **** 
+  75:../Sources/drive/drive.c ****   FTM1_C0V = FTM1_CNT - targetTicks;
+ 443              		.loc 1 75 0
+ 444 0080 0B4A     		ldr	r2, .L25
+ 445 0082 0B4B     		ldr	r3, .L25
+ 446 0084 5B68     		ldr	r3, [r3, #4]
+ 447 0086 0E49     		ldr	r1, .L25+16
+ 448 0088 B1F90010 		ldrsh	r1, [r1]
+ 449 008c 5B1A     		subs	r3, r3, r1
+ 450 008e 1361     		str	r3, [r2, #16]
+  76:../Sources/drive/drive.c **** 
+  77:../Sources/drive/drive.c ****   if (distance > 0)
+ 451              		.loc 1 77 0
+ 452 0090 7B68     		ldr	r3, [r7, #4]
+ 453 0092 002B     		cmp	r3, #0
+ 454 0094 03DD     		ble	.L22
+  78:../Sources/drive/drive.c ****   {
+  79:../Sources/drive/drive.c ****     driveSetSpeed(50);
+ 455              		.loc 1 79 0
+ 456 0096 3220     		movs	r0, #50
+ 457 0098 FFF7FEFF 		bl	driveSetSpeed
+  80:../Sources/drive/drive.c ****   }
+  81:../Sources/drive/drive.c ****   else
+  82:../Sources/drive/drive.c ****   {
+  83:../Sources/drive/drive.c ****     driveSetSpeed(-50);
+  84:../Sources/drive/drive.c ****   }
+  85:../Sources/drive/drive.c **** }
+ 458              		.loc 1 85 0
+ 459 009c 03E0     		b	.L24
+ 460              	.L22:
+  83:../Sources/drive/drive.c ****   }
+ 461              		.loc 1 83 0
+ 462 009e 6FF03100 		mvn	r0, #49
+ 463 00a2 FFF7FEFF 		bl	driveSetSpeed
+ 464              	.L24:
+ 465              		.loc 1 85 0
+ 466 00a6 00BF     		nop
+ 467 00a8 0837     		adds	r7, r7, #8
+ 468              		.cfi_def_cfa_offset 8
+ 469 00aa BD46     		mov	sp, r7
+ 470              		.cfi_def_cfa_register 13
+ 471              		@ sp needed
+ 472 00ac 80BD     		pop	{r7, pc}
+ 473              	.L26:
+ 474 00ae 00BF     		.align	2
+ 475              	.L25:
+ 476 00b0 00900340 		.word	1073975296
+ 477 00b4 00000000 		.word	targetDistance
+ 478 00b8 00000000 		.word	startTicks
+ 479 00bc 00008C42 		.word	1116471296
+ 480 00c0 00000000 		.word	targetTicks
+ 481              		.cfi_endproc
+ 482              	.LFE131:
+ 484              		.section	.text.driveGetDistanceInfo,"ax",%progbits
+ 485              		.align	1
+ 486              		.global	driveGetDistanceInfo
+ 487              		.syntax unified
+ 488              		.thumb
+ 489              		.thumb_func
+ 490              		.fpu fpv4-sp-d16
+ 492              	driveGetDistanceInfo:
+ 493              	.LFB132:
+  86:../Sources/drive/drive.c **** 
+  87:../Sources/drive/drive.c **** uint32_t driveGetDistanceInfo(void)
+  88:../Sources/drive/drive.c **** {
+ 494              		.loc 1 88 0
+ 495              		.cfi_startproc
+ 496              		@ args = 0, pretend = 0, frame = 0
+ 497              		@ frame_needed = 1, uses_anonymous_args = 0
+ 498              		@ link register save eliminated.
+ 499 0000 80B4     		push	{r7}
+ 500              		.cfi_def_cfa_offset 4
+ 501              		.cfi_offset 7, -4
+ 502 0002 00AF     		add	r7, sp, #0
+ 503              		.cfi_def_cfa_register 7
+  89:../Sources/drive/drive.c ****   return targetDistance;
+ 504              		.loc 1 89 0
+ 505 0004 034B     		ldr	r3, .L29
+ 506 0006 1B68     		ldr	r3, [r3]
+  90:../Sources/drive/drive.c **** }
+ 507              		.loc 1 90 0
+ 508 0008 1846     		mov	r0, r3
+ 509 000a BD46     		mov	sp, r7
+ 510              		.cfi_def_cfa_register 13
+ 511              		@ sp needed
+ 512 000c 5DF8047B 		ldr	r7, [sp], #4
+ 513              		.cfi_restore 7
+ 514              		.cfi_def_cfa_offset 0
+ 515 0010 7047     		bx	lr
+ 516              	.L30:
+ 517 0012 00BF     		.align	2
+ 518              	.L29:
+ 519 0014 00000000 		.word	targetDistance
+ 520              		.cfi_endproc
+ 521              	.LFE132:
+ 523              		.section	.text.FTM1CH0_IRQHandler,"ax",%progbits
+ 524              		.align	1
+ 525              		.global	FTM1CH0_IRQHandler
+ 526              		.syntax unified
+ 527              		.thumb
+ 528              		.thumb_func
+ 529              		.fpu fpv4-sp-d16
+ 531              	FTM1CH0_IRQHandler:
+ 532              	.LFB133:
+  91:../Sources/drive/drive.c **** 
+  92:../Sources/drive/drive.c **** void FTM1CH0_IRQHandler()  //driveDistance
+  93:../Sources/drive/drive.c **** {
+ 533              		.loc 1 93 0
+ 534              		.cfi_startproc
+ 535              		@ args = 0, pretend = 0, frame = 0
+ 536              		@ frame_needed = 1, uses_anonymous_args = 0
+ 537 0000 80B5     		push	{r7, lr}
+ 538              		.cfi_def_cfa_offset 8
+ 539              		.cfi_offset 7, -8
+ 540              		.cfi_offset 14, -4
+ 541 0002 00AF     		add	r7, sp, #0
+ 542              		.cfi_def_cfa_register 7
+  94:../Sources/drive/drive.c ****   FTM1_C0SC &= ~FTM_CnSC_CHF_MASK;
+ 543              		.loc 1 94 0
+ 544 0004 0B4A     		ldr	r2, .L32
+ 545 0006 0B4B     		ldr	r3, .L32
+ 546 0008 DB68     		ldr	r3, [r3, #12]
+ 547 000a 23F08003 		bic	r3, r3, #128
+ 548 000e D360     		str	r3, [r2, #12]
+  95:../Sources/drive/drive.c ****   FTM1_C0SC =  FTM_CnSC_CHIE(0);
+ 549              		.loc 1 95 0
+ 550 0010 084B     		ldr	r3, .L32
+ 551 0012 0022     		movs	r2, #0
+ 552 0014 DA60     		str	r2, [r3, #12]
+  96:../Sources/drive/drive.c ****   motorBrake = 1;
+ 553              		.loc 1 96 0
+ 554 0016 084B     		ldr	r3, .L32+4
+ 555 0018 0122     		movs	r2, #1
+ 556 001a 1A70     		strb	r2, [r3]
+  97:../Sources/drive/drive.c ****   driveSetSpeed(0);
+ 557              		.loc 1 97 0
+ 558 001c 0020     		movs	r0, #0
+ 559 001e FFF7FEFF 		bl	driveSetSpeed
+  98:../Sources/drive/drive.c **** 
+  99:../Sources/drive/drive.c ****   targetDistance = 0;
+ 560              		.loc 1 99 0
+ 561 0022 064B     		ldr	r3, .L32+8
+ 562 0024 0022     		movs	r2, #0
+ 563 0026 1A60     		str	r2, [r3]
+ 100:../Sources/drive/drive.c ****   targetTicks = 0;
+ 564              		.loc 1 100 0
+ 565 0028 054B     		ldr	r3, .L32+12
+ 566 002a 0022     		movs	r2, #0
+ 567 002c 1A80     		strh	r2, [r3]	@ movhi
+ 101:../Sources/drive/drive.c **** }
+ 568              		.loc 1 101 0
+ 569 002e 00BF     		nop
+ 570 0030 80BD     		pop	{r7, pc}
+ 571              	.L33:
+ 572 0032 00BF     		.align	2
+ 573              	.L32:
+ 574 0034 00900340 		.word	1073975296
+ 575 0038 00000000 		.word	motorBrake
+ 576 003c 00000000 		.word	targetDistance
+ 577 0040 00000000 		.word	targetTicks
+ 578              		.cfi_endproc
+ 579              	.LFE133:
+ 581              		.section	.text.driveToWork,"ax",%progbits
+ 582              		.align	1
+ 583              		.global	driveToWork
+ 584              		.syntax unified
+ 585              		.thumb
+ 586              		.thumb_func
+ 587              		.fpu fpv4-sp-d16
+ 589              	driveToWork:
+ 590              	.LFB134:
+ 102:../Sources/drive/drive.c **** 
+ 103:../Sources/drive/drive.c **** 
+ 104:../Sources/drive/drive.c **** /**
+ 105:../Sources/drive/drive.c ****  * This function contains the PID closed loop controller
+ 106:../Sources/drive/drive.c ****  */
+ 107:../Sources/drive/drive.c **** void driveToWork(void)
+ 108:../Sources/drive/drive.c **** {
+ 591              		.loc 1 108 0
+ 592              		.cfi_startproc
+ 593              		@ args = 0, pretend = 0, frame = 16
+ 594              		@ frame_needed = 1, uses_anonymous_args = 0
+ 595 0000 80B5     		push	{r7, lr}
+ 596              		.cfi_def_cfa_offset 8
+ 597              		.cfi_offset 7, -8
+ 598              		.cfi_offset 14, -4
+ 599 0002 84B0     		sub	sp, sp, #16
+ 600              		.cfi_def_cfa_offset 24
+ 601 0004 00AF     		add	r7, sp, #0
+ 602              		.cfi_def_cfa_register 7
+ 109:../Sources/drive/drive.c ****   static int16_t trueSpeed = 0;
+ 110:../Sources/drive/drive.c ****   static int16_t setSpeed = 0;
+ 111:../Sources/drive/drive.c ****   static int oldError;
+ 112:../Sources/drive/drive.c ****   static int intError;
+ 113:../Sources/drive/drive.c ****   int ctrl_p;
+ 114:../Sources/drive/drive.c ****   int ctrl_i = 0;
+ 603              		.loc 1 114 0
+ 604 0006 0023     		movs	r3, #0
+ 605 0008 FB60     		str	r3, [r7, #12]
+ 115:../Sources/drive/drive.c ****   int ctrl_d;
+ 116:../Sources/drive/drive.c ****   int currentError;
+ 117:../Sources/drive/drive.c **** 
+ 118:../Sources/drive/drive.c ****   trueSpeed = encodergetSpeedmmps();
+ 606              		.loc 1 118 0
+ 607 000a FFF7FEFF 		bl	encodergetSpeedmmps
+ 608 000e 0346     		mov	r3, r0
+ 609 0010 1A46     		mov	r2, r3
+ 610 0012 784B     		ldr	r3, .L44
+ 611 0014 1A80     		strh	r2, [r3]	@ movhi
+ 119:../Sources/drive/drive.c **** 
+ 120:../Sources/drive/drive.c ****   if (targetSpeed > setSpeed)
+ 612              		.loc 1 120 0
+ 613 0016 784B     		ldr	r3, .L44+4
+ 614 0018 B3F90030 		ldrsh	r3, [r3]
+ 615 001c 1A46     		mov	r2, r3
+ 616 001e 774B     		ldr	r3, .L44+8
+ 617 0020 1B68     		ldr	r3, [r3]
+ 618 0022 9A42     		cmp	r2, r3
+ 619 0024 15DA     		bge	.L35
+ 121:../Sources/drive/drive.c ****   {                                        // accelerate
+ 122:../Sources/drive/drive.c ****     setSpeed += 30;
+ 620              		.loc 1 122 0
+ 621 0026 744B     		ldr	r3, .L44+4
+ 622 0028 B3F90030 		ldrsh	r3, [r3]
+ 623 002c 9BB2     		uxth	r3, r3
+ 624 002e 1E33     		adds	r3, r3, #30
+ 625 0030 9BB2     		uxth	r3, r3
+ 626 0032 1AB2     		sxth	r2, r3
+ 627 0034 704B     		ldr	r3, .L44+4
+ 628 0036 1A80     		strh	r2, [r3]	@ movhi
+ 123:../Sources/drive/drive.c ****     if (targetSpeed < setSpeed) setSpeed = targetSpeed;
+ 629              		.loc 1 123 0
+ 630 0038 6F4B     		ldr	r3, .L44+4
+ 631 003a B3F90030 		ldrsh	r3, [r3]
+ 632 003e 1A46     		mov	r2, r3
+ 633 0040 6E4B     		ldr	r3, .L44+8
+ 634 0042 1B68     		ldr	r3, [r3]
+ 635 0044 9A42     		cmp	r2, r3
+ 636 0046 04DD     		ble	.L35
+ 637              		.loc 1 123 0 is_stmt 0 discriminator 1
+ 638 0048 6C4B     		ldr	r3, .L44+8
+ 639 004a 1B68     		ldr	r3, [r3]
+ 640 004c 1AB2     		sxth	r2, r3
+ 641 004e 6A4B     		ldr	r3, .L44+4
+ 642 0050 1A80     		strh	r2, [r3]	@ movhi
+ 643              	.L35:
+ 124:../Sources/drive/drive.c ****   }
+ 125:../Sources/drive/drive.c ****   if (targetSpeed < setSpeed)
+ 644              		.loc 1 125 0 is_stmt 1
+ 645 0052 694B     		ldr	r3, .L44+4
+ 646 0054 B3F90030 		ldrsh	r3, [r3]
+ 647 0058 1A46     		mov	r2, r3
+ 648 005a 684B     		ldr	r3, .L44+8
+ 649 005c 1B68     		ldr	r3, [r3]
+ 650 005e 9A42     		cmp	r2, r3
+ 651 0060 15DD     		ble	.L36
+ 126:../Sources/drive/drive.c ****   {                                        // decelerate
+ 127:../Sources/drive/drive.c ****     setSpeed -= 30;
+ 652              		.loc 1 127 0
+ 653 0062 654B     		ldr	r3, .L44+4
+ 654 0064 B3F90030 		ldrsh	r3, [r3]
+ 655 0068 9BB2     		uxth	r3, r3
+ 656 006a 1E3B     		subs	r3, r3, #30
+ 657 006c 9BB2     		uxth	r3, r3
+ 658 006e 1AB2     		sxth	r2, r3
+ 659 0070 614B     		ldr	r3, .L44+4
+ 660 0072 1A80     		strh	r2, [r3]	@ movhi
+ 128:../Sources/drive/drive.c ****     if (targetSpeed > setSpeed) setSpeed = targetSpeed;
+ 661              		.loc 1 128 0
+ 662 0074 604B     		ldr	r3, .L44+4
+ 663 0076 B3F90030 		ldrsh	r3, [r3]
+ 664 007a 1A46     		mov	r2, r3
+ 665 007c 5F4B     		ldr	r3, .L44+8
+ 666 007e 1B68     		ldr	r3, [r3]
+ 667 0080 9A42     		cmp	r2, r3
+ 668 0082 04DA     		bge	.L36
+ 669              		.loc 1 128 0 is_stmt 0 discriminator 1
+ 670 0084 5D4B     		ldr	r3, .L44+8
+ 671 0086 1B68     		ldr	r3, [r3]
+ 672 0088 1AB2     		sxth	r2, r3
+ 673 008a 5B4B     		ldr	r3, .L44+4
+ 674 008c 1A80     		strh	r2, [r3]	@ movhi
+ 675              	.L36:
+ 129:../Sources/drive/drive.c ****   }
+ 130:../Sources/drive/drive.c **** 
+ 131:../Sources/drive/drive.c **** //   //dynamic parameters
+ 132:../Sources/drive/drive.c **** //   if (abs(setSpeed) < 200)
+ 133:../Sources/drive/drive.c **** //   {
+ 134:../Sources/drive/drive.c **** //     kp = 40; //80;
+ 135:../Sources/drive/drive.c **** //     ki = 4; //30;
+ 136:../Sources/drive/drive.c **** //   }
+ 137:../Sources/drive/drive.c **** //   else
+ 138:../Sources/drive/drive.c **** //   {
+ 139:../Sources/drive/drive.c **** //     kp = 5; //80;
+ 140:../Sources/drive/drive.c **** //     ki = 40; //30;
+ 141:../Sources/drive/drive.c **** //   }
+ 142:../Sources/drive/drive.c **** 
+ 143:../Sources/drive/drive.c ****   currentError = (setSpeed - trueSpeed);
+ 676              		.loc 1 143 0 is_stmt 1
+ 677 008e 5A4B     		ldr	r3, .L44+4
+ 678 0090 B3F90030 		ldrsh	r3, [r3]
+ 679 0094 1A46     		mov	r2, r3
+ 680 0096 574B     		ldr	r3, .L44
+ 681 0098 B3F90030 		ldrsh	r3, [r3]
+ 682 009c D31A     		subs	r3, r2, r3
+ 683 009e BB60     		str	r3, [r7, #8]
+ 144:../Sources/drive/drive.c ****   // calculate Controller
+ 145:../Sources/drive/drive.c ****   ctrl_p = kp * currentError;
+ 684              		.loc 1 145 0
+ 685 00a0 574B     		ldr	r3, .L44+12
+ 686 00a2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 687 00a4 1A46     		mov	r2, r3
+ 688 00a6 BB68     		ldr	r3, [r7, #8]
+ 689 00a8 03FB02F3 		mul	r3, r3, r2
+ 690 00ac 7B60     		str	r3, [r7, #4]
+ 146:../Sources/drive/drive.c ****   intError += currentError;
+ 691              		.loc 1 146 0
+ 692 00ae 554B     		ldr	r3, .L44+16
+ 693 00b0 1A68     		ldr	r2, [r3]
+ 694 00b2 BB68     		ldr	r3, [r7, #8]
+ 695 00b4 1344     		add	r3, r3, r2
+ 696 00b6 534A     		ldr	r2, .L44+16
+ 697 00b8 1360     		str	r3, [r2]
+ 147:../Sources/drive/drive.c ****   ctrl_i = ki * intError* Ta;
+ 698              		.loc 1 147 0
+ 699 00ba 534B     		ldr	r3, .L44+20
+ 700 00bc 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 701 00be 1A46     		mov	r2, r3
+ 702 00c0 504B     		ldr	r3, .L44+16
+ 703 00c2 1B68     		ldr	r3, [r3]
+ 704 00c4 03FB02F3 		mul	r3, r3, r2
+ 705 00c8 504A     		ldr	r2, .L44+24
+ 706 00ca 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 707 00cc 02FB03F3 		mul	r3, r2, r3
+ 708 00d0 FB60     		str	r3, [r7, #12]
+ 148:../Sources/drive/drive.c ****   ctrl_d = kd * (currentError - oldError)*1/Ta;
+ 709              		.loc 1 148 0
+ 710 00d2 4F4B     		ldr	r3, .L44+28
+ 711 00d4 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 712 00d6 1946     		mov	r1, r3
+ 713 00d8 4E4B     		ldr	r3, .L44+32
+ 714 00da 1B68     		ldr	r3, [r3]
+ 715 00dc BA68     		ldr	r2, [r7, #8]
+ 716 00de D31A     		subs	r3, r2, r3
+ 717 00e0 03FB01F3 		mul	r3, r3, r1
+ 718 00e4 494A     		ldr	r2, .L44+24
+ 719 00e6 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 720 00e8 93FBF2F3 		sdiv	r3, r3, r2
+ 721 00ec 3B60     		str	r3, [r7]
+ 149:../Sources/drive/drive.c ****   oldError = currentError;
+ 722              		.loc 1 149 0
+ 723 00ee 494A     		ldr	r2, .L44+32
+ 724 00f0 BB68     		ldr	r3, [r7, #8]
+ 725 00f2 1360     		str	r3, [r2]
+ 150:../Sources/drive/drive.c **** 
+ 151:../Sources/drive/drive.c **** 
+ 152:../Sources/drive/drive.c ****   val = ctrl_p + ctrl_i/1000 + ctrl_d/1000;
+ 726              		.loc 1 152 0
+ 727 00f4 FB68     		ldr	r3, [r7, #12]
+ 728 00f6 484A     		ldr	r2, .L44+36
+ 729 00f8 82FB0312 		smull	r1, r2, r2, r3
+ 730 00fc 9211     		asrs	r2, r2, #6
+ 731 00fe DB17     		asrs	r3, r3, #31
+ 732 0100 D21A     		subs	r2, r2, r3
+ 733 0102 7B68     		ldr	r3, [r7, #4]
+ 734 0104 1A44     		add	r2, r2, r3
+ 735 0106 3B68     		ldr	r3, [r7]
+ 736 0108 4349     		ldr	r1, .L44+36
+ 737 010a 81FB0301 		smull	r0, r1, r1, r3
+ 738 010e 8911     		asrs	r1, r1, #6
+ 739 0110 DB17     		asrs	r3, r3, #31
+ 740 0112 CB1A     		subs	r3, r1, r3
+ 741 0114 1344     		add	r3, r3, r2
+ 742 0116 414A     		ldr	r2, .L44+40
+ 743 0118 1360     		str	r3, [r2]
+ 153:../Sources/drive/drive.c **** 
+ 154:../Sources/drive/drive.c ****   val /= 10;                                        //scaling
+ 744              		.loc 1 154 0
+ 745 011a 404B     		ldr	r3, .L44+40
+ 746 011c 1B68     		ldr	r3, [r3]
+ 747 011e 404A     		ldr	r2, .L44+44
+ 748 0120 82FB0312 		smull	r1, r2, r2, r3
+ 749 0124 9210     		asrs	r2, r2, #2
+ 750 0126 DB17     		asrs	r3, r3, #31
+ 751 0128 D31A     		subs	r3, r2, r3
+ 752 012a 3C4A     		ldr	r2, .L44+40
+ 753 012c 1360     		str	r3, [r2]
+ 155:../Sources/drive/drive.c **** 
+ 156:../Sources/drive/drive.c ****   if(setSpeed<200)
+ 754              		.loc 1 156 0
+ 755 012e 324B     		ldr	r3, .L44+4
+ 756 0130 B3F90030 		ldrsh	r3, [r3]
+ 757 0134 C72B     		cmp	r3, #199
+ 758 0136 17DC     		bgt	.L37
+ 157:../Sources/drive/drive.c ****   {
+ 158:../Sources/drive/drive.c ****     if(setSpeed>0)
+ 759              		.loc 1 158 0
+ 760 0138 2F4B     		ldr	r3, .L44+4
+ 761 013a B3F90030 		ldrsh	r3, [r3]
+ 762 013e 002B     		cmp	r3, #0
+ 763 0140 06DD     		ble	.L38
+ 159:../Sources/drive/drive.c ****     {
+ 160:../Sources/drive/drive.c ****       val += 1000;
+ 764              		.loc 1 160 0
+ 765 0142 364B     		ldr	r3, .L44+40
+ 766 0144 1B68     		ldr	r3, [r3]
+ 767 0146 03F57A73 		add	r3, r3, #1000
+ 768 014a 344A     		ldr	r2, .L44+40
+ 769 014c 1360     		str	r3, [r2]
+ 770 014e 05E0     		b	.L39
+ 771              	.L38:
+ 161:../Sources/drive/drive.c ****     }
+ 162:../Sources/drive/drive.c ****     else
+ 163:../Sources/drive/drive.c ****     {
+ 164:../Sources/drive/drive.c ****       val -= 1000;
+ 772              		.loc 1 164 0
+ 773 0150 324B     		ldr	r3, .L44+40
+ 774 0152 1B68     		ldr	r3, [r3]
+ 775 0154 A3F57A73 		sub	r3, r3, #1000
+ 776 0158 304A     		ldr	r2, .L44+40
+ 777 015a 1360     		str	r3, [r2]
+ 778              	.L39:
+ 165:../Sources/drive/drive.c ****     }
+ 166:../Sources/drive/drive.c ****     kp =90;
+ 779              		.loc 1 166 0
+ 780 015c 284B     		ldr	r3, .L44+12
+ 781 015e 5A22     		movs	r2, #90
+ 782 0160 1A70     		strb	r2, [r3]
+ 167:../Sources/drive/drive.c ****     ki=60;
+ 783              		.loc 1 167 0
+ 784 0162 294B     		ldr	r3, .L44+20
+ 785 0164 3C22     		movs	r2, #60
+ 786 0166 1A70     		strb	r2, [r3]
+ 787              	.L37:
+ 168:../Sources/drive/drive.c ****   }
+ 169:../Sources/drive/drive.c **** 
+ 170:../Sources/drive/drive.c ****   if (val > MOTOR_MAX_SPEED)
+ 788              		.loc 1 170 0
+ 789 0168 2C4B     		ldr	r3, .L44+40
+ 790 016a 1B68     		ldr	r3, [r3]
+ 791 016c B3F5FA5F 		cmp	r3, #8000
+ 792 0170 0ADD     		ble	.L40
+ 171:../Sources/drive/drive.c ****   {
+ 172:../Sources/drive/drive.c ****     val = MOTOR_MAX_SPEED;
+ 793              		.loc 1 172 0
+ 794 0172 2A4B     		ldr	r3, .L44+40
+ 795 0174 4FF4FA52 		mov	r2, #8000
+ 796 0178 1A60     		str	r2, [r3]
+ 173:../Sources/drive/drive.c ****     intError -= currentError;
+ 797              		.loc 1 173 0
+ 798 017a 224B     		ldr	r3, .L44+16
+ 799 017c 1A68     		ldr	r2, [r3]
+ 800 017e BB68     		ldr	r3, [r7, #8]
+ 801 0180 D31A     		subs	r3, r2, r3
+ 802 0182 204A     		ldr	r2, .L44+16
+ 803 0184 1360     		str	r3, [r2]
+ 804 0186 2BE0     		b	.L41
+ 805              	.L40:
+ 174:../Sources/drive/drive.c ****   }
+ 175:../Sources/drive/drive.c ****   else if (val < -MOTOR_MAX_SPEED)
+ 806              		.loc 1 175 0
+ 807 0188 244B     		ldr	r3, .L44+40
+ 808 018a 1B68     		ldr	r3, [r3]
+ 809 018c 13F5FA5F 		cmn	r3, #8000
+ 810 0190 09DA     		bge	.L42
+ 176:../Sources/drive/drive.c ****   {
+ 177:../Sources/drive/drive.c ****     val = -MOTOR_MAX_SPEED;
+ 811              		.loc 1 177 0
+ 812 0192 224B     		ldr	r3, .L44+40
+ 813 0194 234A     		ldr	r2, .L44+48
+ 814 0196 1A60     		str	r2, [r3]
+ 178:../Sources/drive/drive.c ****     intError += currentError;
+ 815              		.loc 1 178 0
+ 816 0198 1A4B     		ldr	r3, .L44+16
+ 817 019a 1A68     		ldr	r2, [r3]
+ 818 019c BB68     		ldr	r3, [r7, #8]
+ 819 019e 1344     		add	r3, r3, r2
+ 820 01a0 184A     		ldr	r2, .L44+16
+ 821 01a2 1360     		str	r3, [r2]
+ 822 01a4 1CE0     		b	.L41
+ 823              	.L42:
+ 179:../Sources/drive/drive.c ****   }
+ 180:../Sources/drive/drive.c **** 
+ 181:../Sources/drive/drive.c ****   else if (targetSpeed == 0 && trueSpeed == 0)
+ 824              		.loc 1 181 0
+ 825 01a6 154B     		ldr	r3, .L44+8
+ 826 01a8 1B68     		ldr	r3, [r3]
+ 827 01aa 002B     		cmp	r3, #0
+ 828 01ac 0BD1     		bne	.L43
+ 829              		.loc 1 181 0 is_stmt 0 discriminator 1
+ 830 01ae 114B     		ldr	r3, .L44
+ 831 01b0 B3F90030 		ldrsh	r3, [r3]
+ 832 01b4 002B     		cmp	r3, #0
+ 833 01b6 06D1     		bne	.L43
+ 182:../Sources/drive/drive.c ****   {
+ 183:../Sources/drive/drive.c ****     val = 0;
+ 834              		.loc 1 183 0 is_stmt 1
+ 835 01b8 184B     		ldr	r3, .L44+40
+ 836 01ba 0022     		movs	r2, #0
+ 837 01bc 1A60     		str	r2, [r3]
+ 184:../Sources/drive/drive.c ****     intError = 0;
+ 838              		.loc 1 184 0
+ 839 01be 114B     		ldr	r3, .L44+16
+ 840 01c0 0022     		movs	r2, #0
+ 841 01c2 1A60     		str	r2, [r3]
+ 842 01c4 0CE0     		b	.L41
+ 843              	.L43:
+ 185:../Sources/drive/drive.c ****   }
+ 186:../Sources/drive/drive.c **** //  else if (targetSpeed != 0 && trueSpeed == 0)
+ 187:../Sources/drive/drive.c **** //  {
+ 188:../Sources/drive/drive.c **** //    static uint16_t i;
+ 189:../Sources/drive/drive.c **** //    if (i++ == 20)
+ 190:../Sources/drive/drive.c **** //    {
+ 191:../Sources/drive/drive.c **** //      i=0;
+ 192:../Sources/drive/drive.c **** //      val = 0;
+ 193:../Sources/drive/drive.c **** //      intError = 0;
+ 194:../Sources/drive/drive.c **** //    }
+ 195:../Sources/drive/drive.c **** //
+ 196:../Sources/drive/drive.c **** //  }
+ 197:../Sources/drive/drive.c ****   else if (motorBrake == 1)
+ 844              		.loc 1 197 0
+ 845 01c6 184B     		ldr	r3, .L44+52
+ 846 01c8 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 847 01ca 012B     		cmp	r3, #1
+ 848 01cc 08D1     		bne	.L41
+ 198:../Sources/drive/drive.c ****   {
+ 199:../Sources/drive/drive.c ****     val = 0;
+ 849              		.loc 1 199 0
+ 850 01ce 134B     		ldr	r3, .L44+40
+ 851 01d0 0022     		movs	r2, #0
+ 852 01d2 1A60     		str	r2, [r3]
+ 200:../Sources/drive/drive.c ****     motorBrake=0;
+ 853              		.loc 1 200 0
+ 854 01d4 144B     		ldr	r3, .L44+52
+ 855 01d6 0022     		movs	r2, #0
+ 856 01d8 1A70     		strb	r2, [r3]
+ 201:../Sources/drive/drive.c ****     intError = 0;
+ 857              		.loc 1 201 0
+ 858 01da 0A4B     		ldr	r3, .L44+16
+ 859 01dc 0022     		movs	r2, #0
+ 860 01de 1A60     		str	r2, [r3]
+ 861              	.L41:
+ 202:../Sources/drive/drive.c **** 
+ 203:../Sources/drive/drive.c ****   }
+ 204:../Sources/drive/drive.c **** 
+ 205:../Sources/drive/drive.c ****   motorSetPwm(val);
+ 862              		.loc 1 205 0
+ 863 01e0 0E4B     		ldr	r3, .L44+40
+ 864 01e2 1B68     		ldr	r3, [r3]
+ 865 01e4 1BB2     		sxth	r3, r3
+ 866 01e6 1846     		mov	r0, r3
+ 867 01e8 FFF7FEFF 		bl	motorSetPwm
+ 206:../Sources/drive/drive.c **** 
+ 207:../Sources/drive/drive.c **** 
+ 208:../Sources/drive/drive.c **** //  termWriteNum32s(val);
+ 209:../Sources/drive/drive.c **** //  termWriteChar('\n');
+ 210:../Sources/drive/drive.c **** 
+ 211:../Sources/drive/drive.c **** }
+ 868              		.loc 1 211 0
+ 869 01ec 00BF     		nop
+ 870 01ee 1037     		adds	r7, r7, #16
+ 871              		.cfi_def_cfa_offset 8
+ 872 01f0 BD46     		mov	sp, r7
+ 873              		.cfi_def_cfa_register 13
+ 874              		@ sp needed
+ 875 01f2 80BD     		pop	{r7, pc}
+ 876              	.L45:
+ 877              		.align	2
+ 878              	.L44:
+ 879 01f4 00000000 		.word	trueSpeed.7143
+ 880 01f8 00000000 		.word	setSpeed.7144
+ 881 01fc 00000000 		.word	targetSpeed
+ 882 0200 00000000 		.word	kp
+ 883 0204 00000000 		.word	intError.7146
+ 884 0208 00000000 		.word	ki
+ 885 020c 00000000 		.word	Ta
+ 886 0210 00000000 		.word	kd
+ 887 0214 00000000 		.word	oldError.7145
+ 888 0218 D34D6210 		.word	274877907
+ 889 021c 00000000 		.word	val
+ 890 0220 67666666 		.word	1717986919
+ 891 0224 C0E0FFFF 		.word	-8000
+ 892 0228 00000000 		.word	motorBrake
+ 893              		.cfi_endproc
+ 894              	.LFE134:
+ 896              		.section	.rodata
+ 897              		.align	2
+ 898              	.LC0:
+ 899 0000 68656C70 		.ascii	"help\000"
+ 899      00
+ 900 0005 000000   		.align	2
+ 901              	.LC1:
+ 902 0008 6D6F746F 		.ascii	"motor (motor) commands:\000"
+ 902      7220286D 
+ 902      6F746F72 
+ 902      2920636F 
+ 902      6D6D616E 
+ 903              		.align	2
+ 904              	.LC2:
+ 905 0020 20206865 		.ascii	"  help\000"
+ 905      6C7000
+ 906 0027 00       		.align	2
+ 907              	.LC3:
+ 908 0028 20207365 		.ascii	"  set [-100..120]\000"
+ 908      74205B2D 
+ 908      3130302E 
+ 908      2E313230 
+ 908      5D00
+ 909 003a 0000     		.align	2
+ 910              	.LC4:
+ 911 003c 20207374 		.ascii	"  status\000"
+ 911      61747573 
+ 911      00
+ 912 0045 000000   		.align	2
+ 913              	.LC5:
+ 914 0048 6B7000   		.ascii	"kp\000"
+ 915 004b 00       		.align	2
+ 916              	.LC6:
+ 917 004c 6B6900   		.ascii	"ki\000"
+ 918 004f 00       		.align	2
+ 919              	.LC7:
+ 920 0050 6B6400   		.ascii	"kd\000"
+ 921 0053 00       		.align	2
+ 922              	.LC8:
+ 923 0054 73657400 		.ascii	"set\000"
+ 924              		.align	2
+ 925              	.LC9:
+ 926 0058 64697374 		.ascii	"distance\000"
+ 926      616E6365 
+ 926      00
+ 927              		.section	.text.driveParseCommand,"ax",%progbits
+ 928              		.align	1
+ 929              		.global	driveParseCommand
+ 930              		.syntax unified
+ 931              		.thumb
+ 932              		.thumb_func
+ 933              		.fpu fpv4-sp-d16
+ 935              	driveParseCommand:
+ 936              	.LFB135:
+ 212:../Sources/drive/drive.c **** 
+ 213:../Sources/drive/drive.c **** tError driveParseCommand(const unsigned char *cmd)
+ 214:../Sources/drive/drive.c **** {
+ 937              		.loc 1 214 0
+ 938              		.cfi_startproc
+ 939              		@ args = 0, pretend = 0, frame = 24
+ 940              		@ frame_needed = 1, uses_anonymous_args = 0
+ 941 0000 80B5     		push	{r7, lr}
+ 942              		.cfi_def_cfa_offset 8
+ 943              		.cfi_offset 7, -8
+ 944              		.cfi_offset 14, -4
+ 945 0002 86B0     		sub	sp, sp, #24
+ 946              		.cfi_def_cfa_offset 32
+ 947 0004 00AF     		add	r7, sp, #0
+ 948              		.cfi_def_cfa_register 7
+ 949 0006 7860     		str	r0, [r7, #4]
+ 215:../Sources/drive/drive.c ****   tError result = EC_INVALID_ARG;
+ 950              		.loc 1 215 0
+ 951 0008 0323     		movs	r3, #3
+ 952 000a FB75     		strb	r3, [r7, #23]
+ 216:../Sources/drive/drive.c ****   if (strcmp(cmd, "help") == 0)
+ 953              		.loc 1 216 0
+ 954 000c 7B68     		ldr	r3, [r7, #4]
+ 955 000e 5E49     		ldr	r1, .L59
+ 956 0010 1846     		mov	r0, r3
+ 957 0012 FFF7FEFF 		bl	strcmp
+ 958 0016 0346     		mov	r3, r0
+ 959 0018 002B     		cmp	r3, #0
+ 960 001a 0ED1     		bne	.L47
+ 217:../Sources/drive/drive.c ****   {
+ 218:../Sources/drive/drive.c ****     termWriteLine("motor (motor) commands:");
+ 961              		.loc 1 218 0
+ 962 001c 5B48     		ldr	r0, .L59+4
+ 963 001e FFF7FEFF 		bl	termWriteLine
+ 219:../Sources/drive/drive.c ****     termWriteLine("  help");
+ 964              		.loc 1 219 0
+ 965 0022 5B48     		ldr	r0, .L59+8
+ 966 0024 FFF7FEFF 		bl	termWriteLine
+ 220:../Sources/drive/drive.c ****     termWriteLine("  set [-100..120]");
+ 967              		.loc 1 220 0
+ 968 0028 5A48     		ldr	r0, .L59+12
+ 969 002a FFF7FEFF 		bl	termWriteLine
+ 221:../Sources/drive/drive.c ****     termWriteLine("  status");
+ 970              		.loc 1 221 0
+ 971 002e 5A48     		ldr	r0, .L59+16
+ 972 0030 FFF7FEFF 		bl	termWriteLine
+ 222:../Sources/drive/drive.c ****     result = EC_SUCCESS;
+ 973              		.loc 1 222 0
+ 974 0034 0023     		movs	r3, #0
+ 975 0036 FB75     		strb	r3, [r7, #23]
+ 976 0038 A1E0     		b	.L48
+ 977              	.L47:
+ 223:../Sources/drive/drive.c ****   }
+ 224:../Sources/drive/drive.c **** 
+ 225:../Sources/drive/drive.c ****   else if (strncmp(cmd, "kp", sizeof("kp") - 1) == 0)
+ 978              		.loc 1 225 0
+ 979 003a 7B68     		ldr	r3, [r7, #4]
+ 980 003c 0222     		movs	r2, #2
+ 981 003e 5749     		ldr	r1, .L59+20
+ 982 0040 1846     		mov	r0, r3
+ 983 0042 FFF7FEFF 		bl	strncmp
+ 984 0046 0346     		mov	r3, r0
+ 985 0048 002B     		cmp	r3, #0
+ 986 004a 17D1     		bne	.L49
+ 987              	.LBB2:
+ 226:../Sources/drive/drive.c ****   {
+ 227:../Sources/drive/drive.c ****     cmd += sizeof("kp");
+ 988              		.loc 1 227 0
+ 989 004c 7B68     		ldr	r3, [r7, #4]
+ 990 004e 0333     		adds	r3, r3, #3
+ 991 0050 7B60     		str	r3, [r7, #4]
+ 228:../Sources/drive/drive.c ****     int16_t v;
+ 229:../Sources/drive/drive.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 992              		.loc 1 229 0
+ 993 0052 07F11402 		add	r2, r7, #20
+ 994 0056 3B1D     		adds	r3, r7, #4
+ 995 0058 1146     		mov	r1, r2
+ 996 005a 1846     		mov	r0, r3
+ 997 005c FFF7FEFF 		bl	utilScanDecimal16s
+ 998 0060 0346     		mov	r3, r0
+ 999 0062 FB75     		strb	r3, [r7, #23]
+ 230:../Sources/drive/drive.c ****     if (result != EC_SUCCESS) return result;
+ 1000              		.loc 1 230 0
+ 1001 0064 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1002 0066 002B     		cmp	r3, #0
+ 1003 0068 01D0     		beq	.L50
+ 1004              		.loc 1 230 0 is_stmt 0 discriminator 1
+ 1005 006a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1006 006c 88E0     		b	.L51
+ 1007              	.L50:
+ 231:../Sources/drive/drive.c ****     driveSetParameterKp(v);
+ 1008              		.loc 1 231 0 is_stmt 1
+ 1009 006e B7F91430 		ldrsh	r3, [r7, #20]
+ 1010 0072 DBB2     		uxtb	r3, r3
+ 1011 0074 1846     		mov	r0, r3
+ 1012 0076 FFF7FEFF 		bl	driveSetParameterKp
+ 1013              	.LBE2:
+ 1014 007a 80E0     		b	.L48
+ 1015              	.L49:
+ 232:../Sources/drive/drive.c **** 
+ 233:../Sources/drive/drive.c ****   }
+ 234:../Sources/drive/drive.c ****   else if (strncmp(cmd, "ki", sizeof("ki") - 1) == 0)
+ 1016              		.loc 1 234 0
+ 1017 007c 7B68     		ldr	r3, [r7, #4]
+ 1018 007e 0222     		movs	r2, #2
+ 1019 0080 4749     		ldr	r1, .L59+24
+ 1020 0082 1846     		mov	r0, r3
+ 1021 0084 FFF7FEFF 		bl	strncmp
+ 1022 0088 0346     		mov	r3, r0
+ 1023 008a 002B     		cmp	r3, #0
+ 1024 008c 17D1     		bne	.L52
+ 1025              	.LBB3:
+ 235:../Sources/drive/drive.c ****   {
+ 236:../Sources/drive/drive.c ****     cmd += sizeof("ki");
+ 1026              		.loc 1 236 0
+ 1027 008e 7B68     		ldr	r3, [r7, #4]
+ 1028 0090 0333     		adds	r3, r3, #3
+ 1029 0092 7B60     		str	r3, [r7, #4]
+ 237:../Sources/drive/drive.c ****     int16_t v;
+ 238:../Sources/drive/drive.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 1030              		.loc 1 238 0
+ 1031 0094 07F11202 		add	r2, r7, #18
+ 1032 0098 3B1D     		adds	r3, r7, #4
+ 1033 009a 1146     		mov	r1, r2
+ 1034 009c 1846     		mov	r0, r3
+ 1035 009e FFF7FEFF 		bl	utilScanDecimal16s
+ 1036 00a2 0346     		mov	r3, r0
+ 1037 00a4 FB75     		strb	r3, [r7, #23]
+ 239:../Sources/drive/drive.c ****     if (result != EC_SUCCESS) return result;
+ 1038              		.loc 1 239 0
+ 1039 00a6 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1040 00a8 002B     		cmp	r3, #0
+ 1041 00aa 01D0     		beq	.L53
+ 1042              		.loc 1 239 0 is_stmt 0 discriminator 1
+ 1043 00ac FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1044 00ae 67E0     		b	.L51
+ 1045              	.L53:
+ 240:../Sources/drive/drive.c ****     driveSetParameterKi(v);
+ 1046              		.loc 1 240 0 is_stmt 1
+ 1047 00b0 B7F91230 		ldrsh	r3, [r7, #18]
+ 1048 00b4 DBB2     		uxtb	r3, r3
+ 1049 00b6 1846     		mov	r0, r3
+ 1050 00b8 FFF7FEFF 		bl	driveSetParameterKi
+ 1051              	.LBE3:
+ 1052 00bc 5FE0     		b	.L48
+ 1053              	.L52:
+ 241:../Sources/drive/drive.c **** 
+ 242:../Sources/drive/drive.c ****   }
+ 243:../Sources/drive/drive.c ****   else if (strncmp(cmd, "kd", sizeof("kd") - 1) == 0)
+ 1054              		.loc 1 243 0
+ 1055 00be 7B68     		ldr	r3, [r7, #4]
+ 1056 00c0 0222     		movs	r2, #2
+ 1057 00c2 3849     		ldr	r1, .L59+28
+ 1058 00c4 1846     		mov	r0, r3
+ 1059 00c6 FFF7FEFF 		bl	strncmp
+ 1060 00ca 0346     		mov	r3, r0
+ 1061 00cc 002B     		cmp	r3, #0
+ 1062 00ce 17D1     		bne	.L54
+ 1063              	.LBB4:
+ 244:../Sources/drive/drive.c ****   {
+ 245:../Sources/drive/drive.c ****     cmd += sizeof("kd");
+ 1064              		.loc 1 245 0
+ 1065 00d0 7B68     		ldr	r3, [r7, #4]
+ 1066 00d2 0333     		adds	r3, r3, #3
+ 1067 00d4 7B60     		str	r3, [r7, #4]
+ 246:../Sources/drive/drive.c ****     int16_t v;
+ 247:../Sources/drive/drive.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 1068              		.loc 1 247 0
+ 1069 00d6 07F11002 		add	r2, r7, #16
+ 1070 00da 3B1D     		adds	r3, r7, #4
+ 1071 00dc 1146     		mov	r1, r2
+ 1072 00de 1846     		mov	r0, r3
+ 1073 00e0 FFF7FEFF 		bl	utilScanDecimal16s
+ 1074 00e4 0346     		mov	r3, r0
+ 1075 00e6 FB75     		strb	r3, [r7, #23]
+ 248:../Sources/drive/drive.c ****     if (result != EC_SUCCESS) return result;
+ 1076              		.loc 1 248 0
+ 1077 00e8 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1078 00ea 002B     		cmp	r3, #0
+ 1079 00ec 01D0     		beq	.L55
+ 1080              		.loc 1 248 0 is_stmt 0 discriminator 1
+ 1081 00ee FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1082 00f0 46E0     		b	.L51
+ 1083              	.L55:
+ 249:../Sources/drive/drive.c ****     driveSetParameterKd(v);
+ 1084              		.loc 1 249 0 is_stmt 1
+ 1085 00f2 B7F91030 		ldrsh	r3, [r7, #16]
+ 1086 00f6 DBB2     		uxtb	r3, r3
+ 1087 00f8 1846     		mov	r0, r3
+ 1088 00fa FFF7FEFF 		bl	driveSetParameterKd
+ 1089              	.LBE4:
+ 1090 00fe 3EE0     		b	.L48
+ 1091              	.L54:
+ 250:../Sources/drive/drive.c **** 
+ 251:../Sources/drive/drive.c ****   }
+ 252:../Sources/drive/drive.c ****   else if (strncmp(cmd, "set", sizeof("set") - 1) == 0)
+ 1092              		.loc 1 252 0
+ 1093 0100 7B68     		ldr	r3, [r7, #4]
+ 1094 0102 0322     		movs	r2, #3
+ 1095 0104 2849     		ldr	r1, .L59+32
+ 1096 0106 1846     		mov	r0, r3
+ 1097 0108 FFF7FEFF 		bl	strncmp
+ 1098 010c 0346     		mov	r3, r0
+ 1099 010e 002B     		cmp	r3, #0
+ 1100 0110 16D1     		bne	.L56
+ 1101              	.LBB5:
+ 253:../Sources/drive/drive.c ****   {
+ 254:../Sources/drive/drive.c ****     cmd += sizeof("set");
+ 1102              		.loc 1 254 0
+ 1103 0112 7B68     		ldr	r3, [r7, #4]
+ 1104 0114 0433     		adds	r3, r3, #4
+ 1105 0116 7B60     		str	r3, [r7, #4]
+ 255:../Sources/drive/drive.c ****     int16_t v;
+ 256:../Sources/drive/drive.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 1106              		.loc 1 256 0
+ 1107 0118 07F10E02 		add	r2, r7, #14
+ 1108 011c 3B1D     		adds	r3, r7, #4
+ 1109 011e 1146     		mov	r1, r2
+ 1110 0120 1846     		mov	r0, r3
+ 1111 0122 FFF7FEFF 		bl	utilScanDecimal16s
+ 1112 0126 0346     		mov	r3, r0
+ 1113 0128 FB75     		strb	r3, [r7, #23]
+ 257:../Sources/drive/drive.c ****     if (result != EC_SUCCESS) return result;
+ 1114              		.loc 1 257 0
+ 1115 012a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1116 012c 002B     		cmp	r3, #0
+ 1117 012e 01D0     		beq	.L57
+ 1118              		.loc 1 257 0 is_stmt 0 discriminator 1
+ 1119 0130 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1120 0132 25E0     		b	.L51
+ 1121              	.L57:
+ 258:../Sources/drive/drive.c ****     driveSetSpeed(v);
+ 1122              		.loc 1 258 0 is_stmt 1
+ 1123 0134 B7F90E30 		ldrsh	r3, [r7, #14]
+ 1124 0138 1846     		mov	r0, r3
+ 1125 013a FFF7FEFF 		bl	driveSetSpeed
+ 1126              	.LBE5:
+ 1127 013e 1EE0     		b	.L48
+ 1128              	.L56:
+ 259:../Sources/drive/drive.c **** 
+ 260:../Sources/drive/drive.c ****   }
+ 261:../Sources/drive/drive.c ****   else if (strncmp(cmd, "distance", sizeof("distance") - 1) == 0)
+ 1129              		.loc 1 261 0
+ 1130 0140 7B68     		ldr	r3, [r7, #4]
+ 1131 0142 0822     		movs	r2, #8
+ 1132 0144 1949     		ldr	r1, .L59+36
+ 1133 0146 1846     		mov	r0, r3
+ 1134 0148 FFF7FEFF 		bl	strncmp
+ 1135 014c 0346     		mov	r3, r0
+ 1136 014e 002B     		cmp	r3, #0
+ 1137 0150 15D1     		bne	.L48
+ 1138              	.LBB6:
+ 262:../Sources/drive/drive.c ****   {
+ 263:../Sources/drive/drive.c ****     cmd += sizeof("distance");
+ 1139              		.loc 1 263 0
+ 1140 0152 7B68     		ldr	r3, [r7, #4]
+ 1141 0154 0933     		adds	r3, r3, #9
+ 1142 0156 7B60     		str	r3, [r7, #4]
+ 264:../Sources/drive/drive.c ****     int16_t v;
+ 265:../Sources/drive/drive.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 1143              		.loc 1 265 0
+ 1144 0158 07F10C02 		add	r2, r7, #12
+ 1145 015c 3B1D     		adds	r3, r7, #4
+ 1146 015e 1146     		mov	r1, r2
+ 1147 0160 1846     		mov	r0, r3
+ 1148 0162 FFF7FEFF 		bl	utilScanDecimal16s
+ 1149 0166 0346     		mov	r3, r0
+ 1150 0168 FB75     		strb	r3, [r7, #23]
+ 266:../Sources/drive/drive.c ****     if (result != EC_SUCCESS) return result;
+ 1151              		.loc 1 266 0
+ 1152 016a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1153 016c 002B     		cmp	r3, #0
+ 1154 016e 01D0     		beq	.L58
+ 1155              		.loc 1 266 0 is_stmt 0 discriminator 1
+ 1156 0170 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1157 0172 05E0     		b	.L51
+ 1158              	.L58:
+ 267:../Sources/drive/drive.c ****     driveSetDistance(v);
+ 1159              		.loc 1 267 0 is_stmt 1
+ 1160 0174 B7F90C30 		ldrsh	r3, [r7, #12]
+ 1161 0178 1846     		mov	r0, r3
+ 1162 017a FFF7FEFF 		bl	driveSetDistance
+ 1163              	.L48:
+ 1164              	.LBE6:
+ 268:../Sources/drive/drive.c **** 
+ 269:../Sources/drive/drive.c ****   }
+ 270:../Sources/drive/drive.c ****   return result;
+ 1165              		.loc 1 270 0
+ 1166 017e FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 1167              	.L51:
+ 271:../Sources/drive/drive.c **** }
+ 1168              		.loc 1 271 0
+ 1169 0180 1846     		mov	r0, r3
+ 1170 0182 1837     		adds	r7, r7, #24
+ 1171              		.cfi_def_cfa_offset 8
+ 1172 0184 BD46     		mov	sp, r7
+ 1173              		.cfi_def_cfa_register 13
+ 1174              		@ sp needed
+ 1175 0186 80BD     		pop	{r7, pc}
+ 1176              	.L60:
+ 1177              		.align	2
+ 1178              	.L59:
+ 1179 0188 00000000 		.word	.LC0
+ 1180 018c 08000000 		.word	.LC1
+ 1181 0190 20000000 		.word	.LC2
+ 1182 0194 28000000 		.word	.LC3
+ 1183 0198 3C000000 		.word	.LC4
+ 1184 019c 48000000 		.word	.LC5
+ 1185 01a0 4C000000 		.word	.LC6
+ 1186 01a4 50000000 		.word	.LC7
+ 1187 01a8 54000000 		.word	.LC8
+ 1188 01ac 58000000 		.word	.LC9
+ 1189              		.cfi_endproc
+ 1190              	.LFE135:
+ 1192              		.section	.rodata
+ 1193 0061 000000   		.align	2
+ 1194              	.LC10:
+ 1195 0064 68656C70 		.ascii	"help, set\000"
+ 1195      2C207365 
+ 1195      7400
+ 1196 006e 0000     		.align	2
+ 1197              	.LC11:
+ 1198 0070 64726976 		.ascii	"drive\000"
+ 1198      6500
+ 1199              		.section	.text.driveInit,"ax",%progbits
+ 1200              		.align	1
+ 1201              		.global	driveInit
+ 1202              		.syntax unified
+ 1203              		.thumb
+ 1204              		.thumb_func
+ 1205              		.fpu fpv4-sp-d16
+ 1207              	driveInit:
+ 1208              	.LFB136:
+ 272:../Sources/drive/drive.c **** 
+ 273:../Sources/drive/drive.c **** void driveInit(void)
+ 274:../Sources/drive/drive.c **** {
+ 1209              		.loc 1 274 0
+ 1210              		.cfi_startproc
+ 1211              		@ args = 0, pretend = 0, frame = 0
+ 1212              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1213 0000 80B5     		push	{r7, lr}
+ 1214              		.cfi_def_cfa_offset 8
+ 1215              		.cfi_offset 7, -8
+ 1216              		.cfi_offset 14, -4
+ 1217 0002 00AF     		add	r7, sp, #0
+ 1218              		.cfi_def_cfa_register 7
+ 275:../Sources/drive/drive.c ****   kp = 20; //80;
+ 1219              		.loc 1 275 0
+ 1220 0004 0B4B     		ldr	r3, .L62
+ 1221 0006 1422     		movs	r2, #20
+ 1222 0008 1A70     		strb	r2, [r3]
+ 276:../Sources/drive/drive.c ****   ki = 40; //30;
+ 1223              		.loc 1 276 0
+ 1224 000a 0B4B     		ldr	r3, .L62+4
+ 1225 000c 2822     		movs	r2, #40
+ 1226 000e 1A70     		strb	r2, [r3]
+ 277:../Sources/drive/drive.c ****   kd = 0;
+ 1227              		.loc 1 277 0
+ 1228 0010 0A4B     		ldr	r3, .L62+8
+ 1229 0012 0022     		movs	r2, #0
+ 1230 0014 1A70     		strb	r2, [r3]
+ 278:../Sources/drive/drive.c ****   Ta = 25;
+ 1231              		.loc 1 278 0
+ 1232 0016 0A4B     		ldr	r3, .L62+12
+ 1233 0018 1922     		movs	r2, #25
+ 1234 001a 1A70     		strb	r2, [r3]
+ 279:../Sources/drive/drive.c ****   targetSpeed = 0;
+ 1235              		.loc 1 279 0
+ 1236 001c 094B     		ldr	r3, .L62+16
+ 1237 001e 0022     		movs	r2, #0
+ 1238 0020 1A60     		str	r2, [r3]
+ 280:../Sources/drive/drive.c **** 
+ 281:../Sources/drive/drive.c **** // register terminal command line handler
+ 282:../Sources/drive/drive.c ****   termRegisterCommandLineHandler(&clh, "drive", "help, set", driveParseCommand);
+ 1239              		.loc 1 282 0
+ 1240 0022 094B     		ldr	r3, .L62+20
+ 1241 0024 094A     		ldr	r2, .L62+24
+ 1242 0026 0A49     		ldr	r1, .L62+28
+ 1243 0028 0A48     		ldr	r0, .L62+32
+ 1244 002a FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 283:../Sources/drive/drive.c **** }
+ 1245              		.loc 1 283 0
+ 1246 002e 00BF     		nop
+ 1247 0030 80BD     		pop	{r7, pc}
+ 1248              	.L63:
+ 1249 0032 00BF     		.align	2
+ 1250              	.L62:
+ 1251 0034 00000000 		.word	kp
+ 1252 0038 00000000 		.word	ki
+ 1253 003c 00000000 		.word	kd
+ 1254 0040 00000000 		.word	Ta
+ 1255 0044 00000000 		.word	targetSpeed
+ 1256 0048 00000000 		.word	driveParseCommand
+ 1257 004c 64000000 		.word	.LC10
+ 1258 0050 70000000 		.word	.LC11
+ 1259 0054 00000000 		.word	clh
+ 1260              		.cfi_endproc
+ 1261              	.LFE136:
+ 1263              		.section	.bss.trueSpeed.7143,"aw",%nobits
+ 1264              		.align	1
+ 1267              	trueSpeed.7143:
+ 1268 0000 0000     		.space	2
+ 1269              		.section	.bss.setSpeed.7144,"aw",%nobits
+ 1270              		.align	1
+ 1273              	setSpeed.7144:
+ 1274 0000 0000     		.space	2
+ 1275              		.section	.bss.intError.7146,"aw",%nobits
+ 1276              		.align	2
+ 1279              	intError.7146:
+ 1280 0000 00000000 		.space	4
+ 1281              		.section	.bss.oldError.7145,"aw",%nobits
+ 1282              		.align	2
+ 1285              	oldError.7145:
+ 1286 0000 00000000 		.space	4
+ 1287              		.text
+ 1288              	.Letext0:
+ 1289              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1290              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1291              		.file 4 "../Includes/core_cm4.h"
+ 1292              		.file 5 "../Includes/system_MK22F51212.h"
+ 1293              		.file 6 "../Includes/MK22F51212.h"
+ 1294              		.file 7 "../Includes/platform.h"
+ 1295              		.file 8 "../Sources/com/term.h"
+ 1296              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1297              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 1298              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 1299              		.file 12 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+DEFINED SYMBOLS
+                            *ABS*:00000000 drive.c
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:24     .bss.targetSpeed:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:27     .bss.targetSpeed:00000000 targetSpeed
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:30     .bss.targetDistance:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:33     .bss.targetDistance:00000000 targetDistance
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:38     .bss.kp:00000000 kp
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:39     .bss.kp:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:43     .bss.ki:00000000 ki
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:44     .bss.ki:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:48     .bss.kd:00000000 kd
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:49     .bss.kd:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:53     .bss.Ta:00000000 Ta
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:54     .bss.Ta:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:56     .bss.val:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:59     .bss.val:00000000 val
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:64     .bss.motorBrake:00000000 motorBrake
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:65     .bss.motorBrake:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:67     .bss.startTicks:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:70     .bss.startTicks:00000000 startTicks
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:73     .bss.targetTicks:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:76     .bss.targetTicks:00000000 targetTicks
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:79     .text.driveSetParameters:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:86     .text.driveSetParameters:00000000 driveSetParameters
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:128    .text.driveSetParameters:00000028 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:134    .text.driveSetParameterKp:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:141    .text.driveSetParameterKp:00000000 driveSetParameterKp
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:175    .text.driveSetParameterKp:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:180    .text.driveSetParameterKi:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:187    .text.driveSetParameterKi:00000000 driveSetParameterKi
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:221    .text.driveSetParameterKi:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:226    .text.driveSetParameterKd:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:233    .text.driveSetParameterKd:00000000 driveSetParameterKd
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:267    .text.driveSetParameterKd:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:272    .text.driveSetParameterTa:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:279    .text.driveSetParameterTa:00000000 driveSetParameterTa
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:313    .text.driveSetParameterTa:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:318    .text.driveSetSpeed:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:325    .text.driveSetSpeed:00000000 driveSetSpeed
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:358    .text.driveSetSpeed:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:363    .text.driveSetDistance:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:370    .text.driveSetDistance:00000000 driveSetDistance
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:476    .text.driveSetDistance:000000b0 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:485    .text.driveGetDistanceInfo:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:492    .text.driveGetDistanceInfo:00000000 driveGetDistanceInfo
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:519    .text.driveGetDistanceInfo:00000014 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:524    .text.FTM1CH0_IRQHandler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:531    .text.FTM1CH0_IRQHandler:00000000 FTM1CH0_IRQHandler
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:574    .text.FTM1CH0_IRQHandler:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:582    .text.driveToWork:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:589    .text.driveToWork:00000000 driveToWork
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:879    .text.driveToWork:000001f4 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1267   .bss.trueSpeed.7143:00000000 trueSpeed.7143
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1273   .bss.setSpeed.7144:00000000 setSpeed.7144
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1279   .bss.intError.7146:00000000 intError.7146
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1285   .bss.oldError.7145:00000000 oldError.7145
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:897    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:928    .text.driveParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:935    .text.driveParseCommand:00000000 driveParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1179   .text.driveParseCommand:00000188 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1200   .text.driveInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1207   .text.driveInit:00000000 driveInit
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1251   .text.driveInit:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1264   .bss.trueSpeed.7143:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1270   .bss.setSpeed.7144:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1276   .bss.intError.7146:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGwzMvb.s:1282   .bss.oldError.7145:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.drive.h.9.b7ae840a7169f82a3ba596e7b70991e7
+                           .group:00000000 wm4.motor.h.15.68048d459e17ff350ed964e39850d12a
+                           .group:00000000 wm4.encoder.h.9.49f8bdf86a745b6412cf7741af60fe56
+
+UNDEFINED SYMBOLS
+encodergetTicks
+encodergetTicks10ms
+encodergetSpeedmmps
+motorSetPwm
+strcmp
+termWriteLine
+strncmp
+utilScanDecimal16s
+termRegisterCommandLineHandler

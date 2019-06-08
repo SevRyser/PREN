@@ -1,0 +1,448 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"beep.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.bss.number,"aw",%nobits
+  24              		.align	1
+  27              	number:
+  28 0000 0000     		.space	2
+  29              		.section	.text.FTM0CH1_IRQHandler,"ax",%progbits
+  30              		.align	1
+  31              		.global	FTM0CH1_IRQHandler
+  32              		.syntax unified
+  33              		.thumb
+  34              		.thumb_func
+  35              		.fpu fpv4-sp-d16
+  37              	FTM0CH1_IRQHandler:
+  38              	.LFB125:
+  39              		.file 1 "../Sources/sensors/beep.c"
+   1:../Sources/sensors/beep.c **** /*
+   2:../Sources/sensors/beep.c ****  * beep.c
+   3:../Sources/sensors/beep.c ****  *
+   4:../Sources/sensors/beep.c ****  *  Created on: 09.05.2019
+   5:../Sources/sensors/beep.c ****  *      Author: Blub
+   6:../Sources/sensors/beep.c ****  */
+   7:../Sources/sensors/beep.c **** 
+   8:../Sources/sensors/beep.c **** #include "platform.h"
+   9:../Sources/sensors/beep.c **** #include "string.h"
+  10:../Sources/sensors/beep.c **** #include "term.h"
+  11:../Sources/sensors/beep.c **** #include "util.h"
+  12:../Sources/sensors/beep.c **** #include "ftm0.h"
+  13:../Sources/sensors/beep.c **** #include "beep.h"
+  14:../Sources/sensors/beep.c **** 
+  15:../Sources/sensors/beep.c **** #define TOFS_MS(x)   ((uint16_t)(((FTM0_CLOCK / 1000) * x) / (FTM0_MODULO + 1)))
+  16:../Sources/sensors/beep.c **** 
+  17:../Sources/sensors/beep.c **** static tCommandLineHandler clh;
+  18:../Sources/sensors/beep.c **** static int16_t number;
+  19:../Sources/sensors/beep.c **** 
+  20:../Sources/sensors/beep.c **** void FTM0CH1_IRQHandler(void)
+  21:../Sources/sensors/beep.c **** {
+  40              		.loc 1 21 0
+  41              		.cfi_startproc
+  42              		@ args = 0, pretend = 0, frame = 0
+  43              		@ frame_needed = 1, uses_anonymous_args = 0
+  44              		@ link register save eliminated.
+  45 0000 80B4     		push	{r7}
+  46              		.cfi_def_cfa_offset 4
+  47              		.cfi_offset 7, -4
+  48 0002 00AF     		add	r7, sp, #0
+  49              		.cfi_def_cfa_register 7
+  22:../Sources/sensors/beep.c ****   FTM0_C1SC &= ~FTM_CnSC_CHF_MASK;              //clear the channel flag
+  50              		.loc 1 22 0
+  51 0004 1D4A     		ldr	r2, .L5
+  52 0006 1D4B     		ldr	r3, .L5
+  53 0008 5B69     		ldr	r3, [r3, #20]
+  54 000a 23F08003 		bic	r3, r3, #128
+  55 000e 5361     		str	r3, [r2, #20]
+  23:../Sources/sensors/beep.c **** 
+  24:../Sources/sensors/beep.c ****   static uint16_t i = 0, j = 0;
+  25:../Sources/sensors/beep.c ****   if (i++ == TOFS_MS(150))                      //run pid worker every 25ms
+  56              		.loc 1 25 0
+  57 0010 1B4B     		ldr	r3, .L5+4
+  58 0012 1B88     		ldrh	r3, [r3]
+  59 0014 5A1C     		adds	r2, r3, #1
+  60 0016 91B2     		uxth	r1, r2
+  61 0018 194A     		ldr	r2, .L5+4
+  62 001a 1180     		strh	r1, [r2]	@ movhi
+  63 001c 072B     		cmp	r3, #7
+  64 001e 27D1     		bne	.L4
+  26:../Sources/sensors/beep.c ****   {
+  27:../Sources/sensors/beep.c ****     i = 0;
+  65              		.loc 1 27 0
+  66 0020 174B     		ldr	r3, .L5+4
+  67 0022 0022     		movs	r2, #0
+  68 0024 1A80     		strh	r2, [r3]	@ movhi
+  28:../Sources/sensors/beep.c ****     if (j < (2 * number))
+  69              		.loc 1 28 0
+  70 0026 174B     		ldr	r3, .L5+8
+  71 0028 1B88     		ldrh	r3, [r3]
+  72 002a 1A46     		mov	r2, r3
+  73 002c 164B     		ldr	r3, .L5+12
+  74 002e B3F90030 		ldrsh	r3, [r3]
+  75 0032 5B00     		lsls	r3, r3, #1
+  76 0034 9A42     		cmp	r2, r3
+  77 0036 0CDA     		bge	.L3
+  29:../Sources/sensors/beep.c ****     {
+  30:../Sources/sensors/beep.c ****       j++;
+  78              		.loc 1 30 0
+  79 0038 124B     		ldr	r3, .L5+8
+  80 003a 1B88     		ldrh	r3, [r3]
+  81 003c 0133     		adds	r3, r3, #1
+  82 003e 9AB2     		uxth	r2, r3
+  83 0040 104B     		ldr	r3, .L5+8
+  84 0042 1A80     		strh	r2, [r3]	@ movhi
+  31:../Sources/sensors/beep.c ****       GPIOE_PTOR |= (1 << 1);                   // Toggle Buzzer
+  85              		.loc 1 31 0
+  86 0044 114A     		ldr	r2, .L5+16
+  87 0046 114B     		ldr	r3, .L5+16
+  88 0048 DB68     		ldr	r3, [r3, #12]
+  89 004a 43F00203 		orr	r3, r3, #2
+  90 004e D360     		str	r3, [r2, #12]
+  32:../Sources/sensors/beep.c **** //    GPIOD_PTOR |= (1<<2);                     // Toggle LED
+  33:../Sources/sensors/beep.c ****     }
+  34:../Sources/sensors/beep.c ****     else
+  35:../Sources/sensors/beep.c ****     {
+  36:../Sources/sensors/beep.c ****       GPIOE_PCOR |= (1 << 1);
+  37:../Sources/sensors/beep.c ****       FTM0_C1SC &= ~FTM_CnSC_CHIE_MASK;
+  38:../Sources/sensors/beep.c ****       j = 0;
+  39:../Sources/sensors/beep.c ****     }
+  40:../Sources/sensors/beep.c ****   }
+  41:../Sources/sensors/beep.c **** }
+  91              		.loc 1 41 0
+  92 0050 0EE0     		b	.L4
+  93              	.L3:
+  36:../Sources/sensors/beep.c ****       FTM0_C1SC &= ~FTM_CnSC_CHIE_MASK;
+  94              		.loc 1 36 0
+  95 0052 0E4A     		ldr	r2, .L5+16
+  96 0054 0D4B     		ldr	r3, .L5+16
+  97 0056 9B68     		ldr	r3, [r3, #8]
+  98 0058 43F00203 		orr	r3, r3, #2
+  99 005c 9360     		str	r3, [r2, #8]
+  37:../Sources/sensors/beep.c ****       j = 0;
+ 100              		.loc 1 37 0
+ 101 005e 074A     		ldr	r2, .L5
+ 102 0060 064B     		ldr	r3, .L5
+ 103 0062 5B69     		ldr	r3, [r3, #20]
+ 104 0064 23F04003 		bic	r3, r3, #64
+ 105 0068 5361     		str	r3, [r2, #20]
+  38:../Sources/sensors/beep.c ****     }
+ 106              		.loc 1 38 0
+ 107 006a 064B     		ldr	r3, .L5+8
+ 108 006c 0022     		movs	r2, #0
+ 109 006e 1A80     		strh	r2, [r3]	@ movhi
+ 110              	.L4:
+ 111              		.loc 1 41 0
+ 112 0070 00BF     		nop
+ 113 0072 BD46     		mov	sp, r7
+ 114              		.cfi_def_cfa_register 13
+ 115              		@ sp needed
+ 116 0074 5DF8047B 		ldr	r7, [sp], #4
+ 117              		.cfi_restore 7
+ 118              		.cfi_def_cfa_offset 0
+ 119 0078 7047     		bx	lr
+ 120              	.L6:
+ 121 007a 00BF     		.align	2
+ 122              	.L5:
+ 123 007c 00800340 		.word	1073971200
+ 124 0080 00000000 		.word	i.7083
+ 125 0084 00000000 		.word	j.7084
+ 126 0088 00000000 		.word	number
+ 127 008c 00F10F40 		.word	1074786560
+ 128              		.cfi_endproc
+ 129              	.LFE125:
+ 131              		.section	.rodata
+ 132              		.align	2
+ 133              	.LC0:
+ 134 0000 68656C70 		.ascii	"help\000"
+ 134      00
+ 135 0005 000000   		.align	2
+ 136              	.LC1:
+ 137 0008 20626565 		.ascii	" beep commands: beep:[nr]\000"
+ 137      7020636F 
+ 137      6D6D616E 
+ 137      64733A20 
+ 137      62656570 
+ 138              		.section	.text.beepParseCommand,"ax",%progbits
+ 139              		.align	1
+ 140              		.global	beepParseCommand
+ 141              		.syntax unified
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.fpu fpv4-sp-d16
+ 146              	beepParseCommand:
+ 147              	.LFB126:
+  42:../Sources/sensors/beep.c **** 
+  43:../Sources/sensors/beep.c **** tError beepParseCommand(const unsigned char *cmd)
+  44:../Sources/sensors/beep.c **** {
+ 148              		.loc 1 44 0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 16
+ 151              		@ frame_needed = 1, uses_anonymous_args = 0
+ 152 0000 80B5     		push	{r7, lr}
+ 153              		.cfi_def_cfa_offset 8
+ 154              		.cfi_offset 7, -8
+ 155              		.cfi_offset 14, -4
+ 156 0002 84B0     		sub	sp, sp, #16
+ 157              		.cfi_def_cfa_offset 24
+ 158 0004 00AF     		add	r7, sp, #0
+ 159              		.cfi_def_cfa_register 7
+ 160 0006 7860     		str	r0, [r7, #4]
+  45:../Sources/sensors/beep.c ****   tError result = EC_INVALID_ARG;
+ 161              		.loc 1 45 0
+ 162 0008 0323     		movs	r3, #3
+ 163 000a FB73     		strb	r3, [r7, #15]
+  46:../Sources/sensors/beep.c ****   if (strcmp(cmd, "help") == 0)
+ 164              		.loc 1 46 0
+ 165 000c 7B68     		ldr	r3, [r7, #4]
+ 166 000e 1249     		ldr	r1, .L11
+ 167 0010 1846     		mov	r0, r3
+ 168 0012 FFF7FEFF 		bl	strcmp
+ 169 0016 0346     		mov	r3, r0
+ 170 0018 002B     		cmp	r3, #0
+ 171 001a 05D1     		bne	.L8
+  47:../Sources/sensors/beep.c ****   {
+  48:../Sources/sensors/beep.c ****     termWriteLine(" beep commands: beep:[nr]");
+ 172              		.loc 1 48 0
+ 173 001c 0F48     		ldr	r0, .L11+4
+ 174 001e FFF7FEFF 		bl	termWriteLine
+  49:../Sources/sensors/beep.c ****     result = EC_SUCCESS;
+ 175              		.loc 1 49 0
+ 176 0022 0023     		movs	r3, #0
+ 177 0024 FB73     		strb	r3, [r7, #15]
+ 178 0026 11E0     		b	.L9
+ 179              	.L8:
+  50:../Sources/sensors/beep.c ****   }
+  51:../Sources/sensors/beep.c ****   else                        //if (strncmp(cmd, "set", sizeof("set") - 1) == 0)
+  52:../Sources/sensors/beep.c ****   {
+  53:../Sources/sensors/beep.c ****     FTM0_C1SC |= FTM_CnSC_CHIE(1);
+ 180              		.loc 1 53 0
+ 181 0028 0D4A     		ldr	r2, .L11+8
+ 182 002a 0D4B     		ldr	r3, .L11+8
+ 183 002c 5B69     		ldr	r3, [r3, #20]
+ 184 002e 43F04003 		orr	r3, r3, #64
+ 185 0032 5361     		str	r3, [r2, #20]
+  54:../Sources/sensors/beep.c ****     //cmd += sizeof("set");
+  55:../Sources/sensors/beep.c ****     result = utilScanDecimal16s(&cmd, &number);
+ 186              		.loc 1 55 0
+ 187 0034 3B1D     		adds	r3, r7, #4
+ 188 0036 0B49     		ldr	r1, .L11+12
+ 189 0038 1846     		mov	r0, r3
+ 190 003a FFF7FEFF 		bl	utilScanDecimal16s
+ 191 003e 0346     		mov	r3, r0
+ 192 0040 FB73     		strb	r3, [r7, #15]
+  56:../Sources/sensors/beep.c ****     if (result != EC_SUCCESS) return result;
+ 193              		.loc 1 56 0
+ 194 0042 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 195 0044 002B     		cmp	r3, #0
+ 196 0046 01D0     		beq	.L9
+ 197              		.loc 1 56 0 is_stmt 0 discriminator 1
+ 198 0048 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 199 004a 00E0     		b	.L10
+ 200              	.L9:
+  57:../Sources/sensors/beep.c ****   }
+  58:../Sources/sensors/beep.c **** 
+  59:../Sources/sensors/beep.c ****   return result;
+ 201              		.loc 1 59 0 is_stmt 1
+ 202 004c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 203              	.L10:
+  60:../Sources/sensors/beep.c **** }
+ 204              		.loc 1 60 0
+ 205 004e 1846     		mov	r0, r3
+ 206 0050 1037     		adds	r7, r7, #16
+ 207              		.cfi_def_cfa_offset 8
+ 208 0052 BD46     		mov	sp, r7
+ 209              		.cfi_def_cfa_register 13
+ 210              		@ sp needed
+ 211 0054 80BD     		pop	{r7, pc}
+ 212              	.L12:
+ 213 0056 00BF     		.align	2
+ 214              	.L11:
+ 215 0058 00000000 		.word	.LC0
+ 216 005c 08000000 		.word	.LC1
+ 217 0060 00800340 		.word	1073971200
+ 218 0064 00000000 		.word	number
+ 219              		.cfi_endproc
+ 220              	.LFE126:
+ 222              		.section	.rodata
+ 223 0022 0000     		.align	2
+ 224              	.LC2:
+ 225 0024 00       		.ascii	"\000"
+ 226 0025 000000   		.align	2
+ 227              	.LC3:
+ 228 0028 62656570 		.ascii	"beeps\000"
+ 228      7300
+ 229              		.section	.text.beepInit,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	beepInit
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 235              		.fpu fpv4-sp-d16
+ 237              	beepInit:
+ 238              	.LFB127:
+  61:../Sources/sensors/beep.c **** 
+  62:../Sources/sensors/beep.c **** tError beepInit(void)
+  63:../Sources/sensors/beep.c **** {
+ 239              		.loc 1 63 0
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 0
+ 242              		@ frame_needed = 1, uses_anonymous_args = 0
+ 243 0000 80B5     		push	{r7, lr}
+ 244              		.cfi_def_cfa_offset 8
+ 245              		.cfi_offset 7, -8
+ 246              		.cfi_offset 14, -4
+ 247 0002 00AF     		add	r7, sp, #0
+ 248              		.cfi_def_cfa_register 7
+  64:../Sources/sensors/beep.c ****   GPIOE_PDDR |= 1 << 1; // Buzzer
+ 249              		.loc 1 64 0
+ 250 0004 0D4A     		ldr	r2, .L15
+ 251 0006 0D4B     		ldr	r3, .L15
+ 252 0008 5B69     		ldr	r3, [r3, #20]
+ 253 000a 43F00203 		orr	r3, r3, #2
+ 254 000e 5361     		str	r3, [r2, #20]
+  65:../Sources/sensors/beep.c ****   PORTE_PCR1 = PORT_PCR_MUX(1);
+ 255              		.loc 1 65 0
+ 256 0010 0B4B     		ldr	r3, .L15+4
+ 257 0012 4FF48072 		mov	r2, #256
+ 258 0016 5A60     		str	r2, [r3, #4]
+  66:../Sources/sensors/beep.c **** 
+  67:../Sources/sensors/beep.c **** //  GPIOD_PDDR |= 1 << 2; // LED
+  68:../Sources/sensors/beep.c **** //  PORTD_PCR2 = PORT_PCR_MUX(1);
+  69:../Sources/sensors/beep.c **** 
+  70:../Sources/sensors/beep.c ****   FTM0_C1SC = FTM_CnSC_MSx(1) | FTM_CnSC_ELSx(0);
+ 259              		.loc 1 70 0
+ 260 0018 0A4B     		ldr	r3, .L15+8
+ 261 001a 1022     		movs	r2, #16
+ 262 001c 5A61     		str	r2, [r3, #20]
+  71:../Sources/sensors/beep.c ****   FTM0_C1SC |= FTM_CnSC_CHF(1) | FTM_CnSC_CHIE(0);
+ 263              		.loc 1 71 0
+ 264 001e 094A     		ldr	r2, .L15+8
+ 265 0020 084B     		ldr	r3, .L15+8
+ 266 0022 5B69     		ldr	r3, [r3, #20]
+ 267 0024 43F08003 		orr	r3, r3, #128
+ 268 0028 5361     		str	r3, [r2, #20]
+  72:../Sources/sensors/beep.c **** 
+  73:../Sources/sensors/beep.c ****   // register terminal command line handler
+  74:../Sources/sensors/beep.c ****   termRegisterCommandLineHandler(&clh, "beeps", "", beepParseCommand);
+ 269              		.loc 1 74 0
+ 270 002a 074B     		ldr	r3, .L15+12
+ 271 002c 074A     		ldr	r2, .L15+16
+ 272 002e 0849     		ldr	r1, .L15+20
+ 273 0030 0848     		ldr	r0, .L15+24
+ 274 0032 FFF7FEFF 		bl	termRegisterCommandLineHandler
+  75:../Sources/sensors/beep.c ****   return EC_SUCCESS;
+ 275              		.loc 1 75 0
+ 276 0036 0023     		movs	r3, #0
+  76:../Sources/sensors/beep.c **** }
+ 277              		.loc 1 76 0
+ 278 0038 1846     		mov	r0, r3
+ 279 003a 80BD     		pop	{r7, pc}
+ 280              	.L16:
+ 281              		.align	2
+ 282              	.L15:
+ 283 003c 00F10F40 		.word	1074786560
+ 284 0040 00D00440 		.word	1074057216
+ 285 0044 00800340 		.word	1073971200
+ 286 0048 00000000 		.word	beepParseCommand
+ 287 004c 24000000 		.word	.LC2
+ 288 0050 28000000 		.word	.LC3
+ 289 0054 00000000 		.word	clh
+ 290              		.cfi_endproc
+ 291              	.LFE127:
+ 293              		.section	.bss.i.7083,"aw",%nobits
+ 294              		.align	1
+ 297              	i.7083:
+ 298 0000 0000     		.space	2
+ 299              		.section	.bss.j.7084,"aw",%nobits
+ 300              		.align	1
+ 303              	j.7084:
+ 304 0000 0000     		.space	2
+ 305              		.text
+ 306              	.Letext0:
+ 307              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 308              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 309              		.file 4 "../Includes/core_cm4.h"
+ 310              		.file 5 "../Includes/system_MK22F51212.h"
+ 311              		.file 6 "../Includes/MK22F51212.h"
+ 312              		.file 7 "../Includes/platform.h"
+ 313              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 314              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 315              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 316              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 317              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 beep.c
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:24     .bss.number:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:27     .bss.number:00000000 number
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:30     .text.FTM0CH1_IRQHandler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:37     .text.FTM0CH1_IRQHandler:00000000 FTM0CH1_IRQHandler
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:123    .text.FTM0CH1_IRQHandler:0000007c $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:297    .bss.i.7083:00000000 i.7083
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:303    .bss.j.7084:00000000 j.7084
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:132    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:139    .text.beepParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:146    .text.beepParseCommand:00000000 beepParseCommand
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:215    .text.beepParseCommand:00000058 $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:230    .text.beepInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:237    .text.beepInit:00000000 beepInit
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:283    .text.beepInit:0000003c $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:294    .bss.i.7083:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc58K1id.s:300    .bss.j.7084:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.ftm0.h.17.cec3e0a8843af04be56280b53fe960ea
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+utilScanDecimal16s
+termRegisterCommandLineHandler

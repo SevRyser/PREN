@@ -1,0 +1,1484 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"system_MK22F51212.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	SystemCoreClock
+  18              		.section	.data.SystemCoreClock,"aw",%progbits
+  19              		.align	2
+  22              	SystemCoreClock:
+  23 0000 000E2707 		.word	120000000
+  24              		.section	.text.SystemInit,"ax",%progbits
+  25              		.align	1
+  26              		.global	SystemInit
+  27              		.syntax unified
+  28              		.thumb
+  29              		.thumb_func
+  30              		.fpu fpv4-sp-d16
+  32              	SystemInit:
+  33              	.LFB123:
+  34              		.file 1 "../Project_Settings/Startup_Code/system_MK22F51212.c"
+   1:../Project_Settings/Startup_Code/system_MK22F51212.c **** /*
+   2:../Project_Settings/Startup_Code/system_MK22F51212.c **** ** ###################################################################
+   3:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Compilers:           Keil ARM C/C++ Compiler
+   4:../Project_Settings/Startup_Code/system_MK22F51212.c **** **                          Freescale C/C++ for Embedded ARM
+   5:../Project_Settings/Startup_Code/system_MK22F51212.c **** **                          GNU C Compiler
+   6:../Project_Settings/Startup_Code/system_MK22F51212.c **** **                          GNU C Compiler - CodeSourcery Sourcery G++
+   7:../Project_Settings/Startup_Code/system_MK22F51212.c **** **                          IAR ANSI C/C++ Compiler for ARM
+   8:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+   9:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Reference manual:    K22P121M120SF7RM, Rev. 1, March 24, 2014
+  10:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Version:             rev. 2.8, 2015-02-19
+  11:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Build:               b150223
+  12:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  13:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Abstract:
+  14:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Provides a system configuration function and a global variable that
+  15:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         contains the system frequency. It configures the device and initializes
+  16:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         the oscillator (PLL) that is part of the microcontroller device.
+  17:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  18:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Copyright (c) 2015 Freescale Semiconductor, Inc.
+  19:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     All rights reserved.
+  20:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  21:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Redistribution and use in source and binary forms, with or without modification,
+  22:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     are permitted provided that the following conditions are met:
+  23:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  24:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     o Redistributions of source code must retain the above copyright notice, this list
+  25:../Project_Settings/Startup_Code/system_MK22F51212.c **** **       of conditions and the following disclaimer.
+  26:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  27:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     o Redistributions in binary form must reproduce the above copyright notice, this
+  28:../Project_Settings/Startup_Code/system_MK22F51212.c **** **       list of conditions and the following disclaimer in the documentation and/or
+  29:../Project_Settings/Startup_Code/system_MK22F51212.c **** **       other materials provided with the distribution.
+  30:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  31:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     o Neither the name of Freescale Semiconductor, Inc. nor the names of its
+  32:../Project_Settings/Startup_Code/system_MK22F51212.c **** **       contributors may be used to endorse or promote products derived from this
+  33:../Project_Settings/Startup_Code/system_MK22F51212.c **** **       software without specific prior written permission.
+  34:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  35:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  36:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  37:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  38:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+  39:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  40:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  41:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+  42:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  43:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  44:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  45:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  46:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     http:                 www.freescale.com
+  47:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     mail:                 support@freescale.com
+  48:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  49:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     Revisions:
+  50:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 1.0 (2013-07-23)
+  51:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Initial version.
+  52:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 1.1 (2013-09-17)
+  53:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         RM rev. 0.4 update.
+  54:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.0 (2013-10-29)
+  55:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Register accessor macros added to the memory map.
+  56:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Symbols for Processor Expert memory map compatibility added to the memory map.
+  57:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Startup file for gcc has been updated according to CMSIS 3.2.
+  58:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         System initialization updated.
+  59:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.1 (2013-10-30)
+  60:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Definition of BITBAND macros updated to support peripherals with 32-bit acces disabled.
+  61:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.2 (2013-12-20)
+  62:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update according to reference manual rev. 0.6,
+  63:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.3 (2014-01-13)
+  64:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update according to reference manual rev. 0.61,
+  65:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.4 (2014-02-10)
+  66:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         The declaration of clock configurations has been moved to separate header file system_MK
+  67:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.5 (2014-05-06)
+  68:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update according to reference manual rev. 1.0,
+  69:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update of system and startup files.
+  70:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Module access macro module_BASES replaced by module_BASE_PTRS.
+  71:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.6 (2014-08-28)
+  72:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update of system files - default clock configuration changed.
+  73:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Update of startup files - possibility to override DefaultISR added.
+  74:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.7 (2014-10-14)
+  75:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Interrupt INT_LPTimer renamed to INT_LPTMR0, interrupt INT_Watchdog renamed to INT_WDOG_
+  76:../Project_Settings/Startup_Code/system_MK22F51212.c **** **     - rev. 2.8 (2015-02-19)
+  77:../Project_Settings/Startup_Code/system_MK22F51212.c **** **         Renamed interrupt vector LLW to LLWU.
+  78:../Project_Settings/Startup_Code/system_MK22F51212.c **** **
+  79:../Project_Settings/Startup_Code/system_MK22F51212.c **** ** ###################################################################
+  80:../Project_Settings/Startup_Code/system_MK22F51212.c **** */
+  81:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+  82:../Project_Settings/Startup_Code/system_MK22F51212.c **** /*!
+  83:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * @file system_MK22F51212.c
+  84:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * @version 2.8
+  85:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * @date 2015-02-19
+  86:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * @brief Device specific configuration file for MK22F51212 (implementation file)
+  87:../Project_Settings/Startup_Code/system_MK22F51212.c ****  *
+  88:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * Provides a system configuration function and a global variable that contains
+  89:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * the system frequency. It configures the device and initializes the oscillator
+  90:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * (PLL) that is part of the microcontroller device.
+  91:../Project_Settings/Startup_Code/system_MK22F51212.c ****  */
+  92:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+  93:../Project_Settings/Startup_Code/system_MK22F51212.c **** #include <stdint.h>
+  94:../Project_Settings/Startup_Code/system_MK22F51212.c **** #include "MK22F51212.h"
+  95:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+  96:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+  97:../Project_Settings/Startup_Code/system_MK22F51212.c **** /* ----------------------------------------------------------------------------
+  98:../Project_Settings/Startup_Code/system_MK22F51212.c ****    -- Core clock
+  99:../Project_Settings/Startup_Code/system_MK22F51212.c ****    ---------------------------------------------------------------------------- */
+ 100:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 101:../Project_Settings/Startup_Code/system_MK22F51212.c **** uint32_t SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
+ 102:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 103:../Project_Settings/Startup_Code/system_MK22F51212.c **** /* ----------------------------------------------------------------------------
+ 104:../Project_Settings/Startup_Code/system_MK22F51212.c ****    -- SystemInit()
+ 105:../Project_Settings/Startup_Code/system_MK22F51212.c ****    ---------------------------------------------------------------------------- */
+ 106:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 107:../Project_Settings/Startup_Code/system_MK22F51212.c **** void SystemInit (void) {
+  35              		.loc 1 107 0
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 1, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 80B4     		push	{r7}
+  41              		.cfi_def_cfa_offset 4
+  42              		.cfi_offset 7, -4
+  43 0002 00AF     		add	r7, sp, #0
+  44              		.cfi_def_cfa_register 7
+ 108:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if ((__FPU_PRESENT == 1) && (__FPU_USED == 1))
+ 109:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SCB->CPACR |= ((3UL << 10*2) | (3UL << 11*2));    /* set CP10, CP11 Full Access */
+  45              		.loc 1 109 0
+  46 0004 7D4A     		ldr	r2, .L10
+  47 0006 7D4B     		ldr	r3, .L10
+  48 0008 D3F88830 		ldr	r3, [r3, #136]
+  49 000c 43F47003 		orr	r3, r3, #15728640
+  50 0010 C2F88830 		str	r3, [r2, #136]
+ 110:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif /* ((__FPU_PRESENT == 1) && (__FPU_USED == 1)) */
+ 111:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 112:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if (DISABLE_WDOG)
+ 113:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* WDOG->UNLOCK: WDOGUNLOCK=0xC520 */
+ 114:../Project_Settings/Startup_Code/system_MK22F51212.c ****   WDOG->UNLOCK = WDOG_UNLOCK_WDOGUNLOCK(0xC520); /* Key 1 */
+  51              		.loc 1 114 0
+  52 0014 7A4B     		ldr	r3, .L10+4
+  53 0016 4CF22052 		movw	r2, #50464
+  54 001a DA81     		strh	r2, [r3, #14]	@ movhi
+ 115:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* WDOG->UNLOCK: WDOGUNLOCK=0xD928 */
+ 116:../Project_Settings/Startup_Code/system_MK22F51212.c ****   WDOG->UNLOCK = WDOG_UNLOCK_WDOGUNLOCK(0xD928); /* Key 2 */
+  55              		.loc 1 116 0
+  56 001c 784B     		ldr	r3, .L10+4
+  57 001e 4DF62812 		movw	r2, #55592
+  58 0022 DA81     		strh	r2, [r3, #14]	@ movhi
+ 117:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* WDOG->STCTRLH: ?=0,DISTESTWDOG=0,BYTESEL=0,TESTSEL=0,TESTWDOG=0,?=0,?=1,WAITEN=1,STOPEN=1,DBGE
+ 118:../Project_Settings/Startup_Code/system_MK22F51212.c ****   WDOG->STCTRLH = WDOG_STCTRLH_BYTESEL(0x00) |
+  59              		.loc 1 118 0
+  60 0024 764B     		ldr	r3, .L10+4
+  61 0026 4FF4E972 		mov	r2, #466
+  62 002a 1A80     		strh	r2, [r3]	@ movhi
+ 119:../Project_Settings/Startup_Code/system_MK22F51212.c ****                  WDOG_STCTRLH_WAITEN_MASK |
+ 120:../Project_Settings/Startup_Code/system_MK22F51212.c ****                  WDOG_STCTRLH_STOPEN_MASK |
+ 121:../Project_Settings/Startup_Code/system_MK22F51212.c ****                  WDOG_STCTRLH_ALLOWUPDATE_MASK |
+ 122:../Project_Settings/Startup_Code/system_MK22F51212.c ****                  WDOG_STCTRLH_CLKSRC_MASK |
+ 123:../Project_Settings/Startup_Code/system_MK22F51212.c ****                  0x0100U;
+ 124:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif /* (DISABLE_WDOG) */
+ 125:../Project_Settings/Startup_Code/system_MK22F51212.c **** #ifdef CLOCK_SETUP
+ 126:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if((RCM->SRS0 & RCM_SRS0_WAKEUP_MASK) != 0x00U)
+  63              		.loc 1 126 0
+  64 002c 754B     		ldr	r3, .L10+8
+  65 002e 1B78     		ldrb	r3, [r3]
+  66 0030 DBB2     		uxtb	r3, r3
+  67 0032 03F00103 		and	r3, r3, #1
+  68 0036 002B     		cmp	r3, #0
+  69 0038 0FD0     		beq	.L2
+ 127:../Project_Settings/Startup_Code/system_MK22F51212.c ****   {
+ 128:../Project_Settings/Startup_Code/system_MK22F51212.c ****     if((PMC->REGSC & PMC_REGSC_ACKISO_MASK) != 0x00U)
+  70              		.loc 1 128 0
+  71 003a 734B     		ldr	r3, .L10+12
+  72 003c 9B78     		ldrb	r3, [r3, #2]
+  73 003e DBB2     		uxtb	r3, r3
+  74 0040 03F00803 		and	r3, r3, #8
+  75 0044 002B     		cmp	r3, #0
+  76 0046 2ED0     		beq	.L4
+ 129:../Project_Settings/Startup_Code/system_MK22F51212.c ****     {
+ 130:../Project_Settings/Startup_Code/system_MK22F51212.c ****        PMC->REGSC |= PMC_REGSC_ACKISO_MASK; /* Release hold with ACKISO:  Only has an effect if rec
+  77              		.loc 1 130 0
+  78 0048 6F4A     		ldr	r2, .L10+12
+  79 004a 6F4B     		ldr	r3, .L10+12
+  80 004c 9B78     		ldrb	r3, [r3, #2]
+  81 004e DBB2     		uxtb	r3, r3
+  82 0050 43F00803 		orr	r3, r3, #8
+  83 0054 DBB2     		uxtb	r3, r3
+  84 0056 9370     		strb	r3, [r2, #2]
+  85 0058 25E0     		b	.L4
+  86              	.L2:
+ 131:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 132:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else {
+ 133:../Project_Settings/Startup_Code/system_MK22F51212.c **** #ifdef SYSTEM_RTC_CR_VALUE
+ 134:../Project_Settings/Startup_Code/system_MK22F51212.c ****     SIM_SCGC6 |= SIM_SCGC6_RTC_MASK;
+  87              		.loc 1 134 0
+  88 005a 6C49     		ldr	r1, .L10+16
+  89 005c 6B4B     		ldr	r3, .L10+16
+  90 005e 03F58153 		add	r3, r3, #4128
+  91 0062 1C33     		adds	r3, r3, #28
+  92 0064 1B68     		ldr	r3, [r3]
+  93 0066 43F00052 		orr	r2, r3, #536870912
+  94 006a 01F58153 		add	r3, r1, #4128
+  95 006e 1C33     		adds	r3, r3, #28
+  96 0070 1A60     		str	r2, [r3]
+ 135:../Project_Settings/Startup_Code/system_MK22F51212.c ****     if ((RTC_CR & RTC_CR_OSCE_MASK) == 0x00U) { /* Only if the OSCILLATOR is not already enabled */
+  97              		.loc 1 135 0
+  98 0072 674B     		ldr	r3, .L10+20
+  99 0074 1B69     		ldr	r3, [r3, #16]
+ 100 0076 03F48073 		and	r3, r3, #256
+ 101 007a 002B     		cmp	r3, #0
+ 102 007c 13D1     		bne	.L4
+ 136:../Project_Settings/Startup_Code/system_MK22F51212.c ****       RTC_CR = (uint32_t)((RTC_CR & (uint32_t)~(uint32_t)(RTC_CR_SC2P_MASK | RTC_CR_SC4P_MASK | RTC
+ 103              		.loc 1 136 0
+ 104 007e 644A     		ldr	r2, .L10+20
+ 105 0080 634B     		ldr	r3, .L10+20
+ 106 0082 1B69     		ldr	r3, [r3, #16]
+ 107 0084 23F47C53 		bic	r3, r3, #16128
+ 108 0088 43F44073 		orr	r3, r3, #768
+ 109 008c 1361     		str	r3, [r2, #16]
+ 137:../Project_Settings/Startup_Code/system_MK22F51212.c ****       RTC_CR |= (uint32_t)RTC_CR_OSCE_MASK;
+ 110              		.loc 1 137 0
+ 111 008e 604A     		ldr	r2, .L10+20
+ 112 0090 5F4B     		ldr	r3, .L10+20
+ 113 0092 1B69     		ldr	r3, [r3, #16]
+ 114 0094 43F48073 		orr	r3, r3, #256
+ 115 0098 1361     		str	r3, [r2, #16]
+ 138:../Project_Settings/Startup_Code/system_MK22F51212.c ****       RTC_CR &= (uint32_t)~(uint32_t)RTC_CR_CLKO_MASK;
+ 116              		.loc 1 138 0
+ 117 009a 5D4A     		ldr	r2, .L10+20
+ 118 009c 5C4B     		ldr	r3, .L10+20
+ 119 009e 1B69     		ldr	r3, [r3, #16]
+ 120 00a0 23F40073 		bic	r3, r3, #512
+ 121 00a4 1361     		str	r3, [r2, #16]
+ 122              	.L4:
+ 139:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 140:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 141:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 142:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 143:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Power mode protection initialization */
+ 144:../Project_Settings/Startup_Code/system_MK22F51212.c **** #ifdef SYSTEM_SMC_PMPROT_VALUE
+ 145:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SMC->PMPROT = SYSTEM_SMC_PMPROT_VALUE;
+ 123              		.loc 1 145 0
+ 124 00a6 5B4B     		ldr	r3, .L10+24
+ 125 00a8 AA22     		movs	r2, #170
+ 126 00aa 1A70     		strb	r2, [r3]
+ 146:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 147:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 148:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* High speed run mode enable */
+ 149:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if (((SYSTEM_SMC_PMCTRL_VALUE) & SMC_PMCTRL_RUNM_MASK) == (0x03U << SMC_PMCTRL_RUNM_SHIFT))
+ 150:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SMC->PMCTRL = (uint8_t)((SYSTEM_SMC_PMCTRL_VALUE) & (SMC_PMCTRL_RUNM_MASK)); /* Enable HSRUN mode
+ 127              		.loc 1 150 0
+ 128 00ac 594B     		ldr	r3, .L10+24
+ 129 00ae 6022     		movs	r2, #96
+ 130 00b0 5A70     		strb	r2, [r3, #1]
+ 151:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while(SMC->PMSTAT != 0x80U) {        /* Wait until the system is in HSRUN mode */
+ 131              		.loc 1 151 0
+ 132 00b2 00BF     		nop
+ 133              	.L5:
+ 134              		.loc 1 151 0 is_stmt 0 discriminator 1
+ 135 00b4 574B     		ldr	r3, .L10+24
+ 136 00b6 DB78     		ldrb	r3, [r3, #3]
+ 137 00b8 DBB2     		uxtb	r3, r3
+ 138 00ba 802B     		cmp	r3, #128
+ 139 00bc FAD1     		bne	.L5
+ 152:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 153:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 154:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* System clock initialization */
+ 155:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Internal reference clock trim initialization */
+ 156:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if defined(SLOW_TRIM_ADDRESS)
+ 157:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if ( *((uint8_t*)SLOW_TRIM_ADDRESS) != 0xFFU) {                              /* Skip if non-volat
+ 158:../Project_Settings/Startup_Code/system_MK22F51212.c ****     MCG->C3 = *((uint8_t*)SLOW_TRIM_ADDRESS);
+ 159:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif /* defined(SLOW_TRIM_ADDRESS) */
+ 160:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if defined(SLOW_FINE_TRIM_ADDRESS)
+ 161:../Project_Settings/Startup_Code/system_MK22F51212.c ****     MCG->C4 = (MCG->C4 & ~(MCG_C4_SCFTRIM_MASK)) | ((*((uint8_t*) SLOW_FINE_TRIM_ADDRESS)) & MCG_C4
+ 162:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif
+ 163:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if defined(FAST_TRIM_ADDRESS)
+ 164:../Project_Settings/Startup_Code/system_MK22F51212.c ****     MCG->C4 = (MCG->C4 & ~(MCG_C4_FCTRIM_MASK)) |((*((uint8_t*) FAST_TRIM_ADDRESS)) & MCG_C4_FCTRIM
+ 165:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif
+ 166:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if defined(FAST_FINE_TRIM_ADDRESS)
+ 167:../Project_Settings/Startup_Code/system_MK22F51212.c ****     MCG->C2 = (MCG->C2 & ~(MCG_C2_FCFTRIM_MASK)) | ((*((uint8_t*)FAST_TRIM_ADDRESS)) & MCG_C2_FCFTR
+ 168:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif /* defined(FAST_FINE_TRIM_ADDRESS) */
+ 169:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if defined(SLOW_TRIM_ADDRESS)
+ 170:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 171:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif /* defined(SLOW_TRIM_ADDRESS) */
+ 172:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 173:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Set system prescalers and clock sources */
+ 174:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM->CLKDIV1 = SYSTEM_SIM_CLKDIV1_VALUE; /* Set system prescalers */
+ 140              		.loc 1 174 0 is_stmt 1
+ 141 00be 534B     		ldr	r3, .L10+16
+ 142 00c0 03F58253 		add	r3, r3, #4160
+ 143 00c4 0433     		adds	r3, r3, #4
+ 144 00c6 4FF08A72 		mov	r2, #18087936
+ 145 00ca 1A60     		str	r2, [r3]
+ 175:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM->SOPT1 = ((SIM->SOPT1) & (uint32_t)(~(SIM_SOPT1_OSC32KSEL_MASK))) | ((SYSTEM_SIM_SOPT1_VALUE)
+ 146              		.loc 1 175 0
+ 147 00cc 4F4A     		ldr	r2, .L10+16
+ 148 00ce 4F4B     		ldr	r3, .L10+16
+ 149 00d0 1B68     		ldr	r3, [r3]
+ 150 00d2 23F44023 		bic	r3, r3, #786432
+ 151 00d6 43F40023 		orr	r3, r3, #524288
+ 152 00da 1360     		str	r3, [r2]
+ 176:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM->SOPT2 = ((SIM->SOPT2) & (uint32_t)(~(SIM_SOPT2_PLLFLLSEL_MASK))) | ((SYSTEM_SIM_SOPT2_VALUE)
+ 153              		.loc 1 176 0
+ 154 00dc 4B49     		ldr	r1, .L10+16
+ 155 00de 4B4B     		ldr	r3, .L10+16
+ 156 00e0 03F58053 		add	r3, r3, #4096
+ 157 00e4 0433     		adds	r3, r3, #4
+ 158 00e6 1B68     		ldr	r3, [r3]
+ 159 00e8 23F44033 		bic	r3, r3, #196608
+ 160 00ec 43F48032 		orr	r2, r3, #65536
+ 161 00f0 01F58053 		add	r3, r1, #4096
+ 162 00f4 0433     		adds	r3, r3, #4
+ 163 00f6 1A60     		str	r2, [r3]
+ 177:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if ((MCG_MODE == MCG_MODE_FEI) || (MCG_MODE == MCG_MODE_FBI) || (MCG_MODE == MCG_MODE_BLPI))
+ 178:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Set MCG and OSC */
+ 179:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if  ((((SYSTEM_OSC_CR_VALUE) & OSC_CR_ERCLKEN_MASK) != 0x00U) || ((((SYSTEM_MCG_C5_VALUE) & MCG_C5
+ 180:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* SIM_SCGC5: PORTA=1 */
+ 181:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
+ 182:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PORTA_PCR18: ISF=0,MUX=0 */
+ 183:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR18 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
+ 184:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if (((SYSTEM_MCG_C2_VALUE) & MCG_C2_EREFS_MASK) != 0x00U) {
+ 185:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PORTA_PCR19: ISF=0,MUX=0 */
+ 186:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR19 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
+ 187:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 188:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 189:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->SC = SYSTEM_MCG_SC_VALUE;       /* Set SC (fast clock internal reference divider) */
+ 190:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C1 = SYSTEM_MCG_C1_VALUE;       /* Set C1 (clock source selection, FLL ext. reference divide
+ 191:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Check that the source of the FLL reference clock is the requested one. */
+ 192:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if (((SYSTEM_MCG_C1_VALUE) & MCG_C1_IREFS_MASK) != 0x00U) {
+ 193:../Project_Settings/Startup_Code/system_MK22F51212.c ****     while((MCG->S & MCG_S_IREFST_MASK) == 0x00U) {
+ 194:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 195:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else {
+ 196:../Project_Settings/Startup_Code/system_MK22F51212.c ****     while((MCG->S & MCG_S_IREFST_MASK) != 0x00U) {
+ 197:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 198:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 199:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C2 = (MCG->C2 & (uint8_t)(~(MCG_C2_FCFTRIM_MASK))) | (SYSTEM_MCG_C2_VALUE & (uint8_t)(~(MCG_
+ 200:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C4 = ((SYSTEM_MCG_C4_VALUE) & (uint8_t)(~(MCG_C4_FCTRIM_MASK | MCG_C4_SCFTRIM_MASK))) | (MCG
+ 201:../Project_Settings/Startup_Code/system_MK22F51212.c ****   OSC->CR = SYSTEM_OSC_CR_VALUE;       /* Set OSC_CR (OSCERCLK enable, oscillator capacitor load) *
+ 202:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C7 = SYSTEM_MCG_C7_VALUE;       /* Set C7 (OSC Clock Select) */
+ 203:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if (MCG_MODE == MCG_MODE_BLPI)
+ 204:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* BLPI specific */
+ 205:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C2 |= (MCG_C2_LP_MASK);         /* Disable FLL and PLL in bypass mode */
+ 206:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif
+ 207:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 208:../Project_Settings/Startup_Code/system_MK22F51212.c **** #else /* MCG_MODE */
+ 209:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Set MCG and OSC */
+ 210:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if  (((SYSTEM_OSC_CR_VALUE) & OSC_CR_ERCLKEN_MASK) != 0x00U) || (((SYSTEM_MCG_C7_VALUE) & MCG_C7_O
+ 211:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* SIM_SCGC5: PORTA=1 */
+ 212:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
+ 164              		.loc 1 212 0
+ 165 00f8 4449     		ldr	r1, .L10+16
+ 166 00fa 444B     		ldr	r3, .L10+16
+ 167 00fc 03F58153 		add	r3, r3, #4128
+ 168 0100 1833     		adds	r3, r3, #24
+ 169 0102 1B68     		ldr	r3, [r3]
+ 170 0104 43F40072 		orr	r2, r3, #512
+ 171 0108 01F58153 		add	r3, r1, #4128
+ 172 010c 1833     		adds	r3, r3, #24
+ 173 010e 1A60     		str	r2, [r3]
+ 213:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PORTA_PCR18: ISF=0,MUX=0 */
+ 214:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR18 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
+ 174              		.loc 1 214 0
+ 175 0110 414A     		ldr	r2, .L10+28
+ 176 0112 414B     		ldr	r3, .L10+28
+ 177 0114 9B6C     		ldr	r3, [r3, #72]
+ 178 0116 23F08073 		bic	r3, r3, #16777216
+ 179 011a 23F4E063 		bic	r3, r3, #1792
+ 180 011e 9364     		str	r3, [r2, #72]
+ 215:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if (((SYSTEM_MCG_C2_VALUE) & MCG_C2_EREFS_MASK) != 0x00U) {
+ 216:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PORTA_PCR19: ISF=0,MUX=0 */
+ 217:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR19 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
+ 181              		.loc 1 217 0
+ 182 0120 3D4A     		ldr	r2, .L10+28
+ 183 0122 3D4B     		ldr	r3, .L10+28
+ 184 0124 DB6C     		ldr	r3, [r3, #76]
+ 185 0126 23F08073 		bic	r3, r3, #16777216
+ 186 012a 23F4E063 		bic	r3, r3, #1792
+ 187 012e D364     		str	r3, [r2, #76]
+ 218:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 219:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 220:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->SC = SYSTEM_MCG_SC_VALUE;       /* Set SC (fast clock internal reference divider) */
+ 188              		.loc 1 220 0
+ 189 0130 3A4B     		ldr	r3, .L10+32
+ 190 0132 0022     		movs	r2, #0
+ 191 0134 1A72     		strb	r2, [r3, #8]
+ 221:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C2 = (MCG->C2 & (uint8_t)(~(MCG_C2_FCFTRIM_MASK))) | (SYSTEM_MCG_C2_VALUE & (uint8_t)(~(MCG_
+ 192              		.loc 1 221 0
+ 193 0136 394A     		ldr	r2, .L10+32
+ 194 0138 384B     		ldr	r3, .L10+32
+ 195 013a 5B78     		ldrb	r3, [r3, #1]
+ 196 013c DBB2     		uxtb	r3, r3
+ 197 013e 23F06403 		bic	r3, r3, #100
+ 198 0142 DBB2     		uxtb	r3, r3
+ 199 0144 43F02403 		orr	r3, r3, #36
+ 200 0148 DBB2     		uxtb	r3, r3
+ 201 014a 5370     		strb	r3, [r2, #1]
+ 222:../Project_Settings/Startup_Code/system_MK22F51212.c ****   OSC->CR = SYSTEM_OSC_CR_VALUE;       /* Set OSC_CR (OSCERCLK enable, oscillator capacitor load) *
+ 202              		.loc 1 222 0
+ 203 014c 344B     		ldr	r3, .L10+36
+ 204 014e 8022     		movs	r2, #128
+ 205 0150 1A70     		strb	r2, [r3]
+ 223:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C7 = SYSTEM_MCG_C7_VALUE;       /* Set C7 (OSC Clock Select) */
+ 206              		.loc 1 223 0
+ 207 0152 324B     		ldr	r3, .L10+32
+ 208 0154 0022     		movs	r2, #0
+ 209 0156 1A73     		strb	r2, [r3, #12]
+ 224:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if (MCG_MODE == MCG_MODE_PEE)
+ 225:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C1 = (SYSTEM_MCG_C1_VALUE) | MCG_C1_CLKS(0x02); /* Set C1 (clock source selection, FLL ext. 
+ 210              		.loc 1 225 0
+ 211 0158 304B     		ldr	r3, .L10+32
+ 212 015a 8222     		movs	r2, #130
+ 213 015c 1A70     		strb	r2, [r3]
+ 226:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #else
+ 227:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C1 = SYSTEM_MCG_C1_VALUE;       /* Set C1 (clock source selection, FLL ext. reference divide
+ 228:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif
+ 229:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if ((((SYSTEM_MCG_C2_VALUE) & MCG_C2_EREFS_MASK) != 0x00U) && (((SYSTEM_MCG_C7_VALUE) & MCG_C7_OS
+ 230:../Project_Settings/Startup_Code/system_MK22F51212.c ****     while((MCG->S & MCG_S_OSCINIT0_MASK) == 0x00U) { /* Check that the oscillator is running */
+ 214              		.loc 1 230 0
+ 215 015e 00BF     		nop
+ 216              	.L6:
+ 217              		.loc 1 230 0 is_stmt 0 discriminator 1
+ 218 0160 2E4B     		ldr	r3, .L10+32
+ 219 0162 9B79     		ldrb	r3, [r3, #6]
+ 220 0164 DBB2     		uxtb	r3, r3
+ 221 0166 03F00203 		and	r3, r3, #2
+ 222 016a 002B     		cmp	r3, #0
+ 223 016c F8D0     		beq	.L6
+ 231:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 232:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 233:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Check that the source of the FLL reference clock is the requested one. */
+ 234:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if (((SYSTEM_MCG_C1_VALUE) & MCG_C1_IREFS_MASK) != 0x00U) {
+ 235:../Project_Settings/Startup_Code/system_MK22F51212.c ****     while((MCG->S & MCG_S_IREFST_MASK) == 0x00U) {
+ 236:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 237:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else {
+ 238:../Project_Settings/Startup_Code/system_MK22F51212.c ****     while((MCG->S & MCG_S_IREFST_MASK) != 0x00U) {
+ 224              		.loc 1 238 0 is_stmt 1
+ 225 016e 00BF     		nop
+ 226              	.L7:
+ 227              		.loc 1 238 0 is_stmt 0 discriminator 1
+ 228 0170 2A4B     		ldr	r3, .L10+32
+ 229 0172 9B79     		ldrb	r3, [r3, #6]
+ 230 0174 DBB2     		uxtb	r3, r3
+ 231 0176 03F01003 		and	r3, r3, #16
+ 232 017a 002B     		cmp	r3, #0
+ 233 017c F8D1     		bne	.L7
+ 239:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 240:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 241:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C4 = ((SYSTEM_MCG_C4_VALUE)  & (uint8_t)(~(MCG_C4_FCTRIM_MASK | MCG_C4_SCFTRIM_MASK))) | (MC
+ 234              		.loc 1 241 0 is_stmt 1
+ 235 017e 274A     		ldr	r2, .L10+32
+ 236 0180 264B     		ldr	r3, .L10+32
+ 237 0182 DB78     		ldrb	r3, [r3, #3]
+ 238 0184 DBB2     		uxtb	r3, r3
+ 239 0186 03F01F03 		and	r3, r3, #31
+ 240 018a DBB2     		uxtb	r3, r3
+ 241 018c D370     		strb	r3, [r2, #3]
+ 242:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif /* MCG_MODE */
+ 243:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 244:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Common for all MCG modes */
+ 245:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 246:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PLL clock can be used to generate clock for some devices regardless of clock generator (MCGOUT
+ 247:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C5 = (SYSTEM_MCG_C5_VALUE) & (uint8_t)(~(MCG_C5_PLLCLKEN0_MASK)); /* Set C5 (PLL settings, P
+ 242              		.loc 1 247 0
+ 243 018e 234B     		ldr	r3, .L10+32
+ 244 0190 0122     		movs	r2, #1
+ 245 0192 1A71     		strb	r2, [r3, #4]
+ 248:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C6 = (SYSTEM_MCG_C6_VALUE) & (uint8_t)~(MCG_C6_PLLS_MASK); /* Set C6 (PLL select, VCO divide
+ 246              		.loc 1 248 0
+ 247 0194 214B     		ldr	r3, .L10+32
+ 248 0196 0622     		movs	r2, #6
+ 249 0198 5A71     		strb	r2, [r3, #5]
+ 249:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if ((SYSTEM_MCG_C5_VALUE) & MCG_C5_PLLCLKEN0_MASK) {
+ 250:../Project_Settings/Startup_Code/system_MK22F51212.c ****     MCG->C5 |= MCG_C5_PLLCLKEN0_MASK;  /* PLL clock enable in mode other than PEE or PBE */
+ 251:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 252:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* BLPE, PEE and PBE MCG mode specific */
+ 253:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 254:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if (MCG_MODE == MCG_MODE_BLPE)
+ 255:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C2 |= (MCG_C2_LP_MASK);         /* Disable FLL and PLL in bypass mode */
+ 256:../Project_Settings/Startup_Code/system_MK22F51212.c **** #elif ((MCG_MODE == MCG_MODE_PBE) || (MCG_MODE == MCG_MODE_PEE))
+ 257:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C6 |= (MCG_C6_PLLS_MASK);       /* Set C6 (PLL select, VCO divider etc.) */
+ 250              		.loc 1 257 0
+ 251 019a 204A     		ldr	r2, .L10+32
+ 252 019c 1F4B     		ldr	r3, .L10+32
+ 253 019e 5B79     		ldrb	r3, [r3, #5]
+ 254 01a0 DBB2     		uxtb	r3, r3
+ 255 01a2 43F04003 		orr	r3, r3, #64
+ 256 01a6 DBB2     		uxtb	r3, r3
+ 257 01a8 5371     		strb	r3, [r2, #5]
+ 258:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((MCG->S & MCG_S_LOCK0_MASK) == 0x00U) { /* Wait until PLL is locked*/
+ 258              		.loc 1 258 0
+ 259 01aa 00BF     		nop
+ 260              	.L8:
+ 261              		.loc 1 258 0 is_stmt 0 discriminator 1
+ 262 01ac 1B4B     		ldr	r3, .L10+32
+ 263 01ae 9B79     		ldrb	r3, [r3, #6]
+ 264 01b0 DBB2     		uxtb	r3, r3
+ 265 01b2 03F04003 		and	r3, r3, #64
+ 266 01b6 002B     		cmp	r3, #0
+ 267 01b8 F8D0     		beq	.L8
+ 259:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 260:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #if (MCG_MODE == MCG_MODE_PEE)
+ 261:../Project_Settings/Startup_Code/system_MK22F51212.c ****   MCG->C1 &= (uint8_t)~(MCG_C1_CLKS_MASK);
+ 268              		.loc 1 261 0 is_stmt 1
+ 269 01ba 184A     		ldr	r2, .L10+32
+ 270 01bc 174B     		ldr	r3, .L10+32
+ 271 01be 1B78     		ldrb	r3, [r3]
+ 272 01c0 DBB2     		uxtb	r3, r3
+ 273 01c2 03F03F03 		and	r3, r3, #63
+ 274 01c6 DBB2     		uxtb	r3, r3
+ 275 01c8 1370     		strb	r3, [r2]
+ 262:../Project_Settings/Startup_Code/system_MK22F51212.c ****   #endif
+ 263:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 264:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if ((MCG_MODE == MCG_MODE_FEI) || (MCG_MODE == MCG_MODE_FEE))
+ 265:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((MCG->S & MCG_S_CLKST_MASK) != 0x00U) { /* Wait until output of the FLL is selected */
+ 266:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 267:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* Use LPTMR to wait for 1ms for FLL clock stabilization */
+ 268:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM_SCGC5 |= SIM_SCGC5_LPTMR_MASK;   /* Alow software control of LPMTR */
+ 269:../Project_Settings/Startup_Code/system_MK22F51212.c ****   LPTMR0->CMR = LPTMR_CMR_COMPARE(0);  /* Default 1 LPO tick */
+ 270:../Project_Settings/Startup_Code/system_MK22F51212.c ****   LPTMR0->CSR = (LPTMR_CSR_TCF_MASK | LPTMR_CSR_TPS(0x00));
+ 271:../Project_Settings/Startup_Code/system_MK22F51212.c ****   LPTMR0->PSR = (LPTMR_PSR_PCS(0x01) | LPTMR_PSR_PBYP_MASK); /* Clock source: LPO, Prescaler bypass
+ 272:../Project_Settings/Startup_Code/system_MK22F51212.c ****   LPTMR0->CSR = LPTMR_CSR_TEN_MASK;    /* LPMTR enable */
+ 273:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((LPTMR0_CSR & LPTMR_CSR_TCF_MASK) == 0u) {
+ 274:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 275:../Project_Settings/Startup_Code/system_MK22F51212.c ****   LPTMR0_CSR = 0x00;                   /* Disable LPTMR */
+ 276:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM_SCGC5 &= (uint32_t)~(uint32_t)SIM_SCGC5_LPTMR_MASK;
+ 277:../Project_Settings/Startup_Code/system_MK22F51212.c **** #elif ((MCG_MODE == MCG_MODE_FBI) || (MCG_MODE == MCG_MODE_BLPI))
+ 278:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((MCG->S & MCG_S_CLKST_MASK) != 0x04U) { /* Wait until internal reference clock is selected 
+ 279:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 280:../Project_Settings/Startup_Code/system_MK22F51212.c **** #elif ((MCG_MODE == MCG_MODE_FBE) || (MCG_MODE == MCG_MODE_PBE) || (MCG_MODE == MCG_MODE_BLPE))
+ 281:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((MCG->S & MCG_S_CLKST_MASK) != 0x08U) { /* Wait until external reference clock is selected 
+ 282:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 283:../Project_Settings/Startup_Code/system_MK22F51212.c **** #elif (MCG_MODE == MCG_MODE_PEE)
+ 284:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while((MCG->S & MCG_S_CLKST_MASK) != 0x0CU) { /* Wait until output of the PLL is selected */
+ 276              		.loc 1 284 0
+ 277 01ca 00BF     		nop
+ 278              	.L9:
+ 279              		.loc 1 284 0 is_stmt 0 discriminator 1
+ 280 01cc 134B     		ldr	r3, .L10+32
+ 281 01ce 9B79     		ldrb	r3, [r3, #6]
+ 282 01d0 DBB2     		uxtb	r3, r3
+ 283 01d2 03F00C03 		and	r3, r3, #12
+ 284 01d6 0C2B     		cmp	r3, #12
+ 285 01d8 F8D1     		bne	.L9
+ 285:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 286:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 287:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if (((SYSTEM_SMC_PMCTRL_VALUE) & SMC_PMCTRL_RUNM_MASK) == (0x02U << SMC_PMCTRL_RUNM_SHIFT))
+ 288:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SMC->PMCTRL = (uint8_t)((SYSTEM_SMC_PMCTRL_VALUE) & (SMC_PMCTRL_RUNM_MASK)); /* Enable VLPR mode 
+ 289:../Project_Settings/Startup_Code/system_MK22F51212.c ****   while(SMC->PMSTAT != 0x04U) {        /* Wait until the system is in VLPR mode */
+ 290:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 291:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 292:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 293:../Project_Settings/Startup_Code/system_MK22F51212.c **** #if defined(SYSTEM_SIM_CLKDIV2_VALUE)
+ 294:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM->CLKDIV2 = ((SIM->CLKDIV2) & (uint32_t)(~(SIM_CLKDIV2_USBFRAC_MASK | SIM_CLKDIV2_USBDIV_MASK)
+ 295:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 296:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 297:../Project_Settings/Startup_Code/system_MK22F51212.c ****   /* PLL loss of lock interrupt request initialization */
+ 298:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if (((SYSTEM_MCG_C6_VALUE) & MCG_C6_LOLIE0_MASK) != 0U) {
+ 299:../Project_Settings/Startup_Code/system_MK22F51212.c ****     NVIC_EnableIRQ(MCG_IRQn);          /* Enable PLL loss of lock interrupt request */
+ 300:../Project_Settings/Startup_Code/system_MK22F51212.c ****   }
+ 301:../Project_Settings/Startup_Code/system_MK22F51212.c **** #endif
+ 302:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 303:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 304:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 305:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // HSLU
+ 306:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK  | SIM_SCGC5_PORT
+ 286              		.loc 1 306 0 is_stmt 1
+ 287 01da 0C49     		ldr	r1, .L10+16
+ 288 01dc 0B4B     		ldr	r3, .L10+16
+ 289 01de 03F58153 		add	r3, r3, #4128
+ 290 01e2 1833     		adds	r3, r3, #24
+ 291 01e4 1B68     		ldr	r3, [r3]
+ 292 01e6 43F47852 		orr	r2, r3, #15872
+ 293 01ea 01F58153 		add	r3, r1, #4128
+ 294 01ee 1833     		adds	r3, r3, #24
+ 295 01f0 1A60     		str	r2, [r3]
+ 307:../Project_Settings/Startup_Code/system_MK22F51212.c **** /*
+ 308:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(1) = PORT_PCR_MUX(1);
+ 309:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(2) = PORT_PCR_MUX(1);
+ 310:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(4) = PORT_PCR_MUX(1);
+ 311:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(5) = PORT_PCR_MUX(1);
+ 312:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(12) = PORT_PCR_MUX(1);
+ 313:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTA_PCR(13) = PORT_PCR_MUX(1);
+ 314:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 315:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(0) = PORT_PCR_MUX(1);
+ 316:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(1) = PORT_PCR_MUX(1);
+ 317:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(2) = PORT_PCR_MUX(1);
+ 318:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(3) = PORT_PCR_MUX(1);
+ 319:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(16) = PORT_PCR_MUX(1);
+ 320:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(17) = PORT_PCR_MUX(1);
+ 321:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(18) = PORT_PCR_MUX(1);
+ 322:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTB_PCR(19) = PORT_PCR_MUX(1);
+ 323:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 324:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTC_PCR(2) = PORT_PCR_MUX(1);	// Led
+ 325:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTC_PCR(8) = PORT_PCR_MUX(1);
+ 326:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTC_PCR(9) = PORT_PCR_MUX(1);
+ 327:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTC_PCR(10) = PORT_PCR_MUX(1);
+ 328:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTC_PCR(11) = PORT_PCR_MUX(1);
+ 329:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 330:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(0) = PORT_PCR_MUX(1);
+ 331:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(1) = PORT_PCR_MUX(1);
+ 332:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(2) = PORT_PCR_MUX(1);
+ 333:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(3) = PORT_PCR_MUX(1);
+ 334:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(4) = PORT_PCR_MUX(1);
+ 335:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(5) = PORT_PCR_MUX(1);
+ 336:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(6) = PORT_PCR_MUX(1);
+ 337:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTD_PCR(7) = PORT_PCR_MUX(1);
+ 338:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 339:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTE_PCR(0) = PORT_PCR_MUX(1);
+ 340:../Project_Settings/Startup_Code/system_MK22F51212.c ****   PORTE_PCR(1) = PORT_PCR_MUX(1);
+ 341:../Project_Settings/Startup_Code/system_MK22F51212.c **** */
+ 342:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 343:../Project_Settings/Startup_Code/system_MK22F51212.c **** }
+ 296              		.loc 1 343 0
+ 297 01f2 00BF     		nop
+ 298 01f4 BD46     		mov	sp, r7
+ 299              		.cfi_def_cfa_register 13
+ 300              		@ sp needed
+ 301 01f6 5DF8047B 		ldr	r7, [sp], #4
+ 302              		.cfi_restore 7
+ 303              		.cfi_def_cfa_offset 0
+ 304 01fa 7047     		bx	lr
+ 305              	.L11:
+ 306              		.align	2
+ 307              	.L10:
+ 308 01fc 00ED00E0 		.word	-536810240
+ 309 0200 00200540 		.word	1074077696
+ 310 0204 00F00740 		.word	1074262016
+ 311 0208 00D00740 		.word	1074253824
+ 312 020c 00700440 		.word	1074032640
+ 313 0210 00D00340 		.word	1073991680
+ 314 0214 00E00740 		.word	1074257920
+ 315 0218 00900440 		.word	1074040832
+ 316 021c 00400640 		.word	1074151424
+ 317 0220 00500640 		.word	1074155520
+ 318              		.cfi_endproc
+ 319              	.LFE123:
+ 321              		.section	.text.SystemCoreClockUpdate,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	SystemCoreClockUpdate
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 327              		.fpu fpv4-sp-d16
+ 329              	SystemCoreClockUpdate:
+ 330              	.LFB124:
+ 344:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 345:../Project_Settings/Startup_Code/system_MK22F51212.c **** /* ----------------------------------------------------------------------------
+ 346:../Project_Settings/Startup_Code/system_MK22F51212.c ****    -- SystemCoreClockUpdate()
+ 347:../Project_Settings/Startup_Code/system_MK22F51212.c ****    ---------------------------------------------------------------------------- */
+ 348:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 349:../Project_Settings/Startup_Code/system_MK22F51212.c **** void SystemCoreClockUpdate (void) {
+ 331              		.loc 1 349 0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 8
+ 334              		@ frame_needed = 1, uses_anonymous_args = 0
+ 335              		@ link register save eliminated.
+ 336 0000 80B4     		push	{r7}
+ 337              		.cfi_def_cfa_offset 4
+ 338              		.cfi_offset 7, -4
+ 339 0002 83B0     		sub	sp, sp, #12
+ 340              		.cfi_def_cfa_offset 16
+ 341 0004 00AF     		add	r7, sp, #0
+ 342              		.cfi_def_cfa_register 7
+ 350:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 351:../Project_Settings/Startup_Code/system_MK22F51212.c ****   uint32_t MCGOUTClock;                /* Variable to store output clock frequency of the MCG modul
+ 352:../Project_Settings/Startup_Code/system_MK22F51212.c ****   uint16_t Divider;
+ 353:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 354:../Project_Settings/Startup_Code/system_MK22F51212.c ****   if ((MCG->C1 & MCG_C1_CLKS_MASK) == 0x00U) {
+ 343              		.loc 1 354 0
+ 344 0006 964B     		ldr	r3, .L54
+ 345 0008 1B78     		ldrb	r3, [r3]
+ 346 000a DBB2     		uxtb	r3, r3
+ 347 000c 03F0C003 		and	r3, r3, #192
+ 348 0010 002B     		cmp	r3, #0
+ 349 0012 40F0D280 		bne	.L13
+ 355:../Project_Settings/Startup_Code/system_MK22F51212.c ****     /* Output of FLL or PLL is selected */
+ 356:../Project_Settings/Startup_Code/system_MK22F51212.c ****     if ((MCG->C6 & MCG_C6_PLLS_MASK) == 0x00U) {
+ 350              		.loc 1 356 0
+ 351 0016 924B     		ldr	r3, .L54
+ 352 0018 5B79     		ldrb	r3, [r3, #5]
+ 353 001a DBB2     		uxtb	r3, r3
+ 354 001c 03F04003 		and	r3, r3, #64
+ 355 0020 002B     		cmp	r3, #0
+ 356 0022 40F0AD80 		bne	.L14
+ 357:../Project_Settings/Startup_Code/system_MK22F51212.c ****       /* FLL is selected */
+ 358:../Project_Settings/Startup_Code/system_MK22F51212.c ****       if ((MCG->C1 & MCG_C1_IREFS_MASK) == 0x00U) {
+ 357              		.loc 1 358 0
+ 358 0026 8E4B     		ldr	r3, .L54
+ 359 0028 1B78     		ldrb	r3, [r3]
+ 360 002a DBB2     		uxtb	r3, r3
+ 361 002c 03F00403 		and	r3, r3, #4
+ 362 0030 002B     		cmp	r3, #0
+ 363 0032 4ED1     		bne	.L15
+ 359:../Project_Settings/Startup_Code/system_MK22F51212.c ****         /* External reference clock is selected */
+ 360:../Project_Settings/Startup_Code/system_MK22F51212.c ****         switch (MCG->C7 & MCG_C7_OSCSEL_MASK) {
+ 364              		.loc 1 360 0
+ 365 0034 8A4B     		ldr	r3, .L54
+ 366 0036 1B7B     		ldrb	r3, [r3, #12]
+ 367 0038 DBB2     		uxtb	r3, r3
+ 368 003a 03F00303 		and	r3, r3, #3
+ 369 003e 002B     		cmp	r3, #0
+ 370 0040 02D0     		beq	.L17
+ 371 0042 012B     		cmp	r3, #1
+ 372 0044 03D0     		beq	.L18
+ 373 0046 06E0     		b	.L50
+ 374              	.L17:
+ 361:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x00U:
+ 362:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock = CPU_XTAL_CLK_HZ; /* System oscillator drives MCG clock */
+ 375              		.loc 1 362 0
+ 376 0048 864B     		ldr	r3, .L54+4
+ 377 004a 7B60     		str	r3, [r7, #4]
+ 363:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 378              		.loc 1 363 0
+ 379 004c 06E0     		b	.L19
+ 380              	.L18:
+ 364:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x01U:
+ 365:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock = CPU_XTAL32k_CLK_HZ; /* RTC 32 kHz oscillator drives MCG clock */
+ 381              		.loc 1 365 0
+ 382 004e 4FF40043 		mov	r3, #32768
+ 383 0052 7B60     		str	r3, [r7, #4]
+ 366:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 384              		.loc 1 366 0
+ 385 0054 02E0     		b	.L19
+ 386              	.L50:
+ 367:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x02U:
+ 368:../Project_Settings/Startup_Code/system_MK22F51212.c ****         default:
+ 369:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock = CPU_INT_IRC_CLK_HZ; /* IRC 48MHz oscillator drives MCG clock */
+ 387              		.loc 1 369 0
+ 388 0056 844B     		ldr	r3, .L54+8
+ 389 0058 7B60     		str	r3, [r7, #4]
+ 370:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 390              		.loc 1 370 0
+ 391 005a 00BF     		nop
+ 392              	.L19:
+ 371:../Project_Settings/Startup_Code/system_MK22F51212.c ****         }
+ 372:../Project_Settings/Startup_Code/system_MK22F51212.c ****         if (((MCG->C2 & MCG_C2_RANGE_MASK) != 0x00U) && ((MCG->C7 & MCG_C7_OSCSEL_MASK) != 0x01U)) 
+ 393              		.loc 1 372 0
+ 394 005c 804B     		ldr	r3, .L54
+ 395 005e 5B78     		ldrb	r3, [r3, #1]
+ 396 0060 DBB2     		uxtb	r3, r3
+ 397 0062 03F03003 		and	r3, r3, #48
+ 398 0066 002B     		cmp	r3, #0
+ 399 0068 23D0     		beq	.L20
+ 400              		.loc 1 372 0 is_stmt 0 discriminator 1
+ 401 006a 7D4B     		ldr	r3, .L54
+ 402 006c 1B7B     		ldrb	r3, [r3, #12]
+ 403 006e DBB2     		uxtb	r3, r3
+ 404 0070 03F00303 		and	r3, r3, #3
+ 405 0074 012B     		cmp	r3, #1
+ 406 0076 1CD0     		beq	.L20
+ 373:../Project_Settings/Startup_Code/system_MK22F51212.c ****           switch (MCG->C1 & MCG_C1_FRDIV_MASK) {
+ 407              		.loc 1 373 0 is_stmt 1
+ 408 0078 794B     		ldr	r3, .L54
+ 409 007a 1B78     		ldrb	r3, [r3]
+ 410 007c DBB2     		uxtb	r3, r3
+ 411 007e 03F03803 		and	r3, r3, #56
+ 412 0082 302B     		cmp	r3, #48
+ 413 0084 05D0     		beq	.L22
+ 414 0086 382B     		cmp	r3, #56
+ 415 0088 07D1     		bne	.L51
+ 374:../Project_Settings/Startup_Code/system_MK22F51212.c ****           case 0x38U:
+ 375:../Project_Settings/Startup_Code/system_MK22F51212.c ****             Divider = 1536U;
+ 416              		.loc 1 375 0
+ 417 008a 4FF4C063 		mov	r3, #1536
+ 418 008e 7B80     		strh	r3, [r7, #2]	@ movhi
+ 376:../Project_Settings/Startup_Code/system_MK22F51212.c ****             break;
+ 419              		.loc 1 376 0
+ 420 0090 0EE0     		b	.L24
+ 421              	.L22:
+ 377:../Project_Settings/Startup_Code/system_MK22F51212.c ****           case 0x30U:
+ 378:../Project_Settings/Startup_Code/system_MK22F51212.c ****             Divider = 1280U;
+ 422              		.loc 1 378 0
+ 423 0092 4FF4A063 		mov	r3, #1280
+ 424 0096 7B80     		strh	r3, [r7, #2]	@ movhi
+ 379:../Project_Settings/Startup_Code/system_MK22F51212.c ****             break;
+ 425              		.loc 1 379 0
+ 426 0098 0AE0     		b	.L24
+ 427              	.L51:
+ 380:../Project_Settings/Startup_Code/system_MK22F51212.c ****           default:
+ 381:../Project_Settings/Startup_Code/system_MK22F51212.c ****             Divider = (uint16_t)(32LU << ((MCG->C1 & MCG_C1_FRDIV_MASK) >> MCG_C1_FRDIV_SHIFT));
+ 428              		.loc 1 381 0
+ 429 009a 714B     		ldr	r3, .L54
+ 430 009c 1B78     		ldrb	r3, [r3]
+ 431 009e DBB2     		uxtb	r3, r3
+ 432 00a0 DB08     		lsrs	r3, r3, #3
+ 433 00a2 03F00703 		and	r3, r3, #7
+ 434 00a6 2022     		movs	r2, #32
+ 435 00a8 02FA03F3 		lsl	r3, r2, r3
+ 436 00ac 7B80     		strh	r3, [r7, #2]	@ movhi
+ 382:../Project_Settings/Startup_Code/system_MK22F51212.c ****             break;
+ 437              		.loc 1 382 0
+ 438 00ae 00BF     		nop
+ 439              	.L24:
+ 383:../Project_Settings/Startup_Code/system_MK22F51212.c ****           }
+ 384:../Project_Settings/Startup_Code/system_MK22F51212.c ****         } else {/* ((MCG->C2 & MCG_C2_RANGE_MASK) != 0x00U) */
+ 440              		.loc 1 384 0
+ 441 00b0 09E0     		b	.L25
+ 442              	.L20:
+ 385:../Project_Settings/Startup_Code/system_MK22F51212.c ****           Divider = (uint16_t)(1LU << ((MCG->C1 & MCG_C1_FRDIV_MASK) >> MCG_C1_FRDIV_SHIFT));
+ 443              		.loc 1 385 0
+ 444 00b2 6B4B     		ldr	r3, .L54
+ 445 00b4 1B78     		ldrb	r3, [r3]
+ 446 00b6 DBB2     		uxtb	r3, r3
+ 447 00b8 DB08     		lsrs	r3, r3, #3
+ 448 00ba 03F00703 		and	r3, r3, #7
+ 449 00be 0122     		movs	r2, #1
+ 450 00c0 02FA03F3 		lsl	r3, r2, r3
+ 451 00c4 7B80     		strh	r3, [r7, #2]	@ movhi
+ 452              	.L25:
+ 386:../Project_Settings/Startup_Code/system_MK22F51212.c ****         }
+ 387:../Project_Settings/Startup_Code/system_MK22F51212.c ****         MCGOUTClock = (MCGOUTClock / Divider); /* Calculate the divided FLL reference clock */
+ 453              		.loc 1 387 0
+ 454 00c6 7B88     		ldrh	r3, [r7, #2]
+ 455 00c8 7A68     		ldr	r2, [r7, #4]
+ 456 00ca B2FBF3F3 		udiv	r3, r2, r3
+ 457 00ce 7B60     		str	r3, [r7, #4]
+ 458 00d0 02E0     		b	.L26
+ 459              	.L15:
+ 388:../Project_Settings/Startup_Code/system_MK22F51212.c ****       } else { /* (!((MCG->C1 & MCG_C1_IREFS_MASK) == 0x00U)) */
+ 389:../Project_Settings/Startup_Code/system_MK22F51212.c ****         MCGOUTClock = CPU_INT_SLOW_CLK_HZ; /* The slow internal reference clock is selected */
+ 460              		.loc 1 389 0
+ 461 00d2 4FF40043 		mov	r3, #32768
+ 462 00d6 7B60     		str	r3, [r7, #4]
+ 463              	.L26:
+ 390:../Project_Settings/Startup_Code/system_MK22F51212.c ****       } /* (!((MCG->C1 & MCG_C1_IREFS_MASK) == 0x00U)) */
+ 391:../Project_Settings/Startup_Code/system_MK22F51212.c ****       /* Select correct multiplier to calculate the MCG output clock  */
+ 392:../Project_Settings/Startup_Code/system_MK22F51212.c ****       switch (MCG->C4 & (MCG_C4_DMX32_MASK | MCG_C4_DRST_DRS_MASK)) {
+ 464              		.loc 1 392 0
+ 465 00d8 614B     		ldr	r3, .L54
+ 466 00da DB78     		ldrb	r3, [r3, #3]
+ 467 00dc DBB2     		uxtb	r3, r3
+ 468 00de 03F0E003 		and	r3, r3, #224
+ 469 00e2 602B     		cmp	r3, #96
+ 470 00e4 29D0     		beq	.L28
+ 471 00e6 602B     		cmp	r3, #96
+ 472 00e8 06D8     		bhi	.L29
+ 473 00ea 202B     		cmp	r3, #32
+ 474 00ec 17D0     		beq	.L30
+ 475 00ee 402B     		cmp	r3, #64
+ 476 00f0 1CD0     		beq	.L31
+ 477 00f2 002B     		cmp	r3, #0
+ 478 00f4 0CD0     		beq	.L32
+ 393:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x00U:
+ 394:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 640U;
+ 395:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 396:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x20U:
+ 397:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 1280U;
+ 398:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 399:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x40U:
+ 400:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 1920U;
+ 401:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 402:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x60U:
+ 403:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 2560U;
+ 404:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 405:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x80U:
+ 406:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 732U;
+ 407:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 408:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xA0U:
+ 409:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 1464U;
+ 410:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 411:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xC0U:
+ 412:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 2197U;
+ 413:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 414:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xE0U:
+ 415:../Project_Settings/Startup_Code/system_MK22F51212.c ****           MCGOUTClock *= 2929U;
+ 416:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 417:../Project_Settings/Startup_Code/system_MK22F51212.c ****         default:
+ 418:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 479              		.loc 1 418 0
+ 480 00f6 9DE0     		b	.L40
+ 481              	.L29:
+ 392:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x00U:
+ 482              		.loc 1 392 0
+ 483 00f8 A02B     		cmp	r3, #160
+ 484 00fa 2CD0     		beq	.L33
+ 485 00fc A02B     		cmp	r3, #160
+ 486 00fe 02D8     		bhi	.L34
+ 487 0100 802B     		cmp	r3, #128
+ 488 0102 21D0     		beq	.L35
+ 489              		.loc 1 418 0
+ 490 0104 96E0     		b	.L40
+ 491              	.L34:
+ 392:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x00U:
+ 492              		.loc 1 392 0
+ 493 0106 C02B     		cmp	r3, #192
+ 494 0108 2CD0     		beq	.L36
+ 495 010a E02B     		cmp	r3, #224
+ 496 010c 31D0     		beq	.L37
+ 497              		.loc 1 418 0
+ 498 010e 91E0     		b	.L40
+ 499              	.L32:
+ 394:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 500              		.loc 1 394 0
+ 501 0110 7A68     		ldr	r2, [r7, #4]
+ 502 0112 1346     		mov	r3, r2
+ 503 0114 9B00     		lsls	r3, r3, #2
+ 504 0116 1344     		add	r3, r3, r2
+ 505 0118 DB01     		lsls	r3, r3, #7
+ 506 011a 7B60     		str	r3, [r7, #4]
+ 395:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x20U:
+ 507              		.loc 1 395 0
+ 508 011c 8AE0     		b	.L40
+ 509              	.L30:
+ 397:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 510              		.loc 1 397 0
+ 511 011e 7A68     		ldr	r2, [r7, #4]
+ 512 0120 1346     		mov	r3, r2
+ 513 0122 9B00     		lsls	r3, r3, #2
+ 514 0124 1344     		add	r3, r3, r2
+ 515 0126 1B02     		lsls	r3, r3, #8
+ 516 0128 7B60     		str	r3, [r7, #4]
+ 398:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x40U:
+ 517              		.loc 1 398 0
+ 518 012a 83E0     		b	.L40
+ 519              	.L31:
+ 400:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 520              		.loc 1 400 0
+ 521 012c 7A68     		ldr	r2, [r7, #4]
+ 522 012e 1346     		mov	r3, r2
+ 523 0130 1B01     		lsls	r3, r3, #4
+ 524 0132 9B1A     		subs	r3, r3, r2
+ 525 0134 DB01     		lsls	r3, r3, #7
+ 526 0136 7B60     		str	r3, [r7, #4]
+ 401:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x60U:
+ 527              		.loc 1 401 0
+ 528 0138 7CE0     		b	.L40
+ 529              	.L28:
+ 403:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 530              		.loc 1 403 0
+ 531 013a 7A68     		ldr	r2, [r7, #4]
+ 532 013c 1346     		mov	r3, r2
+ 533 013e 9B00     		lsls	r3, r3, #2
+ 534 0140 1344     		add	r3, r3, r2
+ 535 0142 5B02     		lsls	r3, r3, #9
+ 536 0144 7B60     		str	r3, [r7, #4]
+ 404:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0x80U:
+ 537              		.loc 1 404 0
+ 538 0146 75E0     		b	.L40
+ 539              	.L35:
+ 406:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 540              		.loc 1 406 0
+ 541 0148 7B68     		ldr	r3, [r7, #4]
+ 542 014a 4FF43772 		mov	r2, #732
+ 543 014e 02FB03F3 		mul	r3, r2, r3
+ 544 0152 7B60     		str	r3, [r7, #4]
+ 407:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xA0U:
+ 545              		.loc 1 407 0
+ 546 0154 6EE0     		b	.L40
+ 547              	.L33:
+ 409:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 548              		.loc 1 409 0
+ 549 0156 7B68     		ldr	r3, [r7, #4]
+ 550 0158 4FF4B762 		mov	r2, #1464
+ 551 015c 02FB03F3 		mul	r3, r2, r3
+ 552 0160 7B60     		str	r3, [r7, #4]
+ 410:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xC0U:
+ 553              		.loc 1 410 0
+ 554 0162 67E0     		b	.L40
+ 555              	.L36:
+ 412:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 556              		.loc 1 412 0
+ 557 0164 7B68     		ldr	r3, [r7, #4]
+ 558 0166 40F69502 		movw	r2, #2197
+ 559 016a 02FB03F3 		mul	r3, r2, r3
+ 560 016e 7B60     		str	r3, [r7, #4]
+ 413:../Project_Settings/Startup_Code/system_MK22F51212.c ****         case 0xE0U:
+ 561              		.loc 1 413 0
+ 562 0170 60E0     		b	.L40
+ 563              	.L37:
+ 415:../Project_Settings/Startup_Code/system_MK22F51212.c ****           break;
+ 564              		.loc 1 415 0
+ 565 0172 7B68     		ldr	r3, [r7, #4]
+ 566 0174 40F67132 		movw	r2, #2929
+ 567 0178 02FB03F3 		mul	r3, r2, r3
+ 568 017c 7B60     		str	r3, [r7, #4]
+ 416:../Project_Settings/Startup_Code/system_MK22F51212.c ****         default:
+ 569              		.loc 1 416 0
+ 570 017e 59E0     		b	.L40
+ 571              	.L14:
+ 419:../Project_Settings/Startup_Code/system_MK22F51212.c ****       }
+ 420:../Project_Settings/Startup_Code/system_MK22F51212.c ****     } else { /* (!((MCG->C6 & MCG_C6_PLLS_MASK) == 0x00U)) */
+ 421:../Project_Settings/Startup_Code/system_MK22F51212.c ****       /* PLL is selected */
+ 422:../Project_Settings/Startup_Code/system_MK22F51212.c ****       Divider = (((uint16_t)MCG->C5 & MCG_C5_PRDIV0_MASK) + 0x01U);
+ 572              		.loc 1 422 0
+ 573 0180 374B     		ldr	r3, .L54
+ 574 0182 1B79     		ldrb	r3, [r3, #4]
+ 575 0184 DBB2     		uxtb	r3, r3
+ 576 0186 9BB2     		uxth	r3, r3
+ 577 0188 03F01F03 		and	r3, r3, #31
+ 578 018c 9BB2     		uxth	r3, r3
+ 579 018e 0133     		adds	r3, r3, #1
+ 580 0190 7B80     		strh	r3, [r7, #2]	@ movhi
+ 423:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = (uint32_t)(CPU_XTAL_CLK_HZ / Divider); /* Calculate the PLL reference clock */
+ 581              		.loc 1 423 0
+ 582 0192 7B88     		ldrh	r3, [r7, #2]
+ 583 0194 334A     		ldr	r2, .L54+4
+ 584 0196 B2FBF3F3 		udiv	r3, r2, r3
+ 585 019a 7B60     		str	r3, [r7, #4]
+ 424:../Project_Settings/Startup_Code/system_MK22F51212.c ****       Divider = (((uint16_t)MCG->C6 & MCG_C6_VDIV0_MASK) + 24U);
+ 586              		.loc 1 424 0
+ 587 019c 304B     		ldr	r3, .L54
+ 588 019e 5B79     		ldrb	r3, [r3, #5]
+ 589 01a0 DBB2     		uxtb	r3, r3
+ 590 01a2 9BB2     		uxth	r3, r3
+ 591 01a4 03F01F03 		and	r3, r3, #31
+ 592 01a8 9BB2     		uxth	r3, r3
+ 593 01aa 1833     		adds	r3, r3, #24
+ 594 01ac 7B80     		strh	r3, [r7, #2]	@ movhi
+ 425:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock *= Divider;          /* Calculate the MCG output clock */
+ 595              		.loc 1 425 0
+ 596 01ae 7A88     		ldrh	r2, [r7, #2]
+ 597 01b0 7B68     		ldr	r3, [r7, #4]
+ 598 01b2 02FB03F3 		mul	r3, r2, r3
+ 599 01b6 7B60     		str	r3, [r7, #4]
+ 600 01b8 3CE0     		b	.L40
+ 601              	.L13:
+ 426:../Project_Settings/Startup_Code/system_MK22F51212.c ****     } /* (!((MCG->C6 & MCG_C6_PLLS_MASK) == 0x00U)) */
+ 427:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else if ((MCG->C1 & MCG_C1_CLKS_MASK) == 0x40U) {
+ 602              		.loc 1 427 0
+ 603 01ba 294B     		ldr	r3, .L54
+ 604 01bc 1B78     		ldrb	r3, [r3]
+ 605 01be DBB2     		uxtb	r3, r3
+ 606 01c0 03F0C003 		and	r3, r3, #192
+ 607 01c4 402B     		cmp	r3, #64
+ 608 01c6 1AD1     		bne	.L41
+ 428:../Project_Settings/Startup_Code/system_MK22F51212.c ****     /* Internal reference clock is selected */
+ 429:../Project_Settings/Startup_Code/system_MK22F51212.c ****     if ((MCG->C2 & MCG_C2_IRCS_MASK) == 0x00U) {
+ 609              		.loc 1 429 0
+ 610 01c8 254B     		ldr	r3, .L54
+ 611 01ca 5B78     		ldrb	r3, [r3, #1]
+ 612 01cc DBB2     		uxtb	r3, r3
+ 613 01ce 03F00103 		and	r3, r3, #1
+ 614 01d2 002B     		cmp	r3, #0
+ 615 01d4 03D1     		bne	.L42
+ 430:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = CPU_INT_SLOW_CLK_HZ; /* Slow internal reference clock selected */
+ 616              		.loc 1 430 0
+ 617 01d6 4FF40043 		mov	r3, #32768
+ 618 01da 7B60     		str	r3, [r7, #4]
+ 619 01dc 2AE0     		b	.L40
+ 620              	.L42:
+ 431:../Project_Settings/Startup_Code/system_MK22F51212.c ****     } else { /* (!((MCG->C2 & MCG_C2_IRCS_MASK) == 0x00U)) */
+ 432:../Project_Settings/Startup_Code/system_MK22F51212.c ****       Divider = (uint16_t)(0x01LU << ((MCG->SC & MCG_SC_FCRDIV_MASK) >> MCG_SC_FCRDIV_SHIFT));
+ 621              		.loc 1 432 0
+ 622 01de 204B     		ldr	r3, .L54
+ 623 01e0 1B7A     		ldrb	r3, [r3, #8]
+ 624 01e2 DBB2     		uxtb	r3, r3
+ 625 01e4 5B08     		lsrs	r3, r3, #1
+ 626 01e6 03F00703 		and	r3, r3, #7
+ 627 01ea 0122     		movs	r2, #1
+ 628 01ec 02FA03F3 		lsl	r3, r2, r3
+ 629 01f0 7B80     		strh	r3, [r7, #2]	@ movhi
+ 433:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = (uint32_t) (CPU_INT_FAST_CLK_HZ / Divider); /* Fast internal reference clock se
+ 630              		.loc 1 433 0
+ 631 01f2 7B88     		ldrh	r3, [r7, #2]
+ 632 01f4 1D4A     		ldr	r2, .L54+12
+ 633 01f6 B2FBF3F3 		udiv	r3, r2, r3
+ 634 01fa 7B60     		str	r3, [r7, #4]
+ 635 01fc 1AE0     		b	.L40
+ 636              	.L41:
+ 434:../Project_Settings/Startup_Code/system_MK22F51212.c ****     } /* (!((MCG->C2 & MCG_C2_IRCS_MASK) == 0x00U)) */
+ 435:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else if ((MCG->C1 & MCG_C1_CLKS_MASK) == 0x80U) {
+ 637              		.loc 1 435 0
+ 638 01fe 184B     		ldr	r3, .L54
+ 639 0200 1B78     		ldrb	r3, [r3]
+ 640 0202 DBB2     		uxtb	r3, r3
+ 641 0204 03F0C003 		and	r3, r3, #192
+ 642 0208 802B     		cmp	r3, #128
+ 643 020a 22D1     		bne	.L53
+ 436:../Project_Settings/Startup_Code/system_MK22F51212.c ****     /* External reference clock is selected */
+ 437:../Project_Settings/Startup_Code/system_MK22F51212.c ****     switch (MCG->C7 & MCG_C7_OSCSEL_MASK) {
+ 644              		.loc 1 437 0
+ 645 020c 144B     		ldr	r3, .L54
+ 646 020e 1B7B     		ldrb	r3, [r3, #12]
+ 647 0210 DBB2     		uxtb	r3, r3
+ 648 0212 03F00303 		and	r3, r3, #3
+ 649 0216 002B     		cmp	r3, #0
+ 650 0218 02D0     		beq	.L46
+ 651 021a 012B     		cmp	r3, #1
+ 652 021c 03D0     		beq	.L47
+ 653 021e 06E0     		b	.L52
+ 654              	.L46:
+ 438:../Project_Settings/Startup_Code/system_MK22F51212.c ****     case 0x00U:
+ 439:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = CPU_XTAL_CLK_HZ;   /* System oscillator drives MCG clock */
+ 655              		.loc 1 439 0
+ 656 0220 104B     		ldr	r3, .L54+4
+ 657 0222 7B60     		str	r3, [r7, #4]
+ 440:../Project_Settings/Startup_Code/system_MK22F51212.c ****       break;
+ 658              		.loc 1 440 0
+ 659 0224 06E0     		b	.L40
+ 660              	.L47:
+ 441:../Project_Settings/Startup_Code/system_MK22F51212.c ****     case 0x01U:
+ 442:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = CPU_XTAL32k_CLK_HZ; /* RTC 32 kHz oscillator drives MCG clock */
+ 661              		.loc 1 442 0
+ 662 0226 4FF40043 		mov	r3, #32768
+ 663 022a 7B60     		str	r3, [r7, #4]
+ 443:../Project_Settings/Startup_Code/system_MK22F51212.c ****       break;
+ 664              		.loc 1 443 0
+ 665 022c 02E0     		b	.L40
+ 666              	.L52:
+ 444:../Project_Settings/Startup_Code/system_MK22F51212.c ****     case 0x02U:
+ 445:../Project_Settings/Startup_Code/system_MK22F51212.c ****     default:
+ 446:../Project_Settings/Startup_Code/system_MK22F51212.c ****       MCGOUTClock = CPU_INT_IRC_CLK_HZ; /* IRC 48MHz oscillator drives MCG clock */
+ 667              		.loc 1 446 0
+ 668 022e 0E4B     		ldr	r3, .L54+8
+ 669 0230 7B60     		str	r3, [r7, #4]
+ 447:../Project_Settings/Startup_Code/system_MK22F51212.c ****       break;
+ 670              		.loc 1 447 0
+ 671 0232 00BF     		nop
+ 672              	.L40:
+ 448:../Project_Settings/Startup_Code/system_MK22F51212.c ****     }
+ 449:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } else { /* (!((MCG->C1 & MCG_C1_CLKS_MASK) == 0x80U)) */
+ 450:../Project_Settings/Startup_Code/system_MK22F51212.c ****     /* Reserved value */
+ 451:../Project_Settings/Startup_Code/system_MK22F51212.c ****     return;
+ 452:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } /* (!((MCG->C1 & MCG_C1_CLKS_MASK) == 0x80U)) */
+ 453:../Project_Settings/Startup_Code/system_MK22F51212.c ****   SystemCoreClock = (MCGOUTClock / (0x01U + ((SIM->CLKDIV1 & SIM_CLKDIV1_OUTDIV1_MASK) >> SIM_CLKDI
+ 673              		.loc 1 453 0
+ 674 0234 0E4B     		ldr	r3, .L54+16
+ 675 0236 03F58253 		add	r3, r3, #4160
+ 676 023a 0433     		adds	r3, r3, #4
+ 677 023c 1B68     		ldr	r3, [r3]
+ 678 023e 1B0F     		lsrs	r3, r3, #28
+ 679 0240 03F00F03 		and	r3, r3, #15
+ 680 0244 0133     		adds	r3, r3, #1
+ 681 0246 7A68     		ldr	r2, [r7, #4]
+ 682 0248 B2FBF3F3 		udiv	r3, r2, r3
+ 683 024c 094A     		ldr	r2, .L54+20
+ 684 024e 1360     		str	r3, [r2]
+ 685 0250 00E0     		b	.L12
+ 686              	.L53:
+ 451:../Project_Settings/Startup_Code/system_MK22F51212.c ****   } /* (!((MCG->C1 & MCG_C1_CLKS_MASK) == 0x80U)) */
+ 687              		.loc 1 451 0
+ 688 0252 00BF     		nop
+ 689              	.L12:
+ 454:../Project_Settings/Startup_Code/system_MK22F51212.c **** }
+ 690              		.loc 1 454 0
+ 691 0254 0C37     		adds	r7, r7, #12
+ 692              		.cfi_def_cfa_offset 4
+ 693 0256 BD46     		mov	sp, r7
+ 694              		.cfi_def_cfa_register 13
+ 695              		@ sp needed
+ 696 0258 5DF8047B 		ldr	r7, [sp], #4
+ 697              		.cfi_restore 7
+ 698              		.cfi_def_cfa_offset 0
+ 699 025c 7047     		bx	lr
+ 700              	.L55:
+ 701 025e 00BF     		.align	2
+ 702              	.L54:
+ 703 0260 00400640 		.word	1074151424
+ 704 0264 00127A00 		.word	8000000
+ 705 0268 006CDC02 		.word	48000000
+ 706 026c 00093D00 		.word	4000000
+ 707 0270 00700440 		.word	1074032640
+ 708 0274 00000000 		.word	SystemCoreClock
+ 709              		.cfi_endproc
+ 710              	.LFE124:
+ 712              		.section	.text.HardFault_HandlerC,"ax",%progbits
+ 713              		.align	1
+ 714              		.global	HardFault_HandlerC
+ 715              		.syntax unified
+ 716              		.thumb
+ 717              		.thumb_func
+ 718              		.fpu fpv4-sp-d16
+ 720              	HardFault_HandlerC:
+ 721              	.LFB125:
+ 455:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 456:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 457:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 458:../Project_Settings/Startup_Code/system_MK22F51212.c **** /**
+ 459:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * HardFaultHandler_C:
+ 460:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * This is called from the HardFault_HandlerAsm with a pointer the Fault stack
+ 461:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * as the parameter. We can then read the values from the stack and place them
+ 462:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * into local variables for ease of reading.
+ 463:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * We then read the various Fault Status and Address Registers to help decode
+ 464:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * cause of the fault.
+ 465:../Project_Settings/Startup_Code/system_MK22F51212.c ****  * The function ends with a BKPT instruction to force control back into the debugger
+ 466:../Project_Settings/Startup_Code/system_MK22F51212.c ****  */
+ 467:../Project_Settings/Startup_Code/system_MK22F51212.c **** void HardFault_HandlerC(unsigned long *hardfault_args){
+ 722              		.loc 1 467 0
+ 723              		.cfi_startproc
+ 724              		@ args = 0, pretend = 0, frame = 64
+ 725              		@ frame_needed = 1, uses_anonymous_args = 0
+ 726              		@ link register save eliminated.
+ 727 0000 80B4     		push	{r7}
+ 728              		.cfi_def_cfa_offset 4
+ 729              		.cfi_offset 7, -4
+ 730 0002 91B0     		sub	sp, sp, #68
+ 731              		.cfi_def_cfa_offset 72
+ 732 0004 00AF     		add	r7, sp, #0
+ 733              		.cfi_def_cfa_register 7
+ 734 0006 7860     		str	r0, [r7, #4]
+ 468:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_r0 ;
+ 469:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_r1 ;
+ 470:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_r2 ;
+ 471:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_r3 ;
+ 472:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_r12 ;
+ 473:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_lr ;
+ 474:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_pc ;
+ 475:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long stacked_psr ;
+ 476:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _CFSR ;
+ 477:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _HFSR ;
+ 478:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _DFSR ;
+ 479:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _AFSR ;
+ 480:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _BFAR ;
+ 481:../Project_Settings/Startup_Code/system_MK22F51212.c ****   volatile unsigned long _MMAR ;
+ 482:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 483:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_r0 = ((unsigned long)hardfault_args[0]) ;
+ 735              		.loc 1 483 0
+ 736 0008 7B68     		ldr	r3, [r7, #4]
+ 737 000a 1B68     		ldr	r3, [r3]
+ 738 000c FB63     		str	r3, [r7, #60]
+ 484:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_r1 = ((unsigned long)hardfault_args[1]) ;
+ 739              		.loc 1 484 0
+ 740 000e 7B68     		ldr	r3, [r7, #4]
+ 741 0010 5B68     		ldr	r3, [r3, #4]
+ 742 0012 BB63     		str	r3, [r7, #56]
+ 485:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_r2 = ((unsigned long)hardfault_args[2]) ;
+ 743              		.loc 1 485 0
+ 744 0014 7B68     		ldr	r3, [r7, #4]
+ 745 0016 9B68     		ldr	r3, [r3, #8]
+ 746 0018 7B63     		str	r3, [r7, #52]
+ 486:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_r3 = ((unsigned long)hardfault_args[3]) ;
+ 747              		.loc 1 486 0
+ 748 001a 7B68     		ldr	r3, [r7, #4]
+ 749 001c DB68     		ldr	r3, [r3, #12]
+ 750 001e 3B63     		str	r3, [r7, #48]
+ 487:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_r12 = ((unsigned long)hardfault_args[4]) ;
+ 751              		.loc 1 487 0
+ 752 0020 7B68     		ldr	r3, [r7, #4]
+ 753 0022 1B69     		ldr	r3, [r3, #16]
+ 754 0024 FB62     		str	r3, [r7, #44]
+ 488:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_lr = ((unsigned long)hardfault_args[5]) ;
+ 755              		.loc 1 488 0
+ 756 0026 7B68     		ldr	r3, [r7, #4]
+ 757 0028 5B69     		ldr	r3, [r3, #20]
+ 758 002a BB62     		str	r3, [r7, #40]
+ 489:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_pc = ((unsigned long)hardfault_args[6]) ;
+ 759              		.loc 1 489 0
+ 760 002c 7B68     		ldr	r3, [r7, #4]
+ 761 002e 9B69     		ldr	r3, [r3, #24]
+ 762 0030 7B62     		str	r3, [r7, #36]
+ 490:../Project_Settings/Startup_Code/system_MK22F51212.c ****   stacked_psr = ((unsigned long)hardfault_args[7]) ;
+ 763              		.loc 1 490 0
+ 764 0032 7B68     		ldr	r3, [r7, #4]
+ 765 0034 DB69     		ldr	r3, [r3, #28]
+ 766 0036 3B62     		str	r3, [r7, #32]
+ 491:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 492:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Configurable Fault Status Register
+ 493:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Consists of MMSR, BFSR and UFSR
+ 494:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _CFSR = (*((volatile unsigned long *)(0xE000ED28))) ;
+ 767              		.loc 1 494 0
+ 768 0038 134B     		ldr	r3, .L57
+ 769 003a 1B68     		ldr	r3, [r3]
+ 770 003c FB61     		str	r3, [r7, #28]
+ 495:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 496:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Hard Fault Status Register
+ 497:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _HFSR = (*((volatile unsigned long *)(0xE000ED2C))) ;
+ 771              		.loc 1 497 0
+ 772 003e 134B     		ldr	r3, .L57+4
+ 773 0040 1B68     		ldr	r3, [r3]
+ 774 0042 BB61     		str	r3, [r7, #24]
+ 498:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 499:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Debug Fault Status Register
+ 500:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _DFSR = (*((volatile unsigned long *)(0xE000ED30))) ;
+ 775              		.loc 1 500 0
+ 776 0044 124B     		ldr	r3, .L57+8
+ 777 0046 1B68     		ldr	r3, [r3]
+ 778 0048 7B61     		str	r3, [r7, #20]
+ 501:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 502:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Auxiliary Fault Status Register
+ 503:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _AFSR = (*((volatile unsigned long *)(0xE000ED3C))) ;
+ 779              		.loc 1 503 0
+ 780 004a 124B     		ldr	r3, .L57+12
+ 781 004c 1B68     		ldr	r3, [r3]
+ 782 004e 3B61     		str	r3, [r7, #16]
+ 504:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 505:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Read the Fault Address Registers. These may not contain valid values.
+ 506:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Check BFARVALID/MMARVALID to see if they are valid values
+ 507:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // MemManage Fault Address Register
+ 508:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _MMAR = (*((volatile unsigned long *)(0xE000ED34))) ;
+ 783              		.loc 1 508 0
+ 784 0050 114B     		ldr	r3, .L57+16
+ 785 0052 1B68     		ldr	r3, [r3]
+ 786 0054 BB60     		str	r3, [r7, #8]
+ 509:../Project_Settings/Startup_Code/system_MK22F51212.c ****   // Bus Fault Address Register
+ 510:../Project_Settings/Startup_Code/system_MK22F51212.c ****   _BFAR = (*((volatile unsigned long *)(0xE000ED38))) ;
+ 787              		.loc 1 510 0
+ 788 0056 114B     		ldr	r3, .L57+20
+ 789 0058 1B68     		ldr	r3, [r3]
+ 790 005a FB60     		str	r3, [r7, #12]
+ 511:../Project_Settings/Startup_Code/system_MK22F51212.c **** 
+ 512:../Project_Settings/Startup_Code/system_MK22F51212.c ****   __asm("BKPT #0\n") ; // Break into the debugger
+ 791              		.loc 1 512 0
+ 792              		.syntax unified
+ 793              	@ 512 "../Project_Settings/Startup_Code/system_MK22F51212.c" 1
+ 794 005c 00BE     		BKPT #0
+ 795              	
+ 796              	@ 0 "" 2
+ 513:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void)stacked_r0; 
+ 797              		.loc 1 513 0
+ 798              		.thumb
+ 799              		.syntax unified
+ 800 005e FB6B     		ldr	r3, [r7, #60]
+ 514:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void)stacked_r1;   /*                                  oooo$$$$$$$$$$$$oooo                     
+ 801              		.loc 1 514 0
+ 802 0060 BB6B     		ldr	r3, [r7, #56]
+ 515:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void)stacked_r2;   /*                              oo$$$$$$$$$$$$$$$$$$$$$$$$o                  
+ 803              		.loc 1 515 0
+ 804 0062 7B6B     		ldr	r3, [r7, #52]
+ 516:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void)stacked_r3;   /*                           oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $
+ 805              		.loc 1 516 0
+ 806 0064 3B6B     		ldr	r3, [r7, #48]
+ 517:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void)stacked_r12;  /*           o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$
+ 807              		.loc 1 517 0
+ 808 0066 FB6A     		ldr	r3, [r7, #44]
+ 518:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) stacked_lr;  /*        oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o
+ 809              		.loc 1 518 0
+ 810 0068 BB6A     		ldr	r3, [r7, #40]
+ 519:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) stacked_pc;  /*        "$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$
+ 811              		.loc 1 519 0
+ 812 006a 7B6A     		ldr	r3, [r7, #36]
+ 520:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) stacked_psr; /*          $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$
+ 813              		.loc 1 520 0
+ 814 006c 3B6A     		ldr	r3, [r7, #32]
+ 521:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _CFSR;       /*          $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$
+ 815              		.loc 1 521 0
+ 816 006e FB69     		ldr	r3, [r7, #28]
+ 522:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _HFSR;	      /*           "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$
+ 817              		.loc 1 522 0
+ 818 0070 BB69     		ldr	r3, [r7, #24]
+ 523:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _DFSR;       /*            $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "
+ 819              		.loc 1 523 0
+ 820 0072 7B69     		ldr	r3, [r7, #20]
+ 524:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _AFSR;       /*           o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$      
+ 821              		.loc 1 524 0
+ 822 0074 3B69     		ldr	r3, [r7, #16]
+ 525:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _BFAR;       /*           $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooo
+ 823              		.loc 1 525 0
+ 824 0076 FB68     		ldr	r3, [r7, #12]
+ 526:../Project_Settings/Startup_Code/system_MK22F51212.c ****   (void) _MMAR;       /*          o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$
+ 825              		.loc 1 526 0
+ 826 0078 BB68     		ldr	r3, [r7, #8]
+ 527:../Project_Settings/Startup_Code/system_MK22F51212.c **** }                     /*          $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""
+ 827              		.loc 1 527 0
+ 828 007a 00BF     		nop
+ 829 007c 4437     		adds	r7, r7, #68
+ 830              		.cfi_def_cfa_offset 4
+ 831 007e BD46     		mov	sp, r7
+ 832              		.cfi_def_cfa_register 13
+ 833              		@ sp needed
+ 834 0080 5DF8047B 		ldr	r7, [sp], #4
+ 835              		.cfi_restore 7
+ 836              		.cfi_def_cfa_offset 0
+ 837 0084 7047     		bx	lr
+ 838              	.L58:
+ 839 0086 00BF     		.align	2
+ 840              	.L57:
+ 841 0088 28ED00E0 		.word	-536810200
+ 842 008c 2CED00E0 		.word	-536810196
+ 843 0090 30ED00E0 		.word	-536810192
+ 844 0094 3CED00E0 		.word	-536810180
+ 845 0098 34ED00E0 		.word	-536810188
+ 846 009c 38ED00E0 		.word	-536810184
+ 847              		.cfi_endproc
+ 848              	.LFE125:
+ 850              		.section	.text.HardFault_Handler,"ax",%progbits
+ 851              		.align	1
+ 852              		.global	HardFault_Handler
+ 853              		.syntax unified
+ 854              		.thumb
+ 855              		.thumb_func
+ 856              		.fpu fpv4-sp-d16
+ 858              	HardFault_Handler:
+ 859              	.LFB126:
+ 528:../Project_Settings/Startup_Code/system_MK22F51212.c ****                       /*         """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$       
+ 529:../Project_Settings/Startup_Code/system_MK22F51212.c **** __attribute__((naked)) /*                   "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$        
+ 530:../Project_Settings/Startup_Code/system_MK22F51212.c **** void HardFault_Handler(void) /*               $$$o          "$$""$$$$$$""""           o$$$         
+ 531:../Project_Settings/Startup_Code/system_MK22F51212.c **** {                          /*                  $$$$o                                o$$$"          
+ 860              		.loc 1 531 0
+ 861              		.cfi_startproc
+ 862              		@ Naked Function: prologue and epilogue provided by programmer.
+ 863              		@ args = 0, pretend = 0, frame = 0
+ 864              		@ frame_needed = 1, uses_anonymous_args = 0
+ 532:../Project_Settings/Startup_Code/system_MK22F51212.c ****   __asm volatile (         /*                   "$$$$o      o$$$$$$o"$$$$o        o$$$$            
+ 865              		.loc 1 532 0
+ 866              		.syntax unified
+ 867              	@ 532 "../Project_Settings/Startup_Code/system_MK22F51212.c" 1
+ 868 0000 0420     		 movs r0,#4       
+ 869 0002 5FEA0E01 	 movs r1, lr      
+ 870 0006 0842     	 tst r0, r1       
+ 871 0008 02D0     	 beq _MSP         
+ 872 000a EFF30980 	 mrs r0, psp      
+ 873 000e 01E0     	 b _HALT          
+ 874              	_MSP:               
+ 875 0010 EFF30880 	 mrs r0, msp      
+ 876              	_HALT:              
+ 877 0014 4169     	 ldr r1,[r0,#20]  
+ 878 0016 FFF7FEBF 	 b HardFault_HandlerC 
+ 879 001a 00BE     	 bkpt #0          
+ 880              	
+ 881              	@ 0 "" 2
+ 533:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " movs r0,#4       \n" /*                     "$$$$$oo     ""$$$$o$$$$$o   o$$$$""             
+ 534:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " movs r1, lr      \n" /*                        ""$$$$$oooo  "$$$o$$$$$$$$$"""                
+ 535:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " tst r0, r1       \n" /*                           ""$$$$$$$oo $$$$$$$$$$                     
+ 536:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " beq _MSP         \n" /*                                   """"$$$$$$$$$$$                    
+ 537:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " mrs r0, psp      \n" /*                                       $$$$$$$$$$$$                   
+ 538:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " b _HALT          \n" /*                                        $$$$$$$$$$"                   
+ 539:../Project_Settings/Startup_Code/system_MK22F51212.c ****   "_MSP:               \n" /*                                         "$$$""                       
+ 540:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " mrs r0, msp      \n"
+ 541:../Project_Settings/Startup_Code/system_MK22F51212.c ****   "_HALT:              \n" /*                             C R A S H   B O O M   B A N G . . .      
+ 542:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " ldr r1,[r0,#20]  \n"
+ 543:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " b HardFault_HandlerC \n"
+ 544:../Project_Settings/Startup_Code/system_MK22F51212.c ****     " bkpt #0          \n"
+ 545:../Project_Settings/Startup_Code/system_MK22F51212.c ****   );
+ 546:../Project_Settings/Startup_Code/system_MK22F51212.c **** }
+ 882              		.loc 1 546 0
+ 883              		.thumb
+ 884              		.syntax unified
+ 885 001c 00BF     		nop
+ 886              		.cfi_endproc
+ 887              	.LFE126:
+ 889              		.text
+ 890              	.Letext0:
+ 891              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 892              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 893              		.file 4 "../Includes/core_cm4.h"
+ 894              		.file 5 "../Includes/system_MK22F51212.h"
+ 895              		.file 6 "../Includes/MK22F51212.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_MK22F51212.c
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:22     .data.SystemCoreClock:00000000 SystemCoreClock
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:19     .data.SystemCoreClock:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:25     .text.SystemInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:32     .text.SystemInit:00000000 SystemInit
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:308    .text.SystemInit:000001fc $d
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:322    .text.SystemCoreClockUpdate:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:329    .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:703    .text.SystemCoreClockUpdate:00000260 $d
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:713    .text.HardFault_HandlerC:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:720    .text.HardFault_HandlerC:00000000 HardFault_HandlerC
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:841    .text.HardFault_HandlerC:00000088 $d
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:851    .text.HardFault_Handler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:858    .text.HardFault_Handler:00000000 HardFault_Handler
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:874    .text.HardFault_Handler:00000010 _MSP
+C:\Users\Blub\AppData\Local\Temp\cceUkjfd.s:876    .text.HardFault_Handler:00000014 _HALT
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.96.348b39bf3c16ee718f15fb15f99a7d73
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+
+NO UNDEFINED SYMBOLS

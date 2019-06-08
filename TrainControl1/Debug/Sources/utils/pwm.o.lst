@@ -1,0 +1,441 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"pwm.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.SetPwm,"ax",%progbits
+  24              		.align	1
+  25              		.global	SetPwm
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	SetPwm:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/utils/pwm.c"
+   1:../Sources/utils/pwm.c **** /*
+   2:../Sources/utils/pwm.c ****  * pwm.c
+   3:../Sources/utils/pwm.c ****  *
+   4:../Sources/utils/pwm.c ****  *  Created on: 13.03.2019
+   5:../Sources/utils/pwm.c ****  *      Author: Blub
+   6:../Sources/utils/pwm.c ****  */
+   7:../Sources/utils/pwm.c **** #include <string.h>
+   8:../Sources/utils/pwm.c **** #include "platform.h"
+   9:../Sources/utils/pwm.c **** #include "pwm.h"
+  10:../Sources/utils/pwm.c **** #include "ftm1.h"
+  11:../Sources/utils/pwm.c **** #include "term.h"
+  12:../Sources/utils/pwm.c **** #include "util.h"
+  13:../Sources/utils/pwm.c **** 
+  14:../Sources/utils/pwm.c **** static tCommandLineHandler clh;
+  15:../Sources/utils/pwm.c **** 
+  16:../Sources/utils/pwm.c **** 
+  17:../Sources/utils/pwm.c **** void SetPwm(int8_t value)
+  18:../Sources/utils/pwm.c **** {
+  34              		.loc 1 18 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 85B0     		sub	sp, sp, #20
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB71     		strb	r3, [r7, #7]
+  19:../Sources/utils/pwm.c ****   if (value > MOTOR_MAX_VALUE) value = MOTOR_MAX_VALUE;
+  20:../Sources/utils/pwm.c **** 
+  21:../Sources/utils/pwm.c ****   int16_t v = (uint16_t)(((FTM1_MODULO + 1) * ((uint32_t)value)) / MOTOR_MAX_VALUE);
+  48              		.loc 1 21 0
+  49 000a 97F90730 		ldrsb	r3, [r7, #7]
+  50 000e 41F28832 		movw	r2, #5000
+  51 0012 02FB03F3 		mul	r3, r2, r3
+  52 0016 074A     		ldr	r2, .L2
+  53 0018 A2FB0323 		umull	r2, r3, r2, r3
+  54 001c DB09     		lsrs	r3, r3, #7
+  55 001e FB81     		strh	r3, [r7, #14]	@ movhi
+  22:../Sources/utils/pwm.c ****   FTM1_C0V = v;
+  56              		.loc 1 22 0
+  57 0020 054A     		ldr	r2, .L2+4
+  58 0022 B7F90E30 		ldrsh	r3, [r7, #14]
+  59 0026 1361     		str	r3, [r2, #16]
+  23:../Sources/utils/pwm.c **** }
+  60              		.loc 1 23 0
+  61 0028 00BF     		nop
+  62 002a 1437     		adds	r7, r7, #20
+  63              		.cfi_def_cfa_offset 4
+  64 002c BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+  66              		@ sp needed
+  67 002e 5DF8047B 		ldr	r7, [sp], #4
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 0032 7047     		bx	lr
+  71              	.L3:
+  72              		.align	2
+  73              	.L2:
+  74 0034 81808080 		.word	-2139062143
+  75 0038 00900340 		.word	1073975296
+  76              		.cfi_endproc
+  77              	.LFE125:
+  79              		.section	.rodata
+  80              		.align	2
+  81              	.LC0:
+  82 0000 68656C70 		.ascii	"help\000"
+  82      00
+  83 0005 000000   		.align	2
+  84              	.LC1:
+  85 0008 2050574D 		.ascii	" PWM commands:\000"
+  85      20636F6D 
+  85      6D616E64 
+  85      733A00
+  86 0017 00       		.align	2
+  87              	.LC2:
+  88 0018 20206865 		.ascii	"  help\000"
+  88      6C7000
+  89 001f 00       		.align	2
+  90              	.LC3:
+  91 0020 20206D6F 		.ascii	"  motor 1\000"
+  91      746F7220 
+  91      3100
+  92 002a 0000     		.align	2
+  93              	.LC4:
+  94 002c 20206D6F 		.ascii	"  motor 2\000"
+  94      746F7220 
+  94      3200
+  95 0036 0000     		.align	2
+  96              	.LC5:
+  97 0038 20206D6F 		.ascii	"  motor 3\000"
+  97      746F7220 
+  97      3300
+  98 0042 0000     		.align	2
+  99              	.LC6:
+ 100 0044 3100     		.ascii	"1\000"
+ 101 0046 0000     		.align	2
+ 102              	.LC7:
+ 103 0048 3200     		.ascii	"2\000"
+ 104 004a 0000     		.align	2
+ 105              	.LC8:
+ 106 004c 3300     		.ascii	"3\000"
+ 107              		.section	.text.PwmParseCommand,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	PwmParseCommand
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 113              		.fpu fpv4-sp-d16
+ 115              	PwmParseCommand:
+ 116              	.LFB126:
+  24:../Sources/utils/pwm.c **** 
+  25:../Sources/utils/pwm.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  26:../Sources/utils/pwm.c **** /**
+  27:../Sources/utils/pwm.c ****  * This function parses one command line, executes the command and returns the status
+  28:../Sources/utils/pwm.c ****  *
+  29:../Sources/utils/pwm.c ****  * @param[in] cmd
+  30:../Sources/utils/pwm.c ****  *   the null terminated string to parse
+  31:../Sources/utils/pwm.c ****  * @returns
+  32:../Sources/utils/pwm.c ****  *   EC_SUCCESS if there was a valid command
+  33:../Sources/utils/pwm.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  34:../Sources/utils/pwm.c ****  */
+  35:../Sources/utils/pwm.c **** tError PwmParseCommand(const unsigned char *cmd)
+  36:../Sources/utils/pwm.c **** {
+ 117              		.loc 1 36 0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 16
+ 120              		@ frame_needed = 1, uses_anonymous_args = 0
+ 121 0000 80B5     		push	{r7, lr}
+ 122              		.cfi_def_cfa_offset 8
+ 123              		.cfi_offset 7, -8
+ 124              		.cfi_offset 14, -4
+ 125 0002 84B0     		sub	sp, sp, #16
+ 126              		.cfi_def_cfa_offset 24
+ 127 0004 00AF     		add	r7, sp, #0
+ 128              		.cfi_def_cfa_register 7
+ 129 0006 7860     		str	r0, [r7, #4]
+  37:../Sources/utils/pwm.c ****   tError result = EC_INVALID_ARG;
+ 130              		.loc 1 37 0
+ 131 0008 0323     		movs	r3, #3
+ 132 000a FB73     		strb	r3, [r7, #15]
+  38:../Sources/utils/pwm.c ****   if (strcmp(cmd, "help") == 0)
+ 133              		.loc 1 38 0
+ 134 000c 2049     		ldr	r1, .L10
+ 135 000e 7868     		ldr	r0, [r7, #4]
+ 136 0010 FFF7FEFF 		bl	strcmp
+ 137 0014 0346     		mov	r3, r0
+ 138 0016 002B     		cmp	r3, #0
+ 139 0018 11D1     		bne	.L5
+  39:../Sources/utils/pwm.c ****   {
+  40:../Sources/utils/pwm.c ****     termWriteLine(" PWM commands:");
+ 140              		.loc 1 40 0
+ 141 001a 1E48     		ldr	r0, .L10+4
+ 142 001c FFF7FEFF 		bl	termWriteLine
+  41:../Sources/utils/pwm.c ****     termWriteLine("  help");
+ 143              		.loc 1 41 0
+ 144 0020 1D48     		ldr	r0, .L10+8
+ 145 0022 FFF7FEFF 		bl	termWriteLine
+  42:../Sources/utils/pwm.c ****     termWriteLine("  motor 1");
+ 146              		.loc 1 42 0
+ 147 0026 1D48     		ldr	r0, .L10+12
+ 148 0028 FFF7FEFF 		bl	termWriteLine
+  43:../Sources/utils/pwm.c ****     termWriteLine("  motor 2");
+ 149              		.loc 1 43 0
+ 150 002c 1C48     		ldr	r0, .L10+16
+ 151 002e FFF7FEFF 		bl	termWriteLine
+  44:../Sources/utils/pwm.c ****     termWriteLine("  motor 3");
+ 152              		.loc 1 44 0
+ 153 0032 1C48     		ldr	r0, .L10+20
+ 154 0034 FFF7FEFF 		bl	termWriteLine
+  45:../Sources/utils/pwm.c ****     result = EC_SUCCESS;
+ 155              		.loc 1 45 0
+ 156 0038 0023     		movs	r3, #0
+ 157 003a FB73     		strb	r3, [r7, #15]
+ 158 003c 22E0     		b	.L6
+ 159              	.L5:
+  46:../Sources/utils/pwm.c ****   }
+  47:../Sources/utils/pwm.c ****   else if (CheckCommand(cmd, "1"))
+ 160              		.loc 1 47 0
+ 161 003e 7B68     		ldr	r3, [r7, #4]
+ 162 0040 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 163 0042 194B     		ldr	r3, .L10+24
+ 164 0044 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 165 0046 9A42     		cmp	r2, r3
+ 166 0048 05D1     		bne	.L7
+  48:../Sources/utils/pwm.c ****   {
+  49:../Sources/utils/pwm.c ****     SetPwm(15);
+ 167              		.loc 1 49 0
+ 168 004a 0F20     		movs	r0, #15
+ 169 004c FFF7FEFF 		bl	SetPwm
+  50:../Sources/utils/pwm.c ****     result = EC_SUCCESS;
+ 170              		.loc 1 50 0
+ 171 0050 0023     		movs	r3, #0
+ 172 0052 FB73     		strb	r3, [r7, #15]
+ 173 0054 16E0     		b	.L6
+ 174              	.L7:
+  51:../Sources/utils/pwm.c ****   }
+  52:../Sources/utils/pwm.c ****   else if (CheckCommand(cmd, "2"))
+ 175              		.loc 1 52 0
+ 176 0056 7B68     		ldr	r3, [r7, #4]
+ 177 0058 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 178 005a 144B     		ldr	r3, .L10+28
+ 179 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 180 005e 9A42     		cmp	r2, r3
+ 181 0060 05D1     		bne	.L8
+  53:../Sources/utils/pwm.c ****   {
+  54:../Sources/utils/pwm.c ****     SetPwm(20);
+ 182              		.loc 1 54 0
+ 183 0062 1420     		movs	r0, #20
+ 184 0064 FFF7FEFF 		bl	SetPwm
+  55:../Sources/utils/pwm.c ****     result = EC_SUCCESS;
+ 185              		.loc 1 55 0
+ 186 0068 0023     		movs	r3, #0
+ 187 006a FB73     		strb	r3, [r7, #15]
+ 188 006c 0AE0     		b	.L6
+ 189              	.L8:
+  56:../Sources/utils/pwm.c ****   }
+  57:../Sources/utils/pwm.c ****   else if (CheckCommand(cmd, "3"))
+ 190              		.loc 1 57 0
+ 191 006e 7B68     		ldr	r3, [r7, #4]
+ 192 0070 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 193 0072 0F4B     		ldr	r3, .L10+32
+ 194 0074 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 195 0076 9A42     		cmp	r2, r3
+ 196 0078 04D1     		bne	.L6
+  58:../Sources/utils/pwm.c ****   {
+  59:../Sources/utils/pwm.c ****     SetPwm(25);
+ 197              		.loc 1 59 0
+ 198 007a 1920     		movs	r0, #25
+ 199 007c FFF7FEFF 		bl	SetPwm
+  60:../Sources/utils/pwm.c ****     result = EC_SUCCESS;
+ 200              		.loc 1 60 0
+ 201 0080 0023     		movs	r3, #0
+ 202 0082 FB73     		strb	r3, [r7, #15]
+ 203              	.L6:
+  61:../Sources/utils/pwm.c ****   }
+  62:../Sources/utils/pwm.c ****   return result;
+ 204              		.loc 1 62 0
+ 205 0084 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  63:../Sources/utils/pwm.c **** }
+ 206              		.loc 1 63 0
+ 207 0086 1846     		mov	r0, r3
+ 208 0088 1037     		adds	r7, r7, #16
+ 209              		.cfi_def_cfa_offset 8
+ 210 008a BD46     		mov	sp, r7
+ 211              		.cfi_def_cfa_register 13
+ 212              		@ sp needed
+ 213 008c 80BD     		pop	{r7, pc}
+ 214              	.L11:
+ 215 008e 00BF     		.align	2
+ 216              	.L10:
+ 217 0090 00000000 		.word	.LC0
+ 218 0094 08000000 		.word	.LC1
+ 219 0098 18000000 		.word	.LC2
+ 220 009c 20000000 		.word	.LC3
+ 221 00a0 2C000000 		.word	.LC4
+ 222 00a4 38000000 		.word	.LC5
+ 223 00a8 44000000 		.word	.LC6
+ 224 00ac 48000000 		.word	.LC7
+ 225 00b0 4C000000 		.word	.LC8
+ 226              		.cfi_endproc
+ 227              	.LFE126:
+ 229              		.section	.rodata
+ 230 004e 0000     		.align	2
+ 231              	.LC9:
+ 232 0050 312C2032 		.ascii	"1, 2, 3\000"
+ 232      2C203300 
+ 233              		.align	2
+ 234              	.LC10:
+ 235 0058 6D6F746F 		.ascii	"motor\000"
+ 235      7200
+ 236              		.section	.text.pwmInit,"ax",%progbits
+ 237              		.align	1
+ 238              		.global	pwmInit
+ 239              		.syntax unified
+ 240              		.thumb
+ 241              		.thumb_func
+ 242              		.fpu fpv4-sp-d16
+ 244              	pwmInit:
+ 245              	.LFB127:
+  64:../Sources/utils/pwm.c **** 
+  65:../Sources/utils/pwm.c **** 
+  66:../Sources/utils/pwm.c **** void pwmInit(void)
+  67:../Sources/utils/pwm.c **** {
+ 246              		.loc 1 67 0
+ 247              		.cfi_startproc
+ 248              		@ args = 0, pretend = 0, frame = 0
+ 249              		@ frame_needed = 1, uses_anonymous_args = 0
+ 250 0000 80B5     		push	{r7, lr}
+ 251              		.cfi_def_cfa_offset 8
+ 252              		.cfi_offset 7, -8
+ 253              		.cfi_offset 14, -4
+ 254 0002 00AF     		add	r7, sp, #0
+ 255              		.cfi_def_cfa_register 7
+  68:../Sources/utils/pwm.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+  69:../Sources/utils/pwm.c ****   GPIOA_PDDR = 1<<12;               // configure PTA12
+ 256              		.loc 1 69 0
+ 257 0004 094B     		ldr	r3, .L13
+ 258 0006 4FF48052 		mov	r2, #4096
+ 259 000a 5A61     		str	r2, [r3, #20]
+  70:../Sources/utils/pwm.c **** 
+  71:../Sources/utils/pwm.c **** 
+  72:../Sources/utils/pwm.c ****   PORTA_PCR12 = PORT_PCR_MUX(3);
+ 260              		.loc 1 72 0
+ 261 000c 084B     		ldr	r3, .L13+4
+ 262 000e 4FF44072 		mov	r2, #768
+ 263 0012 1A63     		str	r2, [r3, #48]
+  73:../Sources/utils/pwm.c **** 
+  74:../Sources/utils/pwm.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+  75:../Sources/utils/pwm.c ****   FTM1_C0SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 264              		.loc 1 75 0
+ 265 0014 074B     		ldr	r3, .L13+8
+ 266 0016 2822     		movs	r2, #40
+ 267 0018 DA60     		str	r2, [r3, #12]
+  76:../Sources/utils/pwm.c **** 
+  77:../Sources/utils/pwm.c **** 
+  78:../Sources/utils/pwm.c ****   // register terminal command line handler
+  79:../Sources/utils/pwm.c ****     termRegisterCommandLineHandler(&clh, "motor", "1, 2, 3", PwmParseCommand);
+ 268              		.loc 1 79 0
+ 269 001a 074B     		ldr	r3, .L13+12
+ 270 001c 074A     		ldr	r2, .L13+16
+ 271 001e 0849     		ldr	r1, .L13+20
+ 272 0020 0848     		ldr	r0, .L13+24
+ 273 0022 FFF7FEFF 		bl	termRegisterCommandLineHandler
+  80:../Sources/utils/pwm.c **** }
+ 274              		.loc 1 80 0
+ 275 0026 00BF     		nop
+ 276 0028 80BD     		pop	{r7, pc}
+ 277              	.L14:
+ 278 002a 00BF     		.align	2
+ 279              	.L13:
+ 280 002c 00F00F40 		.word	1074786304
+ 281 0030 00900440 		.word	1074040832
+ 282 0034 00900340 		.word	1073975296
+ 283 0038 00000000 		.word	PwmParseCommand
+ 284 003c 50000000 		.word	.LC9
+ 285 0040 58000000 		.word	.LC10
+ 286 0044 00000000 		.word	clh
+ 287              		.cfi_endproc
+ 288              	.LFE127:
+ 290              		.text
+ 291              	.Letext0:
+ 292              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 293              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 294              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 295              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 296              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 297              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 298              		.file 8 "../Includes/core_cm4.h"
+ 299              		.file 9 "../Includes/system_MK22F51212.h"
+ 300              		.file 10 "../Includes/MK22F51212.h"
+ 301              		.file 11 "../Includes/platform.h"
+ 302              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 pwm.c
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:24     .text.SetPwm:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:31     .text.SetPwm:00000000 SetPwm
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:74     .text.SetPwm:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:80     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:108    .text.PwmParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:115    .text.PwmParseCommand:00000000 PwmParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:217    .text.PwmParseCommand:00000090 $d
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:237    .text.pwmInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:244    .text.pwmInit:00000000 pwmInit
+C:\Users\Blub\AppData\Local\Temp\ccip77BP.s:280    .text.pwmInit:0000002c $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.8f84a7e419db83d393efd520f3d78a11
+                           .group:00000000 wm4.pwm.h.9.9ffedf3f5a9884ffb6a00b61d9fc3c5b
+                           .group:00000000 wm4.ftm1.h.17.e807dd908ac53afc576b6764b7735bb8
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+termRegisterCommandLineHandler

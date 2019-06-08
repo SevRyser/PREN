@@ -1,0 +1,545 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"steper.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.steperSet,"ax",%progbits
+  24              		.align	1
+  25              		.global	steperSet
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	steperSet:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/drive/steper.c"
+   1:../Sources/drive/steper.c **** /*
+   2:../Sources/drive/steper.c ****  * steper.c
+   3:../Sources/drive/steper.c ****  *
+   4:../Sources/drive/steper.c ****  *  Created on: 12.04.2019
+   5:../Sources/drive/steper.c ****  *      Author: Blub
+   6:../Sources/drive/steper.c ****  */
+   7:../Sources/drive/steper.c **** 
+   8:../Sources/drive/steper.c **** #include <string.h>
+   9:../Sources/drive/steper.c **** #include "platform.h"
+  10:../Sources/drive/steper.c **** #include "steper.h"
+  11:../Sources/drive/steper.c **** #include "ftm1.h"
+  12:../Sources/drive/steper.c **** #include "term.h"
+  13:../Sources/drive/steper.c **** #include "util.h"
+  14:../Sources/drive/steper.c **** 
+  15:../Sources/drive/steper.c **** 
+  16:../Sources/drive/steper.c **** 
+  17:../Sources/drive/steper.c **** 
+  18:../Sources/drive/steper.c **** #define IN1_GPIO()          (PORTC_PCR8 = PORT_PCR_MUX(1))
+  19:../Sources/drive/steper.c **** #define IN2_GPIO()          (PORTC_PCR9 = PORT_PCR_MUX(1))
+  20:../Sources/drive/steper.c **** #define IN3_GPIO()          (PORTC_PCR10 = PORT_PCR_MUX(1))
+  21:../Sources/drive/steper.c **** #define IN4_GPIO()          (PORTC_PCR11 = PORT_PCR_MUX(1))
+  22:../Sources/drive/steper.c **** 
+  23:../Sources/drive/steper.c **** #define MASK()            (0xF0FF)
+  24:../Sources/drive/steper.c **** 
+  25:../Sources/drive/steper.c **** static tCommandLineHandler clh;
+  26:../Sources/drive/steper.c **** 
+  27:../Sources/drive/steper.c **** 
+  28:../Sources/drive/steper.c **** 
+  29:../Sources/drive/steper.c **** void steperSet(int8_t value)
+  30:../Sources/drive/steper.c **** {
+  34              		.loc 1 30 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 85B0     		sub	sp, sp, #20
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB71     		strb	r3, [r7, #7]
+  31:../Sources/drive/steper.c ****   uint16_t reg =0;
+  48              		.loc 1 31 0
+  49 000a 0023     		movs	r3, #0
+  50 000c FB81     		strh	r3, [r7, #14]	@ movhi
+  32:../Sources/drive/steper.c ****   switch (value) {
+  51              		.loc 1 32 0
+  52 000e 97F90730 		ldrsb	r3, [r7, #7]
+  53 0012 072B     		cmp	r3, #7
+  54 0014 62D8     		bhi	.L2
+  55 0016 01A2     		adr	r2, .L4
+  56 0018 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+  57              		.p2align 2
+  58              	.L4:
+  59 001c 3D000000 		.word	.L3+1
+  60 0020 51000000 		.word	.L5+1
+  61 0024 65000000 		.word	.L6+1
+  62 0028 79000000 		.word	.L7+1
+  63 002c 8D000000 		.word	.L8+1
+  64 0030 A1000000 		.word	.L9+1
+  65 0034 B5000000 		.word	.L10+1
+  66 0038 C9000000 		.word	.L11+1
+  67              		.p2align 1
+  68              	.L3:
+  33:../Sources/drive/steper.c ****     case 0:
+  34:../Sources/drive/steper.c **** 
+  35:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0100;
+  69              		.loc 1 35 0
+  70 003c 2E49     		ldr	r1, .L13
+  71 003e 2E4B     		ldr	r3, .L13
+  72 0040 5A68     		ldr	r2, [r3, #4]
+  73 0042 4FF2FF03 		movw	r3, #61695
+  74 0046 1340     		ands	r3, r3, r2
+  75 0048 43F48073 		orr	r3, r3, #256
+  76 004c 0B60     		str	r3, [r1]
+  36:../Sources/drive/steper.c **** 
+  37:../Sources/drive/steper.c ****       break;
+  77              		.loc 1 37 0
+  78 004e 4DE0     		b	.L12
+  79              	.L5:
+  38:../Sources/drive/steper.c ****     case 1:
+  39:../Sources/drive/steper.c **** 
+  40:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0300;
+  80              		.loc 1 40 0
+  81 0050 2949     		ldr	r1, .L13
+  82 0052 294B     		ldr	r3, .L13
+  83 0054 5A68     		ldr	r2, [r3, #4]
+  84 0056 4FF2FF03 		movw	r3, #61695
+  85 005a 1340     		ands	r3, r3, r2
+  86 005c 43F44073 		orr	r3, r3, #768
+  87 0060 0B60     		str	r3, [r1]
+  41:../Sources/drive/steper.c **** 
+  42:../Sources/drive/steper.c ****       break;
+  88              		.loc 1 42 0
+  89 0062 43E0     		b	.L12
+  90              	.L6:
+  43:../Sources/drive/steper.c ****     case 2:
+  44:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0200;
+  91              		.loc 1 44 0
+  92 0064 2449     		ldr	r1, .L13
+  93 0066 244B     		ldr	r3, .L13
+  94 0068 5A68     		ldr	r2, [r3, #4]
+  95 006a 4FF2FF03 		movw	r3, #61695
+  96 006e 1340     		ands	r3, r3, r2
+  97 0070 43F40073 		orr	r3, r3, #512
+  98 0074 0B60     		str	r3, [r1]
+  45:../Sources/drive/steper.c ****       break;
+  99              		.loc 1 45 0
+ 100 0076 39E0     		b	.L12
+ 101              	.L7:
+  46:../Sources/drive/steper.c ****     case 3:
+  47:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0600;
+ 102              		.loc 1 47 0
+ 103 0078 1F49     		ldr	r1, .L13
+ 104 007a 1F4B     		ldr	r3, .L13
+ 105 007c 5A68     		ldr	r2, [r3, #4]
+ 106 007e 4FF2FF03 		movw	r3, #61695
+ 107 0082 1340     		ands	r3, r3, r2
+ 108 0084 43F4C063 		orr	r3, r3, #1536
+ 109 0088 0B60     		str	r3, [r1]
+  48:../Sources/drive/steper.c ****       break;
+ 110              		.loc 1 48 0
+ 111 008a 2FE0     		b	.L12
+ 112              	.L8:
+  49:../Sources/drive/steper.c ****     case 4:
+  50:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0400;
+ 113              		.loc 1 50 0
+ 114 008c 1A49     		ldr	r1, .L13
+ 115 008e 1A4B     		ldr	r3, .L13
+ 116 0090 5A68     		ldr	r2, [r3, #4]
+ 117 0092 4FF2FF03 		movw	r3, #61695
+ 118 0096 1340     		ands	r3, r3, r2
+ 119 0098 43F48063 		orr	r3, r3, #1024
+ 120 009c 0B60     		str	r3, [r1]
+  51:../Sources/drive/steper.c ****       break;
+ 121              		.loc 1 51 0
+ 122 009e 25E0     		b	.L12
+ 123              	.L9:
+  52:../Sources/drive/steper.c ****     case 5:
+  53:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0C00;
+ 124              		.loc 1 53 0
+ 125 00a0 1549     		ldr	r1, .L13
+ 126 00a2 154B     		ldr	r3, .L13
+ 127 00a4 5A68     		ldr	r2, [r3, #4]
+ 128 00a6 4FF2FF03 		movw	r3, #61695
+ 129 00aa 1340     		ands	r3, r3, r2
+ 130 00ac 43F44063 		orr	r3, r3, #3072
+ 131 00b0 0B60     		str	r3, [r1]
+  54:../Sources/drive/steper.c ****       break;
+ 132              		.loc 1 54 0
+ 133 00b2 1BE0     		b	.L12
+ 134              	.L10:
+  55:../Sources/drive/steper.c ****     case 6:
+  56:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0800;
+ 135              		.loc 1 56 0
+ 136 00b4 1049     		ldr	r1, .L13
+ 137 00b6 104B     		ldr	r3, .L13
+ 138 00b8 5A68     		ldr	r2, [r3, #4]
+ 139 00ba 4FF2FF03 		movw	r3, #61695
+ 140 00be 1340     		ands	r3, r3, r2
+ 141 00c0 43F40063 		orr	r3, r3, #2048
+ 142 00c4 0B60     		str	r3, [r1]
+  57:../Sources/drive/steper.c ****       break;
+ 143              		.loc 1 57 0
+ 144 00c6 11E0     		b	.L12
+ 145              	.L11:
+  58:../Sources/drive/steper.c ****     case 7:
+  59:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0900;
+ 146              		.loc 1 59 0
+ 147 00c8 0B49     		ldr	r1, .L13
+ 148 00ca 0B4B     		ldr	r3, .L13
+ 149 00cc 5A68     		ldr	r2, [r3, #4]
+ 150 00ce 4FF2FF03 		movw	r3, #61695
+ 151 00d2 1340     		ands	r3, r3, r2
+ 152 00d4 43F41063 		orr	r3, r3, #2304
+ 153 00d8 0B60     		str	r3, [r1]
+  60:../Sources/drive/steper.c ****       break;
+ 154              		.loc 1 60 0
+ 155 00da 07E0     		b	.L12
+ 156              	.L2:
+  61:../Sources/drive/steper.c ****     default:
+  62:../Sources/drive/steper.c ****       GPIOC_PDOR = (GPIOC_PSOR & MASK()) |0x0000;
+ 157              		.loc 1 62 0
+ 158 00dc 0649     		ldr	r1, .L13
+ 159 00de 064B     		ldr	r3, .L13
+ 160 00e0 5A68     		ldr	r2, [r3, #4]
+ 161 00e2 4FF2FF03 		movw	r3, #61695
+ 162 00e6 1340     		ands	r3, r3, r2
+ 163 00e8 0B60     		str	r3, [r1]
+  63:../Sources/drive/steper.c ****       break;
+ 164              		.loc 1 63 0
+ 165 00ea 00BF     		nop
+ 166              	.L12:
+  64:../Sources/drive/steper.c ****   }
+  65:../Sources/drive/steper.c ****   // Richtung definieren, Links/Rechts Drehung
+  66:../Sources/drive/steper.c **** 
+  67:../Sources/drive/steper.c **** }
+ 167              		.loc 1 67 0
+ 168 00ec 00BF     		nop
+ 169 00ee 1437     		adds	r7, r7, #20
+ 170              		.cfi_def_cfa_offset 4
+ 171 00f0 BD46     		mov	sp, r7
+ 172              		.cfi_def_cfa_register 13
+ 173              		@ sp needed
+ 174 00f2 5DF8047B 		ldr	r7, [sp], #4
+ 175              		.cfi_restore 7
+ 176              		.cfi_def_cfa_offset 0
+ 177 00f6 7047     		bx	lr
+ 178              	.L14:
+ 179              		.align	2
+ 180              	.L13:
+ 181 00f8 80F00F40 		.word	1074786432
+ 182              		.cfi_endproc
+ 183              	.LFE125:
+ 185              		.section	.rodata
+ 186              		.align	2
+ 187              	.LC0:
+ 188 0000 68656C70 		.ascii	"help\000"
+ 188      00
+ 189 0005 000000   		.align	2
+ 190              	.LC1:
+ 191 0008 20736572 		.ascii	" servo commands:\000"
+ 191      766F2063 
+ 191      6F6D6D61 
+ 191      6E64733A 
+ 191      00
+ 192 0019 000000   		.align	2
+ 193              	.LC2:
+ 194 001c 3000     		.ascii	"0\000"
+ 195 001e 0000     		.align	2
+ 196              	.LC3:
+ 197 0020 3100     		.ascii	"1\000"
+ 198              		.section	.text.steperParseCommand,"ax",%progbits
+ 199              		.align	1
+ 200              		.global	steperParseCommand
+ 201              		.syntax unified
+ 202              		.thumb
+ 203              		.thumb_func
+ 204              		.fpu fpv4-sp-d16
+ 206              	steperParseCommand:
+ 207              	.LFB126:
+  68:../Sources/drive/steper.c **** 
+  69:../Sources/drive/steper.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  70:../Sources/drive/steper.c **** /**
+  71:../Sources/drive/steper.c ****  * This function parses one command line, executes the command and returns the status
+  72:../Sources/drive/steper.c ****  *
+  73:../Sources/drive/steper.c ****  * @param[in] cmd
+  74:../Sources/drive/steper.c ****  *   the null terminated string to parse
+  75:../Sources/drive/steper.c ****  * @returns
+  76:../Sources/drive/steper.c ****  *   EC_SUCCESS if there was a valid command
+  77:../Sources/drive/steper.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  78:../Sources/drive/steper.c ****  */
+  79:../Sources/drive/steper.c **** tError steperParseCommand(const unsigned char *cmd)
+  80:../Sources/drive/steper.c **** {
+ 208              		.loc 1 80 0
+ 209              		.cfi_startproc
+ 210              		@ args = 0, pretend = 0, frame = 16
+ 211              		@ frame_needed = 1, uses_anonymous_args = 0
+ 212 0000 80B5     		push	{r7, lr}
+ 213              		.cfi_def_cfa_offset 8
+ 214              		.cfi_offset 7, -8
+ 215              		.cfi_offset 14, -4
+ 216 0002 84B0     		sub	sp, sp, #16
+ 217              		.cfi_def_cfa_offset 24
+ 218 0004 00AF     		add	r7, sp, #0
+ 219              		.cfi_def_cfa_register 7
+ 220 0006 7860     		str	r0, [r7, #4]
+  81:../Sources/drive/steper.c ****   tError result = EC_INVALID_ARG;
+ 221              		.loc 1 81 0
+ 222 0008 0323     		movs	r3, #3
+ 223 000a FB73     		strb	r3, [r7, #15]
+  82:../Sources/drive/steper.c ****   if (strcmp(cmd, "help") == 0)
+ 224              		.loc 1 82 0
+ 225 000c 1149     		ldr	r1, .L20
+ 226 000e 7868     		ldr	r0, [r7, #4]
+ 227 0010 FFF7FEFF 		bl	strcmp
+ 228 0014 0346     		mov	r3, r0
+ 229 0016 002B     		cmp	r3, #0
+ 230 0018 05D1     		bne	.L16
+  83:../Sources/drive/steper.c ****   {
+  84:../Sources/drive/steper.c ****     termWriteLine(" servo commands:");
+ 231              		.loc 1 84 0
+ 232 001a 0F48     		ldr	r0, .L20+4
+ 233 001c FFF7FEFF 		bl	termWriteLine
+  85:../Sources/drive/steper.c **** 
+  86:../Sources/drive/steper.c ****     result = EC_SUCCESS;
+ 234              		.loc 1 86 0
+ 235 0020 0023     		movs	r3, #0
+ 236 0022 FB73     		strb	r3, [r7, #15]
+ 237 0024 10E0     		b	.L17
+ 238              	.L16:
+  87:../Sources/drive/steper.c ****   }
+  88:../Sources/drive/steper.c ****   else if (CheckCommand(cmd, "0"))
+ 239              		.loc 1 88 0
+ 240 0026 7B68     		ldr	r3, [r7, #4]
+ 241 0028 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 242 002a 0C4B     		ldr	r3, .L20+8
+ 243 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 244 002e 9A42     		cmp	r2, r3
+ 245 0030 02D1     		bne	.L18
+  89:../Sources/drive/steper.c ****     {
+  90:../Sources/drive/steper.c **** 
+  91:../Sources/drive/steper.c **** 
+  92:../Sources/drive/steper.c ****       result = EC_SUCCESS;
+ 246              		.loc 1 92 0
+ 247 0032 0023     		movs	r3, #0
+ 248 0034 FB73     		strb	r3, [r7, #15]
+ 249 0036 07E0     		b	.L17
+ 250              	.L18:
+  93:../Sources/drive/steper.c ****     }
+  94:../Sources/drive/steper.c ****   else if (CheckCommand(cmd, "1"))
+ 251              		.loc 1 94 0
+ 252 0038 7B68     		ldr	r3, [r7, #4]
+ 253 003a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 254 003c 084B     		ldr	r3, .L20+12
+ 255 003e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 256 0040 9A42     		cmp	r2, r3
+ 257 0042 01D1     		bne	.L17
+  95:../Sources/drive/steper.c ****   {
+  96:../Sources/drive/steper.c **** 
+  97:../Sources/drive/steper.c ****     result = EC_SUCCESS;
+ 258              		.loc 1 97 0
+ 259 0044 0023     		movs	r3, #0
+ 260 0046 FB73     		strb	r3, [r7, #15]
+ 261              	.L17:
+  98:../Sources/drive/steper.c ****   }
+  99:../Sources/drive/steper.c **** 
+ 100:../Sources/drive/steper.c **** 
+ 101:../Sources/drive/steper.c ****   return result;
+ 262              		.loc 1 101 0
+ 263 0048 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 102:../Sources/drive/steper.c **** }
+ 264              		.loc 1 102 0
+ 265 004a 1846     		mov	r0, r3
+ 266 004c 1037     		adds	r7, r7, #16
+ 267              		.cfi_def_cfa_offset 8
+ 268 004e BD46     		mov	sp, r7
+ 269              		.cfi_def_cfa_register 13
+ 270              		@ sp needed
+ 271 0050 80BD     		pop	{r7, pc}
+ 272              	.L21:
+ 273 0052 00BF     		.align	2
+ 274              	.L20:
+ 275 0054 00000000 		.word	.LC0
+ 276 0058 08000000 		.word	.LC1
+ 277 005c 1C000000 		.word	.LC2
+ 278 0060 20000000 		.word	.LC3
+ 279              		.cfi_endproc
+ 280              	.LFE126:
+ 282              		.section	.rodata
+ 283 0022 0000     		.align	2
+ 284              	.LC4:
+ 285 0024 00       		.ascii	"\000"
+ 286 0025 000000   		.align	2
+ 287              	.LC5:
+ 288 0028 73746570 		.ascii	"steper\000"
+ 288      657200
+ 289              		.section	.text.steperInit,"ax",%progbits
+ 290              		.align	1
+ 291              		.global	steperInit
+ 292              		.syntax unified
+ 293              		.thumb
+ 294              		.thumb_func
+ 295              		.fpu fpv4-sp-d16
+ 297              	steperInit:
+ 298              	.LFB127:
+ 103:../Sources/drive/steper.c **** 
+ 104:../Sources/drive/steper.c **** 
+ 105:../Sources/drive/steper.c **** void steperInit(void)
+ 106:../Sources/drive/steper.c **** {
+ 299              		.loc 1 106 0
+ 300              		.cfi_startproc
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 1, uses_anonymous_args = 0
+ 303 0000 80B5     		push	{r7, lr}
+ 304              		.cfi_def_cfa_offset 8
+ 305              		.cfi_offset 7, -8
+ 306              		.cfi_offset 14, -4
+ 307 0002 00AF     		add	r7, sp, #0
+ 308              		.cfi_def_cfa_register 7
+ 107:../Sources/drive/steper.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+ 108:../Sources/drive/steper.c ****   GPIOC_PDDR |= 1<<8 | 1<<9 |1<<10 |1<<11;               // configure PTA12
+ 309              		.loc 1 108 0
+ 310 0004 114A     		ldr	r2, .L23
+ 311 0006 114B     		ldr	r3, .L23
+ 312 0008 5B69     		ldr	r3, [r3, #20]
+ 313 000a 43F47063 		orr	r3, r3, #3840
+ 314 000e 5361     		str	r3, [r2, #20]
+ 109:../Sources/drive/steper.c **** 
+ 110:../Sources/drive/steper.c ****   IN1_GPIO();
+ 315              		.loc 1 110 0
+ 316 0010 0F4B     		ldr	r3, .L23+4
+ 317 0012 4FF48072 		mov	r2, #256
+ 318 0016 1A62     		str	r2, [r3, #32]
+ 111:../Sources/drive/steper.c ****   IN2_GPIO();
+ 319              		.loc 1 111 0
+ 320 0018 0D4B     		ldr	r3, .L23+4
+ 321 001a 4FF48072 		mov	r2, #256
+ 322 001e 5A62     		str	r2, [r3, #36]
+ 112:../Sources/drive/steper.c ****   IN3_GPIO();
+ 323              		.loc 1 112 0
+ 324 0020 0B4B     		ldr	r3, .L23+4
+ 325 0022 4FF48072 		mov	r2, #256
+ 326 0026 9A62     		str	r2, [r3, #40]
+ 113:../Sources/drive/steper.c ****   IN4_GPIO();
+ 327              		.loc 1 113 0
+ 328 0028 094B     		ldr	r3, .L23+4
+ 329 002a 4FF48072 		mov	r2, #256
+ 330 002e DA62     		str	r2, [r3, #44]
+ 114:../Sources/drive/steper.c **** 
+ 115:../Sources/drive/steper.c ****   GPIOC_PCOR |=  1<<8 | 1<<9 |1<<10 |1<<11;
+ 331              		.loc 1 115 0
+ 332 0030 064A     		ldr	r2, .L23
+ 333 0032 064B     		ldr	r3, .L23
+ 334 0034 9B68     		ldr	r3, [r3, #8]
+ 335 0036 43F47063 		orr	r3, r3, #3840
+ 336 003a 9360     		str	r3, [r2, #8]
+ 116:../Sources/drive/steper.c **** 
+ 117:../Sources/drive/steper.c **** 
+ 118:../Sources/drive/steper.c **** 
+ 119:../Sources/drive/steper.c ****   // register terminal command line handler
+ 120:../Sources/drive/steper.c ****     termRegisterCommandLineHandler(&clh, "steper", "", steperParseCommand);
+ 337              		.loc 1 120 0
+ 338 003c 054B     		ldr	r3, .L23+8
+ 339 003e 064A     		ldr	r2, .L23+12
+ 340 0040 0649     		ldr	r1, .L23+16
+ 341 0042 0748     		ldr	r0, .L23+20
+ 342 0044 FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 121:../Sources/drive/steper.c **** }
+ 343              		.loc 1 121 0
+ 344 0048 00BF     		nop
+ 345 004a 80BD     		pop	{r7, pc}
+ 346              	.L24:
+ 347              		.align	2
+ 348              	.L23:
+ 349 004c 80F00F40 		.word	1074786432
+ 350 0050 00B00440 		.word	1074049024
+ 351 0054 00000000 		.word	steperParseCommand
+ 352 0058 24000000 		.word	.LC4
+ 353 005c 28000000 		.word	.LC5
+ 354 0060 00000000 		.word	clh
+ 355              		.cfi_endproc
+ 356              	.LFE127:
+ 358              		.text
+ 359              	.Letext0:
+ 360              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 361              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 362              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 363              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 364              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 365              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 366              		.file 8 "../Includes/core_cm4.h"
+ 367              		.file 9 "../Includes/system_MK22F51212.h"
+ 368              		.file 10 "../Includes/MK22F51212.h"
+ 369              		.file 11 "../Includes/platform.h"
+ 370              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 steper.c
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:24     .text.steperSet:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:31     .text.steperSet:00000000 steperSet
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:59     .text.steperSet:0000001c $d
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:67     .text.steperSet:0000003c $t
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:181    .text.steperSet:000000f8 $d
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:186    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:199    .text.steperParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:206    .text.steperParseCommand:00000000 steperParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:275    .text.steperParseCommand:00000054 $d
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:290    .text.steperInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:297    .text.steperInit:00000000 steperInit
+C:\Users\Blub\AppData\Local\Temp\ccYUSl7f.s:349    .text.steperInit:0000004c $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.steper.h.9.f915aeb995854a56dc13d1fa9b4ce713
+                           .group:00000000 wm4.ftm1.h.17.e807dd908ac53afc576b6764b7735bb8
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+termRegisterCommandLineHandler

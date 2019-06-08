@@ -1,0 +1,395 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"spindel.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.spindelSet,"ax",%progbits
+  24              		.align	1
+  25              		.global	spindelSet
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	spindelSet:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/drive/spindel.c"
+   1:../Sources/drive/spindel.c **** /*
+   2:../Sources/drive/spindel.c ****  * spindel.c
+   3:../Sources/drive/spindel.c ****  *
+   4:../Sources/drive/spindel.c ****  *  Created on: 22.03.2019
+   5:../Sources/drive/spindel.c ****  *      Author: Blub
+   6:../Sources/drive/spindel.c ****  */
+   7:../Sources/drive/spindel.c **** 
+   8:../Sources/drive/spindel.c **** #include <string.h>
+   9:../Sources/drive/spindel.c **** #include "platform.h"
+  10:../Sources/drive/spindel.c **** #include "spindel.h"
+  11:../Sources/drive/spindel.c **** #include "ftm2.h"
+  12:../Sources/drive/spindel.c **** #include "term.h"
+  13:../Sources/drive/spindel.c **** #include "util.h"
+  14:../Sources/drive/spindel.c **** 
+  15:../Sources/drive/spindel.c **** 
+  16:../Sources/drive/spindel.c **** 
+  17:../Sources/drive/spindel.c **** static tCommandLineHandler clh;
+  18:../Sources/drive/spindel.c **** 
+  19:../Sources/drive/spindel.c **** 
+  20:../Sources/drive/spindel.c **** void spindelSet(int8_t value)
+  21:../Sources/drive/spindel.c **** {
+  34              		.loc 1 21 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 85B0     		sub	sp, sp, #20
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB71     		strb	r3, [r7, #7]
+  22:../Sources/drive/spindel.c ****   if (value > SPINDLE_MAX_VALUE) value = SPINDLE_MAX_VALUE;
+  23:../Sources/drive/spindel.c **** 
+  24:../Sources/drive/spindel.c ****   int16_t v = (uint16_t)(((FTM2_MODULO + 1) * ((uint32_t)value)) / SPINDLE_MAX_VALUE);
+  48              		.loc 1 24 0
+  49 000a 97F90730 		ldrsb	r3, [r7, #7]
+  50 000e 41F28832 		movw	r2, #5000
+  51 0012 02FB03F3 		mul	r3, r2, r3
+  52 0016 074A     		ldr	r2, .L2
+  53 0018 A2FB0323 		umull	r2, r3, r2, r3
+  54 001c DB09     		lsrs	r3, r3, #7
+  55 001e FB81     		strh	r3, [r7, #14]	@ movhi
+  25:../Sources/drive/spindel.c ****   FTM2_C0V = v;
+  56              		.loc 1 25 0
+  57 0020 054A     		ldr	r2, .L2+4
+  58 0022 B7F90E30 		ldrsh	r3, [r7, #14]
+  59 0026 1361     		str	r3, [r2, #16]
+  26:../Sources/drive/spindel.c **** }
+  60              		.loc 1 26 0
+  61 0028 00BF     		nop
+  62 002a 1437     		adds	r7, r7, #20
+  63              		.cfi_def_cfa_offset 4
+  64 002c BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+  66              		@ sp needed
+  67 002e 5DF8047B 		ldr	r7, [sp], #4
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 0032 7047     		bx	lr
+  71              	.L3:
+  72              		.align	2
+  73              	.L2:
+  74 0034 81808080 		.word	-2139062143
+  75 0038 00A00340 		.word	1073979392
+  76              		.cfi_endproc
+  77              	.LFE125:
+  79              		.section	.rodata
+  80              		.align	2
+  81              	.LC0:
+  82 0000 68656C70 		.ascii	"help\000"
+  82      00
+  83 0005 000000   		.align	2
+  84              	.LC1:
+  85 0008 20737069 		.ascii	" spindel commands:\000"
+  85      6E64656C 
+  85      20636F6D 
+  85      6D616E64 
+  85      733A00
+  86 001b 00       		.align	2
+  87              	.LC2:
+  88 001c 3100     		.ascii	"1\000"
+  89 001e 0000     		.align	2
+  90              	.LC3:
+  91 0020 3200     		.ascii	"2\000"
+  92 0022 0000     		.align	2
+  93              	.LC4:
+  94 0024 3300     		.ascii	"3\000"
+  95              		.section	.text.spindelParseCommand,"ax",%progbits
+  96              		.align	1
+  97              		.global	spindelParseCommand
+  98              		.syntax unified
+  99              		.thumb
+ 100              		.thumb_func
+ 101              		.fpu fpv4-sp-d16
+ 103              	spindelParseCommand:
+ 104              	.LFB126:
+  27:../Sources/drive/spindel.c **** 
+  28:../Sources/drive/spindel.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  29:../Sources/drive/spindel.c **** /**
+  30:../Sources/drive/spindel.c ****  * This function parses one command line, executes the command and returns the status
+  31:../Sources/drive/spindel.c ****  *
+  32:../Sources/drive/spindel.c ****  * @param[in] cmd
+  33:../Sources/drive/spindel.c ****  *   the null terminated string to parse
+  34:../Sources/drive/spindel.c ****  * @returns
+  35:../Sources/drive/spindel.c ****  *   EC_SUCCESS if there was a valid command
+  36:../Sources/drive/spindel.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  37:../Sources/drive/spindel.c ****  */
+  38:../Sources/drive/spindel.c **** tError spindelParseCommand(const unsigned char *cmd)
+  39:../Sources/drive/spindel.c **** {
+ 105              		.loc 1 39 0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 16
+ 108              		@ frame_needed = 1, uses_anonymous_args = 0
+ 109 0000 80B5     		push	{r7, lr}
+ 110              		.cfi_def_cfa_offset 8
+ 111              		.cfi_offset 7, -8
+ 112              		.cfi_offset 14, -4
+ 113 0002 84B0     		sub	sp, sp, #16
+ 114              		.cfi_def_cfa_offset 24
+ 115 0004 00AF     		add	r7, sp, #0
+ 116              		.cfi_def_cfa_register 7
+ 117 0006 7860     		str	r0, [r7, #4]
+  40:../Sources/drive/spindel.c ****   tError result = EC_INVALID_ARG;
+ 118              		.loc 1 40 0
+ 119 0008 0323     		movs	r3, #3
+ 120 000a FB73     		strb	r3, [r7, #15]
+  41:../Sources/drive/spindel.c ****   if (strcmp(cmd, "help") == 0)
+ 121              		.loc 1 41 0
+ 122 000c 1A49     		ldr	r1, .L10
+ 123 000e 7868     		ldr	r0, [r7, #4]
+ 124 0010 FFF7FEFF 		bl	strcmp
+ 125 0014 0346     		mov	r3, r0
+ 126 0016 002B     		cmp	r3, #0
+ 127 0018 05D1     		bne	.L5
+  42:../Sources/drive/spindel.c ****   {
+  43:../Sources/drive/spindel.c ****     termWriteLine(" spindel commands:");
+ 128              		.loc 1 43 0
+ 129 001a 1848     		ldr	r0, .L10+4
+ 130 001c FFF7FEFF 		bl	termWriteLine
+  44:../Sources/drive/spindel.c ****     result = EC_SUCCESS;
+ 131              		.loc 1 44 0
+ 132 0020 0023     		movs	r3, #0
+ 133 0022 FB73     		strb	r3, [r7, #15]
+ 134 0024 22E0     		b	.L6
+ 135              	.L5:
+  45:../Sources/drive/spindel.c ****   }
+  46:../Sources/drive/spindel.c ****   else if (CheckCommand(cmd, "1"))
+ 136              		.loc 1 46 0
+ 137 0026 7B68     		ldr	r3, [r7, #4]
+ 138 0028 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 139 002a 154B     		ldr	r3, .L10+8
+ 140 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 141 002e 9A42     		cmp	r2, r3
+ 142 0030 05D1     		bne	.L7
+  47:../Sources/drive/spindel.c ****   {
+  48:../Sources/drive/spindel.c ****     spindelSet(6);
+ 143              		.loc 1 48 0
+ 144 0032 0620     		movs	r0, #6
+ 145 0034 FFF7FEFF 		bl	spindelSet
+  49:../Sources/drive/spindel.c ****     result = EC_SUCCESS;
+ 146              		.loc 1 49 0
+ 147 0038 0023     		movs	r3, #0
+ 148 003a FB73     		strb	r3, [r7, #15]
+ 149 003c 16E0     		b	.L6
+ 150              	.L7:
+  50:../Sources/drive/spindel.c ****   }
+  51:../Sources/drive/spindel.c ****   else if (CheckCommand(cmd, "2"))
+ 151              		.loc 1 51 0
+ 152 003e 7B68     		ldr	r3, [r7, #4]
+ 153 0040 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 154 0042 104B     		ldr	r3, .L10+12
+ 155 0044 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 156 0046 9A42     		cmp	r2, r3
+ 157 0048 05D1     		bne	.L8
+  52:../Sources/drive/spindel.c ****   {
+  53:../Sources/drive/spindel.c ****     spindelSet(10);
+ 158              		.loc 1 53 0
+ 159 004a 0A20     		movs	r0, #10
+ 160 004c FFF7FEFF 		bl	spindelSet
+  54:../Sources/drive/spindel.c ****     result = EC_SUCCESS;
+ 161              		.loc 1 54 0
+ 162 0050 0023     		movs	r3, #0
+ 163 0052 FB73     		strb	r3, [r7, #15]
+ 164 0054 0AE0     		b	.L6
+ 165              	.L8:
+  55:../Sources/drive/spindel.c ****   }
+  56:../Sources/drive/spindel.c ****   else if (CheckCommand(cmd, "3"))
+ 166              		.loc 1 56 0
+ 167 0056 7B68     		ldr	r3, [r7, #4]
+ 168 0058 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 169 005a 0B4B     		ldr	r3, .L10+16
+ 170 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 171 005e 9A42     		cmp	r2, r3
+ 172 0060 04D1     		bne	.L6
+  57:../Sources/drive/spindel.c ****   {
+  58:../Sources/drive/spindel.c ****     spindelSet(12);
+ 173              		.loc 1 58 0
+ 174 0062 0C20     		movs	r0, #12
+ 175 0064 FFF7FEFF 		bl	spindelSet
+  59:../Sources/drive/spindel.c ****     result = EC_SUCCESS;
+ 176              		.loc 1 59 0
+ 177 0068 0023     		movs	r3, #0
+ 178 006a FB73     		strb	r3, [r7, #15]
+ 179              	.L6:
+  60:../Sources/drive/spindel.c ****   }
+  61:../Sources/drive/spindel.c **** 
+  62:../Sources/drive/spindel.c ****   return result;
+ 180              		.loc 1 62 0
+ 181 006c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  63:../Sources/drive/spindel.c **** }
+ 182              		.loc 1 63 0
+ 183 006e 1846     		mov	r0, r3
+ 184 0070 1037     		adds	r7, r7, #16
+ 185              		.cfi_def_cfa_offset 8
+ 186 0072 BD46     		mov	sp, r7
+ 187              		.cfi_def_cfa_register 13
+ 188              		@ sp needed
+ 189 0074 80BD     		pop	{r7, pc}
+ 190              	.L11:
+ 191 0076 00BF     		.align	2
+ 192              	.L10:
+ 193 0078 00000000 		.word	.LC0
+ 194 007c 08000000 		.word	.LC1
+ 195 0080 1C000000 		.word	.LC2
+ 196 0084 20000000 		.word	.LC3
+ 197 0088 24000000 		.word	.LC4
+ 198              		.cfi_endproc
+ 199              	.LFE126:
+ 201              		.section	.text.spindelInit,"ax",%progbits
+ 202              		.align	1
+ 203              		.global	spindelInit
+ 204              		.syntax unified
+ 205              		.thumb
+ 206              		.thumb_func
+ 207              		.fpu fpv4-sp-d16
+ 209              	spindelInit:
+ 210              	.LFB127:
+  64:../Sources/drive/spindel.c **** 
+  65:../Sources/drive/spindel.c **** 
+  66:../Sources/drive/spindel.c **** void spindelInit(void)
+  67:../Sources/drive/spindel.c **** {
+ 211              		.loc 1 67 0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 1, uses_anonymous_args = 0
+ 215              		@ link register save eliminated.
+ 216 0000 80B4     		push	{r7}
+ 217              		.cfi_def_cfa_offset 4
+ 218              		.cfi_offset 7, -4
+ 219 0002 00AF     		add	r7, sp, #0
+ 220              		.cfi_def_cfa_register 7
+  68:../Sources/drive/spindel.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+  69:../Sources/drive/spindel.c ****   GPIOB_PDDR |= 1<<18;               // configure PTA12
+ 221              		.loc 1 69 0
+ 222 0004 084A     		ldr	r2, .L13
+ 223 0006 084B     		ldr	r3, .L13
+ 224 0008 5B69     		ldr	r3, [r3, #20]
+ 225 000a 43F48023 		orr	r3, r3, #262144
+ 226 000e 5361     		str	r3, [r2, #20]
+  70:../Sources/drive/spindel.c **** 
+  71:../Sources/drive/spindel.c **** 
+  72:../Sources/drive/spindel.c ****   PORTB_PCR18 = PORT_PCR_MUX(3);
+ 227              		.loc 1 72 0
+ 228 0010 064B     		ldr	r3, .L13+4
+ 229 0012 4FF44072 		mov	r2, #768
+ 230 0016 9A64     		str	r2, [r3, #72]
+  73:../Sources/drive/spindel.c **** 
+  74:../Sources/drive/spindel.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+  75:../Sources/drive/spindel.c ****   FTM2_C0SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 231              		.loc 1 75 0
+ 232 0018 054B     		ldr	r3, .L13+8
+ 233 001a 2822     		movs	r2, #40
+ 234 001c DA60     		str	r2, [r3, #12]
+  76:../Sources/drive/spindel.c **** 
+  77:../Sources/drive/spindel.c **** 
+  78:../Sources/drive/spindel.c ****   // register terminal command line handler
+  79:../Sources/drive/spindel.c ****     //termRegisterCommandLineHandler(&clh, "servo", "1, 2, 3, 4, 5, 6, 7, 8, 9", servoParseCommand)
+  80:../Sources/drive/spindel.c **** }
+ 235              		.loc 1 80 0
+ 236 001e 00BF     		nop
+ 237 0020 BD46     		mov	sp, r7
+ 238              		.cfi_def_cfa_register 13
+ 239              		@ sp needed
+ 240 0022 5DF8047B 		ldr	r7, [sp], #4
+ 241              		.cfi_restore 7
+ 242              		.cfi_def_cfa_offset 0
+ 243 0026 7047     		bx	lr
+ 244              	.L14:
+ 245              		.align	2
+ 246              	.L13:
+ 247 0028 40F00F40 		.word	1074786368
+ 248 002c 00A00440 		.word	1074044928
+ 249 0030 00A00340 		.word	1073979392
+ 250              		.cfi_endproc
+ 251              	.LFE127:
+ 253              		.text
+ 254              	.Letext0:
+ 255              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 256              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 257              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 258              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 259              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 260              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 261              		.file 8 "../Includes/core_cm4.h"
+ 262              		.file 9 "../Includes/system_MK22F51212.h"
+ 263              		.file 10 "../Includes/MK22F51212.h"
+ 264              		.file 11 "../Includes/platform.h"
+ 265              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 spindel.c
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:24     .text.spindelSet:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:31     .text.spindelSet:00000000 spindelSet
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:74     .text.spindelSet:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:80     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:96     .text.spindelParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:103    .text.spindelParseCommand:00000000 spindelParseCommand
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:193    .text.spindelParseCommand:00000078 $d
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:202    .text.spindelInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:209    .text.spindelInit:00000000 spindelInit
+C:\Users\Blub\AppData\Local\Temp\cc2YSFrf.s:247    .text.spindelInit:00000028 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.f74e607392e0b505ace5d00108430fa1
+                           .group:00000000 wm4.spindel.h.9.87093a2a66b06d4f0f513c61e1ac4da1
+                           .group:00000000 wm4.ftm2.h.17.4f10e2e67b8ae00d3da9921141ce08c3
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine

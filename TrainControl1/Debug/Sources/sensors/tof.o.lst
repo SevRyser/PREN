@@ -1,0 +1,1505 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"tof.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.tofWriteReg,"ax",%progbits
+  24              		.align	1
+  25              		.global	tofWriteReg
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	tofWriteReg:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/sensors/tof.c"
+   1:../Sources/sensors/tof.c **** /*
+   2:../Sources/sensors/tof.c ****  * tof.c
+   3:../Sources/sensors/tof.c ****  *
+   4:../Sources/sensors/tof.c ****  *  Created on: 13.03.2019
+   5:../Sources/sensors/tof.c ****  *      Author: Blub
+   6:../Sources/sensors/tof.c ****  */
+   7:../Sources/sensors/tof.c **** 
+   8:../Sources/sensors/tof.c **** 
+   9:../Sources/sensors/tof.c **** #include "platform.h"
+  10:../Sources/sensors/tof.c **** #include "tof.h"
+  11:../Sources/sensors/tof.c **** #include "i2c.h"
+  12:../Sources/sensors/tof.c **** #include "util.h"
+  13:../Sources/sensors/tof.c **** #include "term.h"
+  14:../Sources/sensors/tof.c **** #include "string.h"
+  15:../Sources/sensors/tof.c **** 
+  16:../Sources/sensors/tof.c **** static tCommandLineHandler clh;
+  17:../Sources/sensors/tof.c **** 
+  18:../Sources/sensors/tof.c **** 
+  19:../Sources/sensors/tof.c **** 
+  20:../Sources/sensors/tof.c ****   tError tofWriteReg(uint16_t tofAddress, uint16_t reg, uint8_t data) {
+  34              		.loc 1 20 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38 0000 80B5     		push	{r7, lr}
+  39              		.cfi_def_cfa_offset 8
+  40              		.cfi_offset 7, -8
+  41              		.cfi_offset 14, -4
+  42 0002 84B0     		sub	sp, sp, #16
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  48 000a 0B46     		mov	r3, r1	@ movhi
+  49 000c BB80     		strh	r3, [r7, #4]	@ movhi
+  50 000e 1346     		mov	r3, r2
+  51 0010 FB70     		strb	r3, [r7, #3]
+  21:../Sources/sensors/tof.c ****     tError result = EC_FAILED;
+  52              		.loc 1 21 0
+  53 0012 0123     		movs	r3, #1
+  54 0014 FB73     		strb	r3, [r7, #15]
+  22:../Sources/sensors/tof.c **** 
+  23:../Sources/sensors/tof.c ****     // send I2C-Address
+  24:../Sources/sensors/tof.c ****     result = i2cStart(tofAddress, FALSE);
+  55              		.loc 1 24 0
+  56 0016 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  57 0018 DBB2     		uxtb	r3, r3
+  58 001a 0021     		movs	r1, #0
+  59 001c 1846     		mov	r0, r3
+  60 001e FFF7FEFF 		bl	i2cStart
+  61 0022 0346     		mov	r3, r0
+  62 0024 FB73     		strb	r3, [r7, #15]
+  25:../Sources/sensors/tof.c **** 
+  26:../Sources/sensors/tof.c ****     // send index high byte
+  27:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+  63              		.loc 1 27 0
+  64 0026 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  65 0028 002B     		cmp	r3, #0
+  66 002a 07D1     		bne	.L2
+  28:../Sources/sensors/tof.c ****       result = i2cSendData((uint8_t*) (&reg) + 1, 1);
+  67              		.loc 1 28 0
+  68 002c 3B1D     		adds	r3, r7, #4
+  69 002e 0133     		adds	r3, r3, #1
+  70 0030 0121     		movs	r1, #1
+  71 0032 1846     		mov	r0, r3
+  72 0034 FFF7FEFF 		bl	i2cSendData
+  73 0038 0346     		mov	r3, r0
+  74 003a FB73     		strb	r3, [r7, #15]
+  75              	.L2:
+  29:../Sources/sensors/tof.c ****     }
+  30:../Sources/sensors/tof.c **** 
+  31:../Sources/sensors/tof.c ****     // send index low byte
+  32:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+  76              		.loc 1 32 0
+  77 003c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  78 003e 002B     		cmp	r3, #0
+  79 0040 06D1     		bne	.L3
+  33:../Sources/sensors/tof.c ****       //uint8_t regs = (uint8_t)(reg >> 8);
+  34:../Sources/sensors/tof.c ****       result = i2cSendData((uint8_t*) (&reg), 1);
+  80              		.loc 1 34 0
+  81 0042 3B1D     		adds	r3, r7, #4
+  82 0044 0121     		movs	r1, #1
+  83 0046 1846     		mov	r0, r3
+  84 0048 FFF7FEFF 		bl	i2cSendData
+  85 004c 0346     		mov	r3, r0
+  86 004e FB73     		strb	r3, [r7, #15]
+  87              	.L3:
+  35:../Sources/sensors/tof.c ****     }
+  36:../Sources/sensors/tof.c **** 
+  37:../Sources/sensors/tof.c ****     // send data
+  38:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+  88              		.loc 1 38 0
+  89 0050 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  90 0052 002B     		cmp	r3, #0
+  91 0054 06D1     		bne	.L4
+  39:../Sources/sensors/tof.c ****       result = i2cSendData(&data, 1);
+  92              		.loc 1 39 0
+  93 0056 FB1C     		adds	r3, r7, #3
+  94 0058 0121     		movs	r1, #1
+  95 005a 1846     		mov	r0, r3
+  96 005c FFF7FEFF 		bl	i2cSendData
+  97 0060 0346     		mov	r3, r0
+  98 0062 FB73     		strb	r3, [r7, #15]
+  99              	.L4:
+  40:../Sources/sensors/tof.c ****     }
+  41:../Sources/sensors/tof.c **** 
+  42:../Sources/sensors/tof.c ****     // generate stop condition
+  43:../Sources/sensors/tof.c ****     i2cStop();
+ 100              		.loc 1 43 0
+ 101 0064 FFF7FEFF 		bl	i2cStop
+  44:../Sources/sensors/tof.c **** 
+  45:../Sources/sensors/tof.c ****     return result;
+ 102              		.loc 1 45 0
+ 103 0068 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  46:../Sources/sensors/tof.c ****   }
+ 104              		.loc 1 46 0
+ 105 006a 1846     		mov	r0, r3
+ 106 006c 1037     		adds	r7, r7, #16
+ 107              		.cfi_def_cfa_offset 8
+ 108 006e BD46     		mov	sp, r7
+ 109              		.cfi_def_cfa_register 13
+ 110              		@ sp needed
+ 111 0070 80BD     		pop	{r7, pc}
+ 112              		.cfi_endproc
+ 113              	.LFE125:
+ 115              		.section	.text.tofReadReg,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	tofReadReg
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ 121              		.fpu fpv4-sp-d16
+ 123              	tofReadReg:
+ 124              	.LFB126:
+  47:../Sources/sensors/tof.c **** 
+  48:../Sources/sensors/tof.c ****   tError tofReadReg(uint16_t tofAddress, uint16_t reg, uint8_t* data) {
+ 125              		.loc 1 48 0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 16
+ 128              		@ frame_needed = 1, uses_anonymous_args = 0
+ 129 0000 80B5     		push	{r7, lr}
+ 130              		.cfi_def_cfa_offset 8
+ 131              		.cfi_offset 7, -8
+ 132              		.cfi_offset 14, -4
+ 133 0002 84B0     		sub	sp, sp, #16
+ 134              		.cfi_def_cfa_offset 24
+ 135 0004 00AF     		add	r7, sp, #0
+ 136              		.cfi_def_cfa_register 7
+ 137 0006 0346     		mov	r3, r0
+ 138 0008 3A60     		str	r2, [r7]
+ 139 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 140 000c 0B46     		mov	r3, r1	@ movhi
+ 141 000e BB80     		strh	r3, [r7, #4]	@ movhi
+  49:../Sources/sensors/tof.c ****     tError result = EC_FAILED;
+ 142              		.loc 1 49 0
+ 143 0010 0123     		movs	r3, #1
+ 144 0012 FB73     		strb	r3, [r7, #15]
+  50:../Sources/sensors/tof.c **** 
+  51:../Sources/sensors/tof.c ****     // send I2C-Address
+  52:../Sources/sensors/tof.c ****     result = i2cStart(tofAddress, FALSE);
+ 145              		.loc 1 52 0
+ 146 0014 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 147 0016 DBB2     		uxtb	r3, r3
+ 148 0018 0021     		movs	r1, #0
+ 149 001a 1846     		mov	r0, r3
+ 150 001c FFF7FEFF 		bl	i2cStart
+ 151 0020 0346     		mov	r3, r0
+ 152 0022 FB73     		strb	r3, [r7, #15]
+  53:../Sources/sensors/tof.c **** 
+  54:../Sources/sensors/tof.c ****     // send index high byte
+  55:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+ 153              		.loc 1 55 0
+ 154 0024 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 155 0026 002B     		cmp	r3, #0
+ 156 0028 07D1     		bne	.L7
+  56:../Sources/sensors/tof.c ****       result = i2cSendData((uint8_t*) (&reg) + 1, 1);
+ 157              		.loc 1 56 0
+ 158 002a 3B1D     		adds	r3, r7, #4
+ 159 002c 0133     		adds	r3, r3, #1
+ 160 002e 0121     		movs	r1, #1
+ 161 0030 1846     		mov	r0, r3
+ 162 0032 FFF7FEFF 		bl	i2cSendData
+ 163 0036 0346     		mov	r3, r0
+ 164 0038 FB73     		strb	r3, [r7, #15]
+ 165              	.L7:
+  57:../Sources/sensors/tof.c ****     }
+  58:../Sources/sensors/tof.c **** 
+  59:../Sources/sensors/tof.c ****     // send index low byte
+  60:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+ 166              		.loc 1 60 0
+ 167 003a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 168 003c 002B     		cmp	r3, #0
+ 169 003e 06D1     		bne	.L8
+  61:../Sources/sensors/tof.c ****       result = i2cSendData((uint8_t*) (&reg), 1);
+ 170              		.loc 1 61 0
+ 171 0040 3B1D     		adds	r3, r7, #4
+ 172 0042 0121     		movs	r1, #1
+ 173 0044 1846     		mov	r0, r3
+ 174 0046 FFF7FEFF 		bl	i2cSendData
+ 175 004a 0346     		mov	r3, r0
+ 176 004c FB73     		strb	r3, [r7, #15]
+ 177              	.L8:
+  62:../Sources/sensors/tof.c ****     }
+  63:../Sources/sensors/tof.c **** 
+  64:../Sources/sensors/tof.c ****     // repeated start to change the direction from write to read
+  65:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+ 178              		.loc 1 65 0
+ 179 004e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 180 0050 002B     		cmp	r3, #0
+ 181 0052 07D1     		bne	.L9
+  66:../Sources/sensors/tof.c ****       result = i2cRepeatedStart(tofAddress, TRUE);
+ 182              		.loc 1 66 0
+ 183 0054 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 184 0056 DBB2     		uxtb	r3, r3
+ 185 0058 0121     		movs	r1, #1
+ 186 005a 1846     		mov	r0, r3
+ 187 005c FFF7FEFF 		bl	i2cRepeatedStart
+ 188 0060 0346     		mov	r3, r0
+ 189 0062 FB73     		strb	r3, [r7, #15]
+ 190              	.L9:
+  67:../Sources/sensors/tof.c ****     }
+  68:../Sources/sensors/tof.c **** 
+  69:../Sources/sensors/tof.c ****     // read the data & generate the stop condition
+  70:../Sources/sensors/tof.c ****     if (result == EC_SUCCESS) {
+ 191              		.loc 1 70 0
+ 192 0064 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 193 0066 002B     		cmp	r3, #0
+ 194 0068 03D1     		bne	.L10
+  71:../Sources/sensors/tof.c ****       i2cReceiveData(data, 1);
+ 195              		.loc 1 71 0
+ 196 006a 0121     		movs	r1, #1
+ 197 006c 3868     		ldr	r0, [r7]
+ 198 006e FFF7FEFF 		bl	i2cReceiveData
+ 199              	.L10:
+  72:../Sources/sensors/tof.c ****     }
+  73:../Sources/sensors/tof.c **** 
+  74:../Sources/sensors/tof.c ****     return result;
+ 200              		.loc 1 74 0
+ 201 0072 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  75:../Sources/sensors/tof.c ****   }
+ 202              		.loc 1 75 0
+ 203 0074 1846     		mov	r0, r3
+ 204 0076 1037     		adds	r7, r7, #16
+ 205              		.cfi_def_cfa_offset 8
+ 206 0078 BD46     		mov	sp, r7
+ 207              		.cfi_def_cfa_register 13
+ 208              		@ sp needed
+ 209 007a 80BD     		pop	{r7, pc}
+ 210              		.cfi_endproc
+ 211              	.LFE126:
+ 213              		.section	.text.tofRange,"ax",%progbits
+ 214              		.align	1
+ 215              		.global	tofRange
+ 216              		.syntax unified
+ 217              		.thumb
+ 218              		.thumb_func
+ 219              		.fpu fpv4-sp-d16
+ 221              	tofRange:
+ 222              	.LFB127:
+  76:../Sources/sensors/tof.c **** 
+  77:../Sources/sensors/tof.c ****   tError tofRange(uint16_t tofAddress,uint8_t* data) {
+ 223              		.loc 1 77 0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 16
+ 226              		@ frame_needed = 1, uses_anonymous_args = 0
+ 227 0000 80B5     		push	{r7, lr}
+ 228              		.cfi_def_cfa_offset 8
+ 229              		.cfi_offset 7, -8
+ 230              		.cfi_offset 14, -4
+ 231 0002 84B0     		sub	sp, sp, #16
+ 232              		.cfi_def_cfa_offset 24
+ 233 0004 00AF     		add	r7, sp, #0
+ 234              		.cfi_def_cfa_register 7
+ 235 0006 0346     		mov	r3, r0
+ 236 0008 3960     		str	r1, [r7]
+ 237 000a FB80     		strh	r3, [r7, #6]	@ movhi
+  78:../Sources/sensors/tof.c ****     tError result = EC_FAILED;
+ 238              		.loc 1 78 0
+ 239 000c 0123     		movs	r3, #1
+ 240 000e FB73     		strb	r3, [r7, #15]
+  79:../Sources/sensors/tof.c ****     uint8_t status[1];
+  80:../Sources/sensors/tof.c ****     status[0] = 0;
+ 241              		.loc 1 80 0
+ 242 0010 0023     		movs	r3, #0
+ 243 0012 3B73     		strb	r3, [r7, #12]
+  81:../Sources/sensors/tof.c **** 
+  82:../Sources/sensors/tof.c ****     // start single range measurement
+  83:../Sources/sensors/tof.c ****     result = tofWriteReg(tofAddress, 0x018, 0x01);
+ 244              		.loc 1 83 0
+ 245 0014 FB88     		ldrh	r3, [r7, #6]
+ 246 0016 0122     		movs	r2, #1
+ 247 0018 1821     		movs	r1, #24
+ 248 001a 1846     		mov	r0, r3
+ 249 001c FFF7FEFF 		bl	tofWriteReg
+ 250 0020 0346     		mov	r3, r0
+ 251 0022 FB73     		strb	r3, [r7, #15]
+  84:../Sources/sensors/tof.c **** 
+  85:../Sources/sensors/tof.c ****     // poll the VL6180 till new sample ready
+  86:../Sources/sensors/tof.c ****     if (EC_FAILED == result) {
+ 252              		.loc 1 86 0
+ 253 0024 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 254 0026 012B     		cmp	r3, #1
+ 255 0028 14D1     		bne	.L13
+  87:../Sources/sensors/tof.c ****       // wait for new measurement ready status
+  88:../Sources/sensors/tof.c ****       while (*status != 0x04 && EC_SUCCESS == result) {
+ 256              		.loc 1 88 0
+ 257 002a 0DE0     		b	.L14
+ 258              	.L15:
+  89:../Sources/sensors/tof.c ****         // check the status
+  90:../Sources/sensors/tof.c ****         result = tofReadReg(tofAddress, 0x04f, status);
+ 259              		.loc 1 90 0
+ 260 002c 07F10C02 		add	r2, r7, #12
+ 261 0030 FB88     		ldrh	r3, [r7, #6]
+ 262 0032 4F21     		movs	r1, #79
+ 263 0034 1846     		mov	r0, r3
+ 264 0036 FFF7FEFF 		bl	tofReadReg
+ 265 003a 0346     		mov	r3, r0
+ 266 003c FB73     		strb	r3, [r7, #15]
+  91:../Sources/sensors/tof.c ****         status[0] = status[0] & 0x07;
+ 267              		.loc 1 91 0
+ 268 003e 3B7B     		ldrb	r3, [r7, #12]	@ zero_extendqisi2
+ 269 0040 03F00703 		and	r3, r3, #7
+ 270 0044 DBB2     		uxtb	r3, r3
+ 271 0046 3B73     		strb	r3, [r7, #12]
+ 272              	.L14:
+  88:../Sources/sensors/tof.c ****         // check the status
+ 273              		.loc 1 88 0
+ 274 0048 3B7B     		ldrb	r3, [r7, #12]	@ zero_extendqisi2
+ 275 004a 042B     		cmp	r3, #4
+ 276 004c 02D0     		beq	.L13
+  88:../Sources/sensors/tof.c ****         // check the status
+ 277              		.loc 1 88 0 is_stmt 0 discriminator 1
+ 278 004e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 279 0050 002B     		cmp	r3, #0
+ 280 0052 EBD0     		beq	.L15
+ 281              	.L13:
+  92:../Sources/sensors/tof.c ****         //wait_ms(1); // (can be removed)
+  93:../Sources/sensors/tof.c ****       }
+  94:../Sources/sensors/tof.c ****     }
+  95:../Sources/sensors/tof.c **** 
+  96:../Sources/sensors/tof.c ****     // read range result
+  97:../Sources/sensors/tof.c ****     if (EC_SUCCESS == result) {
+ 282              		.loc 1 97 0 is_stmt 1
+ 283 0054 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 284 0056 002B     		cmp	r3, #0
+ 285 0058 07D1     		bne	.L16
+  98:../Sources/sensors/tof.c ****       result = tofReadReg(tofAddress, 0x062, data);
+ 286              		.loc 1 98 0
+ 287 005a FB88     		ldrh	r3, [r7, #6]
+ 288 005c 3A68     		ldr	r2, [r7]
+ 289 005e 6221     		movs	r1, #98
+ 290 0060 1846     		mov	r0, r3
+ 291 0062 FFF7FEFF 		bl	tofReadReg
+ 292 0066 0346     		mov	r3, r0
+ 293 0068 FB73     		strb	r3, [r7, #15]
+ 294              	.L16:
+  99:../Sources/sensors/tof.c ****     }
+ 100:../Sources/sensors/tof.c **** 
+ 101:../Sources/sensors/tof.c ****     // clear the interrupt on VL6180
+ 102:../Sources/sensors/tof.c ****     if (EC_SUCCESS == result) {
+ 295              		.loc 1 102 0
+ 296 006a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 297 006c 002B     		cmp	r3, #0
+ 298 006e 07D1     		bne	.L17
+ 103:../Sources/sensors/tof.c ****       result = tofWriteReg(tofAddress, 0x015, 0x07);
+ 299              		.loc 1 103 0
+ 300 0070 FB88     		ldrh	r3, [r7, #6]
+ 301 0072 0722     		movs	r2, #7
+ 302 0074 1521     		movs	r1, #21
+ 303 0076 1846     		mov	r0, r3
+ 304 0078 FFF7FEFF 		bl	tofWriteReg
+ 305 007c 0346     		mov	r3, r0
+ 306 007e FB73     		strb	r3, [r7, #15]
+ 307              	.L17:
+ 104:../Sources/sensors/tof.c ****     }
+ 105:../Sources/sensors/tof.c **** 
+ 106:../Sources/sensors/tof.c ****     return result;
+ 308              		.loc 1 106 0
+ 309 0080 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 107:../Sources/sensors/tof.c **** 
+ 108:../Sources/sensors/tof.c ****   }
+ 310              		.loc 1 108 0
+ 311 0082 1846     		mov	r0, r3
+ 312 0084 1037     		adds	r7, r7, #16
+ 313              		.cfi_def_cfa_offset 8
+ 314 0086 BD46     		mov	sp, r7
+ 315              		.cfi_def_cfa_register 13
+ 316              		@ sp needed
+ 317 0088 80BD     		pop	{r7, pc}
+ 318              		.cfi_endproc
+ 319              	.LFE127:
+ 321              		.section	.text.tofInitSequence,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	tofInitSequence
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 327              		.fpu fpv4-sp-d16
+ 329              	tofInitSequence:
+ 330              	.LFB128:
+ 109:../Sources/sensors/tof.c **** 
+ 110:../Sources/sensors/tof.c ****   tError tofInitSequence(uint16_t tofAddress) {
+ 331              		.loc 1 110 0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 16
+ 334              		@ frame_needed = 1, uses_anonymous_args = 0
+ 335 0000 80B5     		push	{r7, lr}
+ 336              		.cfi_def_cfa_offset 8
+ 337              		.cfi_offset 7, -8
+ 338              		.cfi_offset 14, -4
+ 339 0002 84B0     		sub	sp, sp, #16
+ 340              		.cfi_def_cfa_offset 24
+ 341 0004 00AF     		add	r7, sp, #0
+ 342              		.cfi_def_cfa_register 7
+ 343 0006 0346     		mov	r3, r0
+ 344 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 111:../Sources/sensors/tof.c ****       tError result = EC_FAILED;
+ 345              		.loc 1 111 0
+ 346 000a 0123     		movs	r3, #1
+ 347 000c FB73     		strb	r3, [r7, #15]
+ 112:../Sources/sensors/tof.c ****       uint8_t readBuffer[1];
+ 113:../Sources/sensors/tof.c **** 
+ 114:../Sources/sensors/tof.c ****       result = tofReadReg(tofAddress, 0x016, readBuffer);
+ 348              		.loc 1 114 0
+ 349 000e 07F10C02 		add	r2, r7, #12
+ 350 0012 FB88     		ldrh	r3, [r7, #6]
+ 351 0014 1621     		movs	r1, #22
+ 352 0016 1846     		mov	r0, r3
+ 353 0018 FFF7FEFF 		bl	tofReadReg
+ 354 001c 0346     		mov	r3, r0
+ 355 001e FB73     		strb	r3, [r7, #15]
+ 115:../Sources/sensors/tof.c ****       // check to see has it be Initialised already
+ 116:../Sources/sensors/tof.c ****       if (1 != *readBuffer && EC_SUCCESS != result) {
+ 356              		.loc 1 116 0
+ 357 0020 3B7B     		ldrb	r3, [r7, #12]	@ zero_extendqisi2
+ 358 0022 012B     		cmp	r3, #1
+ 359 0024 04D0     		beq	.L20
+ 360              		.loc 1 116 0 is_stmt 0 discriminator 1
+ 361 0026 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 362 0028 002B     		cmp	r3, #0
+ 363 002a 01D0     		beq	.L20
+ 117:../Sources/sensors/tof.c ****         result = EC_FAILED;
+ 364              		.loc 1 117 0 is_stmt 1
+ 365 002c 0123     		movs	r3, #1
+ 366 002e FB73     		strb	r3, [r7, #15]
+ 367              	.L20:
+ 118:../Sources/sensors/tof.c ****       }
+ 119:../Sources/sensors/tof.c **** 
+ 120:../Sources/sensors/tof.c ****       // Mandatory : private registers
+ 121:../Sources/sensors/tof.c ****       //TODO comment configurations
+ 122:../Sources/sensors/tof.c ****       result = tofWriteReg(tofAddress, 0x0207, 0x01);
+ 368              		.loc 1 122 0
+ 369 0030 FB88     		ldrh	r3, [r7, #6]
+ 370 0032 0122     		movs	r2, #1
+ 371 0034 40F20721 		movw	r1, #519
+ 372 0038 1846     		mov	r0, r3
+ 373 003a FFF7FEFF 		bl	tofWriteReg
+ 374 003e 0346     		mov	r3, r0
+ 375 0040 FB73     		strb	r3, [r7, #15]
+ 123:../Sources/sensors/tof.c **** 
+ 124:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 376              		.loc 1 124 0
+ 377 0042 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 378 0044 002B     		cmp	r3, #0
+ 379 0046 08D1     		bne	.L21
+ 125:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0208, 0x01);
+ 380              		.loc 1 125 0
+ 381 0048 FB88     		ldrh	r3, [r7, #6]
+ 382 004a 0122     		movs	r2, #1
+ 383 004c 4FF40271 		mov	r1, #520
+ 384 0050 1846     		mov	r0, r3
+ 385 0052 FFF7FEFF 		bl	tofWriteReg
+ 386 0056 0346     		mov	r3, r0
+ 387 0058 FB73     		strb	r3, [r7, #15]
+ 388              	.L21:
+ 126:../Sources/sensors/tof.c ****       }
+ 127:../Sources/sensors/tof.c **** 
+ 128:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 389              		.loc 1 128 0
+ 390 005a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 391 005c 002B     		cmp	r3, #0
+ 392 005e 07D1     		bne	.L22
+ 129:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0096, 0x00);
+ 393              		.loc 1 129 0
+ 394 0060 FB88     		ldrh	r3, [r7, #6]
+ 395 0062 0022     		movs	r2, #0
+ 396 0064 9621     		movs	r1, #150
+ 397 0066 1846     		mov	r0, r3
+ 398 0068 FFF7FEFF 		bl	tofWriteReg
+ 399 006c 0346     		mov	r3, r0
+ 400 006e FB73     		strb	r3, [r7, #15]
+ 401              	.L22:
+ 130:../Sources/sensors/tof.c ****       }
+ 131:../Sources/sensors/tof.c **** 
+ 132:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 402              		.loc 1 132 0
+ 403 0070 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 404 0072 002B     		cmp	r3, #0
+ 405 0074 07D1     		bne	.L23
+ 133:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0097, 0xfd);
+ 406              		.loc 1 133 0
+ 407 0076 FB88     		ldrh	r3, [r7, #6]
+ 408 0078 FD22     		movs	r2, #253
+ 409 007a 9721     		movs	r1, #151
+ 410 007c 1846     		mov	r0, r3
+ 411 007e FFF7FEFF 		bl	tofWriteReg
+ 412 0082 0346     		mov	r3, r0
+ 413 0084 FB73     		strb	r3, [r7, #15]
+ 414              	.L23:
+ 134:../Sources/sensors/tof.c ****       }
+ 135:../Sources/sensors/tof.c **** 
+ 136:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 415              		.loc 1 136 0
+ 416 0086 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 417 0088 002B     		cmp	r3, #0
+ 418 008a 07D1     		bne	.L24
+ 137:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00e3, 0x01);
+ 419              		.loc 1 137 0
+ 420 008c FB88     		ldrh	r3, [r7, #6]
+ 421 008e 0122     		movs	r2, #1
+ 422 0090 E321     		movs	r1, #227
+ 423 0092 1846     		mov	r0, r3
+ 424 0094 FFF7FEFF 		bl	tofWriteReg
+ 425 0098 0346     		mov	r3, r0
+ 426 009a FB73     		strb	r3, [r7, #15]
+ 427              	.L24:
+ 138:../Sources/sensors/tof.c ****       }
+ 139:../Sources/sensors/tof.c **** 
+ 140:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 428              		.loc 1 140 0
+ 429 009c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 430 009e 002B     		cmp	r3, #0
+ 431 00a0 07D1     		bne	.L25
+ 141:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00e4, 0x03);
+ 432              		.loc 1 141 0
+ 433 00a2 FB88     		ldrh	r3, [r7, #6]
+ 434 00a4 0322     		movs	r2, #3
+ 435 00a6 E421     		movs	r1, #228
+ 436 00a8 1846     		mov	r0, r3
+ 437 00aa FFF7FEFF 		bl	tofWriteReg
+ 438 00ae 0346     		mov	r3, r0
+ 439 00b0 FB73     		strb	r3, [r7, #15]
+ 440              	.L25:
+ 142:../Sources/sensors/tof.c ****       }
+ 143:../Sources/sensors/tof.c **** 
+ 144:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 441              		.loc 1 144 0
+ 442 00b2 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 443 00b4 002B     		cmp	r3, #0
+ 444 00b6 07D1     		bne	.L26
+ 145:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00e5, 0x02);
+ 445              		.loc 1 145 0
+ 446 00b8 FB88     		ldrh	r3, [r7, #6]
+ 447 00ba 0222     		movs	r2, #2
+ 448 00bc E521     		movs	r1, #229
+ 449 00be 1846     		mov	r0, r3
+ 450 00c0 FFF7FEFF 		bl	tofWriteReg
+ 451 00c4 0346     		mov	r3, r0
+ 452 00c6 FB73     		strb	r3, [r7, #15]
+ 453              	.L26:
+ 146:../Sources/sensors/tof.c ****       }
+ 147:../Sources/sensors/tof.c **** 
+ 148:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 454              		.loc 1 148 0
+ 455 00c8 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 456 00ca 002B     		cmp	r3, #0
+ 457 00cc 07D1     		bne	.L27
+ 149:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00e6, 0x01);
+ 458              		.loc 1 149 0
+ 459 00ce FB88     		ldrh	r3, [r7, #6]
+ 460 00d0 0122     		movs	r2, #1
+ 461 00d2 E621     		movs	r1, #230
+ 462 00d4 1846     		mov	r0, r3
+ 463 00d6 FFF7FEFF 		bl	tofWriteReg
+ 464 00da 0346     		mov	r3, r0
+ 465 00dc FB73     		strb	r3, [r7, #15]
+ 466              	.L27:
+ 150:../Sources/sensors/tof.c ****       }
+ 151:../Sources/sensors/tof.c **** 
+ 152:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 467              		.loc 1 152 0
+ 468 00de FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 469 00e0 002B     		cmp	r3, #0
+ 470 00e2 07D1     		bne	.L28
+ 153:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00e7, 0x03);
+ 471              		.loc 1 153 0
+ 472 00e4 FB88     		ldrh	r3, [r7, #6]
+ 473 00e6 0322     		movs	r2, #3
+ 474 00e8 E721     		movs	r1, #231
+ 475 00ea 1846     		mov	r0, r3
+ 476 00ec FFF7FEFF 		bl	tofWriteReg
+ 477 00f0 0346     		mov	r3, r0
+ 478 00f2 FB73     		strb	r3, [r7, #15]
+ 479              	.L28:
+ 154:../Sources/sensors/tof.c ****       }
+ 155:../Sources/sensors/tof.c **** 
+ 156:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 480              		.loc 1 156 0
+ 481 00f4 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 482 00f6 002B     		cmp	r3, #0
+ 483 00f8 07D1     		bne	.L29
+ 157:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00f5, 0x02);
+ 484              		.loc 1 157 0
+ 485 00fa FB88     		ldrh	r3, [r7, #6]
+ 486 00fc 0222     		movs	r2, #2
+ 487 00fe F521     		movs	r1, #245
+ 488 0100 1846     		mov	r0, r3
+ 489 0102 FFF7FEFF 		bl	tofWriteReg
+ 490 0106 0346     		mov	r3, r0
+ 491 0108 FB73     		strb	r3, [r7, #15]
+ 492              	.L29:
+ 158:../Sources/sensors/tof.c ****       }
+ 159:../Sources/sensors/tof.c **** 
+ 160:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 493              		.loc 1 160 0
+ 494 010a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 495 010c 002B     		cmp	r3, #0
+ 496 010e 07D1     		bne	.L30
+ 161:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00d9, 0x05);
+ 497              		.loc 1 161 0
+ 498 0110 FB88     		ldrh	r3, [r7, #6]
+ 499 0112 0522     		movs	r2, #5
+ 500 0114 D921     		movs	r1, #217
+ 501 0116 1846     		mov	r0, r3
+ 502 0118 FFF7FEFF 		bl	tofWriteReg
+ 503 011c 0346     		mov	r3, r0
+ 504 011e FB73     		strb	r3, [r7, #15]
+ 505              	.L30:
+ 162:../Sources/sensors/tof.c ****       }
+ 163:../Sources/sensors/tof.c **** 
+ 164:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 506              		.loc 1 164 0
+ 507 0120 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 508 0122 002B     		cmp	r3, #0
+ 509 0124 07D1     		bne	.L31
+ 165:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00db, 0xce);
+ 510              		.loc 1 165 0
+ 511 0126 FB88     		ldrh	r3, [r7, #6]
+ 512 0128 CE22     		movs	r2, #206
+ 513 012a DB21     		movs	r1, #219
+ 514 012c 1846     		mov	r0, r3
+ 515 012e FFF7FEFF 		bl	tofWriteReg
+ 516 0132 0346     		mov	r3, r0
+ 517 0134 FB73     		strb	r3, [r7, #15]
+ 518              	.L31:
+ 166:../Sources/sensors/tof.c ****       }
+ 167:../Sources/sensors/tof.c **** 
+ 168:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 519              		.loc 1 168 0
+ 520 0136 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 521 0138 002B     		cmp	r3, #0
+ 522 013a 07D1     		bne	.L32
+ 169:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00dc, 0x03);
+ 523              		.loc 1 169 0
+ 524 013c FB88     		ldrh	r3, [r7, #6]
+ 525 013e 0322     		movs	r2, #3
+ 526 0140 DC21     		movs	r1, #220
+ 527 0142 1846     		mov	r0, r3
+ 528 0144 FFF7FEFF 		bl	tofWriteReg
+ 529 0148 0346     		mov	r3, r0
+ 530 014a FB73     		strb	r3, [r7, #15]
+ 531              	.L32:
+ 170:../Sources/sensors/tof.c ****       }
+ 171:../Sources/sensors/tof.c **** 
+ 172:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 532              		.loc 1 172 0
+ 533 014c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 534 014e 002B     		cmp	r3, #0
+ 535 0150 07D1     		bne	.L33
+ 173:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00dd, 0xf8);
+ 536              		.loc 1 173 0
+ 537 0152 FB88     		ldrh	r3, [r7, #6]
+ 538 0154 F822     		movs	r2, #248
+ 539 0156 DD21     		movs	r1, #221
+ 540 0158 1846     		mov	r0, r3
+ 541 015a FFF7FEFF 		bl	tofWriteReg
+ 542 015e 0346     		mov	r3, r0
+ 543 0160 FB73     		strb	r3, [r7, #15]
+ 544              	.L33:
+ 174:../Sources/sensors/tof.c ****       }
+ 175:../Sources/sensors/tof.c **** 
+ 176:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 545              		.loc 1 176 0
+ 546 0162 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 547 0164 002B     		cmp	r3, #0
+ 548 0166 07D1     		bne	.L34
+ 177:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x009f, 0x00);
+ 549              		.loc 1 177 0
+ 550 0168 FB88     		ldrh	r3, [r7, #6]
+ 551 016a 0022     		movs	r2, #0
+ 552 016c 9F21     		movs	r1, #159
+ 553 016e 1846     		mov	r0, r3
+ 554 0170 FFF7FEFF 		bl	tofWriteReg
+ 555 0174 0346     		mov	r3, r0
+ 556 0176 FB73     		strb	r3, [r7, #15]
+ 557              	.L34:
+ 178:../Sources/sensors/tof.c ****       }
+ 179:../Sources/sensors/tof.c **** 
+ 180:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 558              		.loc 1 180 0
+ 559 0178 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 560 017a 002B     		cmp	r3, #0
+ 561 017c 07D1     		bne	.L35
+ 181:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00a3, 0x3c);
+ 562              		.loc 1 181 0
+ 563 017e FB88     		ldrh	r3, [r7, #6]
+ 564 0180 3C22     		movs	r2, #60
+ 565 0182 A321     		movs	r1, #163
+ 566 0184 1846     		mov	r0, r3
+ 567 0186 FFF7FEFF 		bl	tofWriteReg
+ 568 018a 0346     		mov	r3, r0
+ 569 018c FB73     		strb	r3, [r7, #15]
+ 570              	.L35:
+ 182:../Sources/sensors/tof.c ****       }
+ 183:../Sources/sensors/tof.c **** 
+ 184:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 571              		.loc 1 184 0
+ 572 018e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 573 0190 002B     		cmp	r3, #0
+ 574 0192 07D1     		bne	.L36
+ 185:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00b7, 0x00);
+ 575              		.loc 1 185 0
+ 576 0194 FB88     		ldrh	r3, [r7, #6]
+ 577 0196 0022     		movs	r2, #0
+ 578 0198 B721     		movs	r1, #183
+ 579 019a 1846     		mov	r0, r3
+ 580 019c FFF7FEFF 		bl	tofWriteReg
+ 581 01a0 0346     		mov	r3, r0
+ 582 01a2 FB73     		strb	r3, [r7, #15]
+ 583              	.L36:
+ 186:../Sources/sensors/tof.c ****       }
+ 187:../Sources/sensors/tof.c **** 
+ 188:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 584              		.loc 1 188 0
+ 585 01a4 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 586 01a6 002B     		cmp	r3, #0
+ 587 01a8 07D1     		bne	.L37
+ 189:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00bb, 0x3c);
+ 588              		.loc 1 189 0
+ 589 01aa FB88     		ldrh	r3, [r7, #6]
+ 590 01ac 3C22     		movs	r2, #60
+ 591 01ae BB21     		movs	r1, #187
+ 592 01b0 1846     		mov	r0, r3
+ 593 01b2 FFF7FEFF 		bl	tofWriteReg
+ 594 01b6 0346     		mov	r3, r0
+ 595 01b8 FB73     		strb	r3, [r7, #15]
+ 596              	.L37:
+ 190:../Sources/sensors/tof.c ****       }
+ 191:../Sources/sensors/tof.c **** 
+ 192:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 597              		.loc 1 192 0
+ 598 01ba FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 599 01bc 002B     		cmp	r3, #0
+ 600 01be 07D1     		bne	.L38
+ 193:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00b2, 0x09);
+ 601              		.loc 1 193 0
+ 602 01c0 FB88     		ldrh	r3, [r7, #6]
+ 603 01c2 0922     		movs	r2, #9
+ 604 01c4 B221     		movs	r1, #178
+ 605 01c6 1846     		mov	r0, r3
+ 606 01c8 FFF7FEFF 		bl	tofWriteReg
+ 607 01cc 0346     		mov	r3, r0
+ 608 01ce FB73     		strb	r3, [r7, #15]
+ 609              	.L38:
+ 194:../Sources/sensors/tof.c ****       }
+ 195:../Sources/sensors/tof.c **** 
+ 196:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 610              		.loc 1 196 0
+ 611 01d0 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 612 01d2 002B     		cmp	r3, #0
+ 613 01d4 07D1     		bne	.L39
+ 197:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00ca, 0x09);
+ 614              		.loc 1 197 0
+ 615 01d6 FB88     		ldrh	r3, [r7, #6]
+ 616 01d8 0922     		movs	r2, #9
+ 617 01da CA21     		movs	r1, #202
+ 618 01dc 1846     		mov	r0, r3
+ 619 01de FFF7FEFF 		bl	tofWriteReg
+ 620 01e2 0346     		mov	r3, r0
+ 621 01e4 FB73     		strb	r3, [r7, #15]
+ 622              	.L39:
+ 198:../Sources/sensors/tof.c ****       }
+ 199:../Sources/sensors/tof.c **** 
+ 200:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 623              		.loc 1 200 0
+ 624 01e6 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 625 01e8 002B     		cmp	r3, #0
+ 626 01ea 08D1     		bne	.L40
+ 201:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0198, 0x01);
+ 627              		.loc 1 201 0
+ 628 01ec FB88     		ldrh	r3, [r7, #6]
+ 629 01ee 0122     		movs	r2, #1
+ 630 01f0 4FF4CC71 		mov	r1, #408
+ 631 01f4 1846     		mov	r0, r3
+ 632 01f6 FFF7FEFF 		bl	tofWriteReg
+ 633 01fa 0346     		mov	r3, r0
+ 634 01fc FB73     		strb	r3, [r7, #15]
+ 635              	.L40:
+ 202:../Sources/sensors/tof.c ****       }
+ 203:../Sources/sensors/tof.c **** 
+ 204:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 636              		.loc 1 204 0
+ 637 01fe FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 638 0200 002B     		cmp	r3, #0
+ 639 0202 08D1     		bne	.L41
+ 205:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x01b0, 0x17);
+ 640              		.loc 1 205 0
+ 641 0204 FB88     		ldrh	r3, [r7, #6]
+ 642 0206 1722     		movs	r2, #23
+ 643 0208 4FF4D871 		mov	r1, #432
+ 644 020c 1846     		mov	r0, r3
+ 645 020e FFF7FEFF 		bl	tofWriteReg
+ 646 0212 0346     		mov	r3, r0
+ 647 0214 FB73     		strb	r3, [r7, #15]
+ 648              	.L41:
+ 206:../Sources/sensors/tof.c ****       }
+ 207:../Sources/sensors/tof.c **** 
+ 208:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 649              		.loc 1 208 0
+ 650 0216 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 651 0218 002B     		cmp	r3, #0
+ 652 021a 08D1     		bne	.L42
+ 209:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x01ad, 0x00);
+ 653              		.loc 1 209 0
+ 654 021c FB88     		ldrh	r3, [r7, #6]
+ 655 021e 0022     		movs	r2, #0
+ 656 0220 40F2AD11 		movw	r1, #429
+ 657 0224 1846     		mov	r0, r3
+ 658 0226 FFF7FEFF 		bl	tofWriteReg
+ 659 022a 0346     		mov	r3, r0
+ 660 022c FB73     		strb	r3, [r7, #15]
+ 661              	.L42:
+ 210:../Sources/sensors/tof.c ****       }
+ 211:../Sources/sensors/tof.c **** 
+ 212:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 662              		.loc 1 212 0
+ 663 022e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 664 0230 002B     		cmp	r3, #0
+ 665 0232 07D1     		bne	.L43
+ 213:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x00ff, 0x05);
+ 666              		.loc 1 213 0
+ 667 0234 FB88     		ldrh	r3, [r7, #6]
+ 668 0236 0522     		movs	r2, #5
+ 669 0238 FF21     		movs	r1, #255
+ 670 023a 1846     		mov	r0, r3
+ 671 023c FFF7FEFF 		bl	tofWriteReg
+ 672 0240 0346     		mov	r3, r0
+ 673 0242 FB73     		strb	r3, [r7, #15]
+ 674              	.L43:
+ 214:../Sources/sensors/tof.c ****       }
+ 215:../Sources/sensors/tof.c **** 
+ 216:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 675              		.loc 1 216 0
+ 676 0244 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 677 0246 002B     		cmp	r3, #0
+ 678 0248 08D1     		bne	.L44
+ 217:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0100, 0x05);
+ 679              		.loc 1 217 0
+ 680 024a FB88     		ldrh	r3, [r7, #6]
+ 681 024c 0522     		movs	r2, #5
+ 682 024e 4FF48071 		mov	r1, #256
+ 683 0252 1846     		mov	r0, r3
+ 684 0254 FFF7FEFF 		bl	tofWriteReg
+ 685 0258 0346     		mov	r3, r0
+ 686 025a FB73     		strb	r3, [r7, #15]
+ 687              	.L44:
+ 218:../Sources/sensors/tof.c ****       }
+ 219:../Sources/sensors/tof.c **** 
+ 220:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 688              		.loc 1 220 0
+ 689 025c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 690 025e 002B     		cmp	r3, #0
+ 691 0260 08D1     		bne	.L45
+ 221:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0199, 0x05);
+ 692              		.loc 1 221 0
+ 693 0262 FB88     		ldrh	r3, [r7, #6]
+ 694 0264 0522     		movs	r2, #5
+ 695 0266 40F29911 		movw	r1, #409
+ 696 026a 1846     		mov	r0, r3
+ 697 026c FFF7FEFF 		bl	tofWriteReg
+ 698 0270 0346     		mov	r3, r0
+ 699 0272 FB73     		strb	r3, [r7, #15]
+ 700              	.L45:
+ 222:../Sources/sensors/tof.c ****       }
+ 223:../Sources/sensors/tof.c **** 
+ 224:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 701              		.loc 1 224 0
+ 702 0274 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 703 0276 002B     		cmp	r3, #0
+ 704 0278 08D1     		bne	.L46
+ 225:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x01a6, 0x1b);
+ 705              		.loc 1 225 0
+ 706 027a FB88     		ldrh	r3, [r7, #6]
+ 707 027c 1B22     		movs	r2, #27
+ 708 027e 4FF4D371 		mov	r1, #422
+ 709 0282 1846     		mov	r0, r3
+ 710 0284 FFF7FEFF 		bl	tofWriteReg
+ 711 0288 0346     		mov	r3, r0
+ 712 028a FB73     		strb	r3, [r7, #15]
+ 713              	.L46:
+ 226:../Sources/sensors/tof.c ****       }
+ 227:../Sources/sensors/tof.c **** 
+ 228:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 714              		.loc 1 228 0
+ 715 028c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 716 028e 002B     		cmp	r3, #0
+ 717 0290 08D1     		bne	.L47
+ 229:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x01ac, 0x3e);
+ 718              		.loc 1 229 0
+ 719 0292 FB88     		ldrh	r3, [r7, #6]
+ 720 0294 3E22     		movs	r2, #62
+ 721 0296 4FF4D671 		mov	r1, #428
+ 722 029a 1846     		mov	r0, r3
+ 723 029c FFF7FEFF 		bl	tofWriteReg
+ 724 02a0 0346     		mov	r3, r0
+ 725 02a2 FB73     		strb	r3, [r7, #15]
+ 726              	.L47:
+ 230:../Sources/sensors/tof.c ****       }
+ 231:../Sources/sensors/tof.c **** 
+ 232:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 727              		.loc 1 232 0
+ 728 02a4 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 729 02a6 002B     		cmp	r3, #0
+ 730 02a8 08D1     		bne	.L48
+ 233:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x01a7, 0x1f);
+ 731              		.loc 1 233 0
+ 732 02aa FB88     		ldrh	r3, [r7, #6]
+ 733 02ac 1F22     		movs	r2, #31
+ 734 02ae 40F2A711 		movw	r1, #423
+ 735 02b2 1846     		mov	r0, r3
+ 736 02b4 FFF7FEFF 		bl	tofWriteReg
+ 737 02b8 0346     		mov	r3, r0
+ 738 02ba FB73     		strb	r3, [r7, #15]
+ 739              	.L48:
+ 234:../Sources/sensors/tof.c ****       }
+ 235:../Sources/sensors/tof.c **** 
+ 236:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 740              		.loc 1 236 0
+ 741 02bc FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 742 02be 002B     		cmp	r3, #0
+ 743 02c0 07D1     		bne	.L49
+ 237:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0030, 0x00);
+ 744              		.loc 1 237 0
+ 745 02c2 FB88     		ldrh	r3, [r7, #6]
+ 746 02c4 0022     		movs	r2, #0
+ 747 02c6 3021     		movs	r1, #48
+ 748 02c8 1846     		mov	r0, r3
+ 749 02ca FFF7FEFF 		bl	tofWriteReg
+ 750 02ce 0346     		mov	r3, r0
+ 751 02d0 FB73     		strb	r3, [r7, #15]
+ 752              	.L49:
+ 238:../Sources/sensors/tof.c ****       }
+ 239:../Sources/sensors/tof.c **** 
+ 240:../Sources/sensors/tof.c ****       // Recommended : Public registers - See data sheet for more detail
+ 241:../Sources/sensors/tof.c **** 
+ 242:../Sources/sensors/tof.c ****       // Enables polling for ‘New Sample ready when measurement completes
+ 243:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 753              		.loc 1 243 0
+ 754 02d2 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 755 02d4 002B     		cmp	r3, #0
+ 756 02d6 07D1     		bne	.L50
+ 244:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0011, 0x10);
+ 757              		.loc 1 244 0
+ 758 02d8 FB88     		ldrh	r3, [r7, #6]
+ 759 02da 1022     		movs	r2, #16
+ 760 02dc 1121     		movs	r1, #17
+ 761 02de 1846     		mov	r0, r3
+ 762 02e0 FFF7FEFF 		bl	tofWriteReg
+ 763 02e4 0346     		mov	r3, r0
+ 764 02e6 FB73     		strb	r3, [r7, #15]
+ 765              	.L50:
+ 245:../Sources/sensors/tof.c ****       }
+ 246:../Sources/sensors/tof.c ****       // Set the averaging sample period (compromise between lower noise and increased execution ti
+ 247:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 766              		.loc 1 247 0
+ 767 02e8 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 768 02ea 002B     		cmp	r3, #0
+ 769 02ec 08D1     		bne	.L51
+ 248:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x010a, 0x30);
+ 770              		.loc 1 248 0
+ 771 02ee FB88     		ldrh	r3, [r7, #6]
+ 772 02f0 3022     		movs	r2, #48
+ 773 02f2 4FF48571 		mov	r1, #266
+ 774 02f6 1846     		mov	r0, r3
+ 775 02f8 FFF7FEFF 		bl	tofWriteReg
+ 776 02fc 0346     		mov	r3, r0
+ 777 02fe FB73     		strb	r3, [r7, #15]
+ 778              	.L51:
+ 249:../Sources/sensors/tof.c ****       }
+ 250:../Sources/sensors/tof.c ****       // Sets the light and dark gain (upper nibble). Dark gain should not be changed
+ 251:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 779              		.loc 1 251 0
+ 780 0300 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 781 0302 002B     		cmp	r3, #0
+ 782 0304 07D1     		bne	.L52
+ 252:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x003f, 0x46);
+ 783              		.loc 1 252 0
+ 784 0306 FB88     		ldrh	r3, [r7, #6]
+ 785 0308 4622     		movs	r2, #70
+ 786 030a 3F21     		movs	r1, #63
+ 787 030c 1846     		mov	r0, r3
+ 788 030e FFF7FEFF 		bl	tofWriteReg
+ 789 0312 0346     		mov	r3, r0
+ 790 0314 FB73     		strb	r3, [r7, #15]
+ 791              	.L52:
+ 253:../Sources/sensors/tof.c ****       }
+ 254:../Sources/sensors/tof.c ****       // sets the # of range measurements after which auto calibration of system is performed
+ 255:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 792              		.loc 1 255 0
+ 793 0316 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 794 0318 002B     		cmp	r3, #0
+ 795 031a 07D1     		bne	.L53
+ 256:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0031, 0xFF);
+ 796              		.loc 1 256 0
+ 797 031c FB88     		ldrh	r3, [r7, #6]
+ 798 031e FF22     		movs	r2, #255
+ 799 0320 3121     		movs	r1, #49
+ 800 0322 1846     		mov	r0, r3
+ 801 0324 FFF7FEFF 		bl	tofWriteReg
+ 802 0328 0346     		mov	r3, r0
+ 803 032a FB73     		strb	r3, [r7, #15]
+ 804              	.L53:
+ 257:../Sources/sensors/tof.c ****       }
+ 258:../Sources/sensors/tof.c ****       // Set ALS integration time to 100ms
+ 259:../Sources/sensors/tof.c ****       if (result == EC_SUCCESS) {
+ 805              		.loc 1 259 0
+ 806 032c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 807 032e 002B     		cmp	r3, #0
+ 808 0330 07D1     		bne	.L54
+ 260:../Sources/sensors/tof.c ****         result = tofWriteReg(tofAddress, 0x0041, 0x63);
+ 809              		.loc 1 260 0
+ 810 0332 FB88     		ldrh	r3, [r7, #6]
+ 811 0334 6322     		movs	r2, #99
+ 812 0336 4121     		movs	r1, #65
+ 813 0338 1846     		mov	r0, r3
+ 814 033a FFF7FEFF 		bl	tofWriteReg
+ 815 033e 0346     		mov	r3, r0
+ 816 0340 FB73     		strb	r3, [r7, #15]
+ 817              	.L54:
+ 261:../Sources/sensors/tof.c ****       }
+ 262:../Sources/sensors/tof.c **** 
+ 263:../Sources/sensors/tof.c ****       return result;
+ 818              		.loc 1 263 0
+ 819 0342 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 264:../Sources/sensors/tof.c ****     }
+ 820              		.loc 1 264 0
+ 821 0344 1846     		mov	r0, r3
+ 822 0346 1037     		adds	r7, r7, #16
+ 823              		.cfi_def_cfa_offset 8
+ 824 0348 BD46     		mov	sp, r7
+ 825              		.cfi_def_cfa_register 13
+ 826              		@ sp needed
+ 827 034a 80BD     		pop	{r7, pc}
+ 828              		.cfi_endproc
+ 829              	.LFE128:
+ 831              		.section	.rodata
+ 832              		.align	2
+ 833              	.LC0:
+ 834 0000 68656C70 		.ascii	"help\000"
+ 834      00
+ 835 0005 000000   		.align	2
+ 836              	.LC1:
+ 837 0008 20746F66 		.ascii	" tof commands: tof 1, tof 2\000"
+ 837      20636F6D 
+ 837      6D616E64 
+ 837      733A2074 
+ 837      6F662031 
+ 838              		.align	2
+ 839              	.LC2:
+ 840 0024 3100     		.ascii	"1\000"
+ 841 0026 0000     		.align	2
+ 842              	.LC3:
+ 843 0028 544F4620 		.ascii	"TOF 1: \000"
+ 843      313A2000 
+ 844              		.align	2
+ 845              	.LC4:
+ 846 0030 206D6D00 		.ascii	" mm\000"
+ 847              		.align	2
+ 848              	.LC5:
+ 849 0034 3200     		.ascii	"2\000"
+ 850 0036 0000     		.align	2
+ 851              	.LC6:
+ 852 0038 544F4620 		.ascii	"TOF 2: \000"
+ 852      323A2000 
+ 853              		.section	.text.tofParseCommand,"ax",%progbits
+ 854              		.align	1
+ 855              		.global	tofParseCommand
+ 856              		.syntax unified
+ 857              		.thumb
+ 858              		.thumb_func
+ 859              		.fpu fpv4-sp-d16
+ 861              	tofParseCommand:
+ 862              	.LFB129:
+ 265:../Sources/sensors/tof.c **** 
+ 266:../Sources/sensors/tof.c **** 
+ 267:../Sources/sensors/tof.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+ 268:../Sources/sensors/tof.c **** 
+ 269:../Sources/sensors/tof.c ****   tError tofParseCommand(const unsigned char *cmd)
+ 270:../Sources/sensors/tof.c ****   {
+ 863              		.loc 1 270 0
+ 864              		.cfi_startproc
+ 865              		@ args = 0, pretend = 0, frame = 16
+ 866              		@ frame_needed = 1, uses_anonymous_args = 0
+ 867 0000 80B5     		push	{r7, lr}
+ 868              		.cfi_def_cfa_offset 8
+ 869              		.cfi_offset 7, -8
+ 870              		.cfi_offset 14, -4
+ 871 0002 84B0     		sub	sp, sp, #16
+ 872              		.cfi_def_cfa_offset 24
+ 873 0004 00AF     		add	r7, sp, #0
+ 874              		.cfi_def_cfa_register 7
+ 875 0006 7860     		str	r0, [r7, #4]
+ 271:../Sources/sensors/tof.c ****     tError result = EC_INVALID_ARG;
+ 876              		.loc 1 271 0
+ 877 0008 0323     		movs	r3, #3
+ 878 000a FB73     		strb	r3, [r7, #15]
+ 272:../Sources/sensors/tof.c ****     if (strcmp(cmd, "help") == 0)
+ 879              		.loc 1 272 0
+ 880 000c 2549     		ldr	r1, .L61
+ 881 000e 7868     		ldr	r0, [r7, #4]
+ 882 0010 FFF7FEFF 		bl	strcmp
+ 883 0014 0346     		mov	r3, r0
+ 884 0016 002B     		cmp	r3, #0
+ 885 0018 05D1     		bne	.L57
+ 273:../Sources/sensors/tof.c ****     {
+ 274:../Sources/sensors/tof.c ****       termWriteLine(" tof commands: tof 1, tof 2");
+ 886              		.loc 1 274 0
+ 887 001a 2348     		ldr	r0, .L61+4
+ 888 001c FFF7FEFF 		bl	termWriteLine
+ 275:../Sources/sensors/tof.c ****       result = EC_SUCCESS;
+ 889              		.loc 1 275 0
+ 890 0020 0023     		movs	r3, #0
+ 891 0022 FB73     		strb	r3, [r7, #15]
+ 892 0024 38E0     		b	.L58
+ 893              	.L57:
+ 276:../Sources/sensors/tof.c ****     }
+ 277:../Sources/sensors/tof.c ****     else if (CheckCommand(cmd, "1"))
+ 894              		.loc 1 277 0
+ 895 0026 7B68     		ldr	r3, [r7, #4]
+ 896 0028 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 897 002a 204B     		ldr	r3, .L61+8
+ 898 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 899 002e 9A42     		cmp	r2, r3
+ 900 0030 16D1     		bne	.L59
+ 901              	.LBB2:
+ 278:../Sources/sensors/tof.c ****       {
+ 279:../Sources/sensors/tof.c ****         uint8_t range_data;
+ 280:../Sources/sensors/tof.c ****         tofRange(TOFADD1, &range_data);
+ 902              		.loc 1 280 0
+ 903 0032 07F10E03 		add	r3, r7, #14
+ 904 0036 1946     		mov	r1, r3
+ 905 0038 2920     		movs	r0, #41
+ 906 003a FFF7FEFF 		bl	tofRange
+ 281:../Sources/sensors/tof.c ****         termWrite("TOF 1: ");
+ 907              		.loc 1 281 0
+ 908 003e 1C48     		ldr	r0, .L61+12
+ 909 0040 FFF7FEFF 		bl	termWrite
+ 282:../Sources/sensors/tof.c ****         termWriteNum16s((int16_t)range_data);
+ 910              		.loc 1 282 0
+ 911 0044 BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+ 912 0046 1BB2     		sxth	r3, r3
+ 913 0048 1846     		mov	r0, r3
+ 914 004a FFF7FEFF 		bl	termWriteNum16s
+ 283:../Sources/sensors/tof.c ****         termWrite(" mm");
+ 915              		.loc 1 283 0
+ 916 004e 1948     		ldr	r0, .L61+16
+ 917 0050 FFF7FEFF 		bl	termWrite
+ 284:../Sources/sensors/tof.c ****         termWriteChar('\n');
+ 918              		.loc 1 284 0
+ 919 0054 0A20     		movs	r0, #10
+ 920 0056 FFF7FEFF 		bl	termWriteChar
+ 285:../Sources/sensors/tof.c ****         result = EC_SUCCESS;
+ 921              		.loc 1 285 0
+ 922 005a 0023     		movs	r3, #0
+ 923 005c FB73     		strb	r3, [r7, #15]
+ 924              	.LBE2:
+ 925 005e 1BE0     		b	.L58
+ 926              	.L59:
+ 286:../Sources/sensors/tof.c ****       }
+ 287:../Sources/sensors/tof.c ****     else if (CheckCommand(cmd, "2"))
+ 927              		.loc 1 287 0
+ 928 0060 7B68     		ldr	r3, [r7, #4]
+ 929 0062 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 930 0064 144B     		ldr	r3, .L61+20
+ 931 0066 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 932 0068 9A42     		cmp	r2, r3
+ 933 006a 15D1     		bne	.L58
+ 934              	.LBB3:
+ 288:../Sources/sensors/tof.c ****     {
+ 289:../Sources/sensors/tof.c ****       uint8_t range_data;
+ 290:../Sources/sensors/tof.c ****       tofRange(TOFADD2, &range_data);
+ 935              		.loc 1 290 0
+ 936 006c 07F10D03 		add	r3, r7, #13
+ 937 0070 1946     		mov	r1, r3
+ 938 0072 3920     		movs	r0, #57
+ 939 0074 FFF7FEFF 		bl	tofRange
+ 291:../Sources/sensors/tof.c ****       termWrite("TOF 2: ");
+ 940              		.loc 1 291 0
+ 941 0078 1048     		ldr	r0, .L61+24
+ 942 007a FFF7FEFF 		bl	termWrite
+ 292:../Sources/sensors/tof.c ****       termWriteNum16s((int16_t)range_data);
+ 943              		.loc 1 292 0
+ 944 007e 7B7B     		ldrb	r3, [r7, #13]	@ zero_extendqisi2
+ 945 0080 1BB2     		sxth	r3, r3
+ 946 0082 1846     		mov	r0, r3
+ 947 0084 FFF7FEFF 		bl	termWriteNum16s
+ 293:../Sources/sensors/tof.c ****       termWrite(" mm");
+ 948              		.loc 1 293 0
+ 949 0088 0A48     		ldr	r0, .L61+16
+ 950 008a FFF7FEFF 		bl	termWrite
+ 294:../Sources/sensors/tof.c ****       termWriteChar('\n');
+ 951              		.loc 1 294 0
+ 952 008e 0A20     		movs	r0, #10
+ 953 0090 FFF7FEFF 		bl	termWriteChar
+ 295:../Sources/sensors/tof.c **** 
+ 296:../Sources/sensors/tof.c ****       result = EC_SUCCESS;
+ 954              		.loc 1 296 0
+ 955 0094 0023     		movs	r3, #0
+ 956 0096 FB73     		strb	r3, [r7, #15]
+ 957              	.L58:
+ 958              	.LBE3:
+ 297:../Sources/sensors/tof.c ****     }
+ 298:../Sources/sensors/tof.c **** 
+ 299:../Sources/sensors/tof.c ****     return result;
+ 959              		.loc 1 299 0
+ 960 0098 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 300:../Sources/sensors/tof.c ****   }
+ 961              		.loc 1 300 0
+ 962 009a 1846     		mov	r0, r3
+ 963 009c 1037     		adds	r7, r7, #16
+ 964              		.cfi_def_cfa_offset 8
+ 965 009e BD46     		mov	sp, r7
+ 966              		.cfi_def_cfa_register 13
+ 967              		@ sp needed
+ 968 00a0 80BD     		pop	{r7, pc}
+ 969              	.L62:
+ 970 00a2 00BF     		.align	2
+ 971              	.L61:
+ 972 00a4 00000000 		.word	.LC0
+ 973 00a8 08000000 		.word	.LC1
+ 974 00ac 24000000 		.word	.LC2
+ 975 00b0 28000000 		.word	.LC3
+ 976 00b4 30000000 		.word	.LC4
+ 977 00b8 34000000 		.word	.LC5
+ 978 00bc 38000000 		.word	.LC6
+ 979              		.cfi_endproc
+ 980              	.LFE129:
+ 982              		.section	.rodata
+ 983              		.align	2
+ 984              	.LC7:
+ 985 0040 312C2032 		.ascii	"1, 2\000"
+ 985      00
+ 986 0045 000000   		.align	2
+ 987              	.LC8:
+ 988 0048 746F6600 		.ascii	"tof\000"
+ 989              		.section	.text.tofInit,"ax",%progbits
+ 990              		.align	1
+ 991              		.global	tofInit
+ 992              		.syntax unified
+ 993              		.thumb
+ 994              		.thumb_func
+ 995              		.fpu fpv4-sp-d16
+ 997              	tofInit:
+ 998              	.LFB130:
+ 301:../Sources/sensors/tof.c **** 
+ 302:../Sources/sensors/tof.c **** 
+ 303:../Sources/sensors/tof.c ****   tError tofInit() {
+ 999              		.loc 1 303 0
+ 1000              		.cfi_startproc
+ 1001              		@ args = 0, pretend = 0, frame = 8
+ 1002              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1003 0000 80B5     		push	{r7, lr}
+ 1004              		.cfi_def_cfa_offset 8
+ 1005              		.cfi_offset 7, -8
+ 1006              		.cfi_offset 14, -4
+ 1007 0002 82B0     		sub	sp, sp, #8
+ 1008              		.cfi_def_cfa_offset 16
+ 1009 0004 00AF     		add	r7, sp, #0
+ 1010              		.cfi_def_cfa_register 7
+ 304:../Sources/sensors/tof.c ****     GPIOB_PDDR |= 1<<16 | 1<<17;       // configure PT & PT as output
+ 1011              		.loc 1 304 0
+ 1012 0006 254A     		ldr	r2, .L65
+ 1013 0008 244B     		ldr	r3, .L65
+ 1014 000a 5B69     		ldr	r3, [r3, #20]
+ 1015 000c 43F44033 		orr	r3, r3, #196608
+ 1016 0010 5361     		str	r3, [r2, #20]
+ 305:../Sources/sensors/tof.c ****     PORTB_PCR16 = PORT_PCR_MUX(1);
+ 1017              		.loc 1 305 0
+ 1018 0012 234B     		ldr	r3, .L65+4
+ 1019 0014 4FF48072 		mov	r2, #256
+ 1020 0018 1A64     		str	r2, [r3, #64]
+ 306:../Sources/sensors/tof.c ****     PORTB_PCR17 = PORT_PCR_MUX(1);
+ 1021              		.loc 1 306 0
+ 1022 001a 214B     		ldr	r3, .L65+4
+ 1023 001c 4FF48072 		mov	r2, #256
+ 1024 0020 5A64     		str	r2, [r3, #68]
+ 307:../Sources/sensors/tof.c **** 
+ 308:../Sources/sensors/tof.c ****     GPIOB_PSOR |= 1<<17;               // set PTD0 & PTD1 = 1
+ 1025              		.loc 1 308 0
+ 1026 0022 1E4A     		ldr	r2, .L65
+ 1027 0024 1D4B     		ldr	r3, .L65
+ 1028 0026 5B68     		ldr	r3, [r3, #4]
+ 1029 0028 43F40033 		orr	r3, r3, #131072
+ 1030 002c 5360     		str	r3, [r2, #4]
+ 309:../Sources/sensors/tof.c ****     GPIOB_PCOR |= 1<<16;               // set PTD0 & PTD1 = 1
+ 1031              		.loc 1 309 0
+ 1032 002e 1B4A     		ldr	r2, .L65
+ 1033 0030 1A4B     		ldr	r3, .L65
+ 1034 0032 9B68     		ldr	r3, [r3, #8]
+ 1035 0034 43F48033 		orr	r3, r3, #65536
+ 1036 0038 9360     		str	r3, [r2, #8]
+ 310:../Sources/sensors/tof.c ****     utilWaitUs(400);
+ 1037              		.loc 1 310 0
+ 1038 003a 4FF4C870 		mov	r0, #400
+ 1039 003e FFF7FEFF 		bl	utilWaitUs
+ 311:../Sources/sensors/tof.c ****     tError result = tofWriteReg(TOFADD1, 0x0212, TOFADD2);
+ 1040              		.loc 1 311 0
+ 1041 0042 3922     		movs	r2, #57
+ 1042 0044 40F21221 		movw	r1, #530
+ 1043 0048 2920     		movs	r0, #41
+ 1044 004a FFF7FEFF 		bl	tofWriteReg
+ 1045 004e 0346     		mov	r3, r0
+ 1046 0050 FB71     		strb	r3, [r7, #7]
+ 312:../Sources/sensors/tof.c ****     GPIOB_PSOR |= 1<<16;               // set PTD0 & PTD1 = 1
+ 1047              		.loc 1 312 0
+ 1048 0052 124A     		ldr	r2, .L65
+ 1049 0054 114B     		ldr	r3, .L65
+ 1050 0056 5B68     		ldr	r3, [r3, #4]
+ 1051 0058 43F48033 		orr	r3, r3, #65536
+ 1052 005c 5360     		str	r3, [r2, #4]
+ 313:../Sources/sensors/tof.c ****     utilWaitUs(400);
+ 1053              		.loc 1 313 0
+ 1054 005e 4FF4C870 		mov	r0, #400
+ 1055 0062 FFF7FEFF 		bl	utilWaitUs
+ 314:../Sources/sensors/tof.c ****     tofInitSequence(TOFADD1);
+ 1056              		.loc 1 314 0
+ 1057 0066 2920     		movs	r0, #41
+ 1058 0068 FFF7FEFF 		bl	tofInitSequence
+ 315:../Sources/sensors/tof.c ****     tofInitSequence(TOFADD2);
+ 1059              		.loc 1 315 0
+ 1060 006c 3920     		movs	r0, #57
+ 1061 006e FFF7FEFF 		bl	tofInitSequence
+ 316:../Sources/sensors/tof.c ****     uint8_t range_data;
+ 317:../Sources/sensors/tof.c ****     tofRange(TOFADD1, &range_data);
+ 1062              		.loc 1 317 0
+ 1063 0072 BB1D     		adds	r3, r7, #6
+ 1064 0074 1946     		mov	r1, r3
+ 1065 0076 2920     		movs	r0, #41
+ 1066 0078 FFF7FEFF 		bl	tofRange
+ 318:../Sources/sensors/tof.c ****     if(range_data<0){
+ 319:../Sources/sensors/tof.c ****       result = EC_FAILED;
+ 320:../Sources/sensors/tof.c ****     }
+ 321:../Sources/sensors/tof.c ****     tofRange(TOFADD2, &range_data);
+ 1067              		.loc 1 321 0
+ 1068 007c BB1D     		adds	r3, r7, #6
+ 1069 007e 1946     		mov	r1, r3
+ 1070 0080 3920     		movs	r0, #57
+ 1071 0082 FFF7FEFF 		bl	tofRange
+ 322:../Sources/sensors/tof.c ****     if(range_data<0){
+ 323:../Sources/sensors/tof.c ****       result = EC_FAILED;
+ 324:../Sources/sensors/tof.c ****     }
+ 325:../Sources/sensors/tof.c **** 
+ 326:../Sources/sensors/tof.c ****     // register terminal command line handler
+ 327:../Sources/sensors/tof.c ****       termRegisterCommandLineHandler(&clh, "tof", "1, 2", tofParseCommand);
+ 1072              		.loc 1 327 0
+ 1073 0086 074B     		ldr	r3, .L65+8
+ 1074 0088 074A     		ldr	r2, .L65+12
+ 1075 008a 0849     		ldr	r1, .L65+16
+ 1076 008c 0848     		ldr	r0, .L65+20
+ 1077 008e FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 328:../Sources/sensors/tof.c **** 
+ 329:../Sources/sensors/tof.c ****     return result;
+ 1078              		.loc 1 329 0
+ 1079 0092 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 330:../Sources/sensors/tof.c ****   }
+ 1080              		.loc 1 330 0
+ 1081 0094 1846     		mov	r0, r3
+ 1082 0096 0837     		adds	r7, r7, #8
+ 1083              		.cfi_def_cfa_offset 8
+ 1084 0098 BD46     		mov	sp, r7
+ 1085              		.cfi_def_cfa_register 13
+ 1086              		@ sp needed
+ 1087 009a 80BD     		pop	{r7, pc}
+ 1088              	.L66:
+ 1089              		.align	2
+ 1090              	.L65:
+ 1091 009c 40F00F40 		.word	1074786368
+ 1092 00a0 00A00440 		.word	1074044928
+ 1093 00a4 00000000 		.word	tofParseCommand
+ 1094 00a8 40000000 		.word	.LC7
+ 1095 00ac 48000000 		.word	.LC8
+ 1096 00b0 00000000 		.word	clh
+ 1097              		.cfi_endproc
+ 1098              	.LFE130:
+ 1100              		.text
+ 1101              	.Letext0:
+ 1102              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1103              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1104              		.file 4 "../Includes/core_cm4.h"
+ 1105              		.file 5 "../Includes/system_MK22F51212.h"
+ 1106              		.file 6 "../Includes/MK22F51212.h"
+ 1107              		.file 7 "../Includes/platform.h"
+ 1108              		.file 8 "../Sources/com/term.h"
+ 1109              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1110              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 1111              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 1112              		.file 12 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+DEFINED SYMBOLS
+                            *ABS*:00000000 tof.c
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:24     .text.tofWriteReg:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:31     .text.tofWriteReg:00000000 tofWriteReg
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:116    .text.tofReadReg:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:123    .text.tofReadReg:00000000 tofReadReg
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:214    .text.tofRange:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:221    .text.tofRange:00000000 tofRange
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:322    .text.tofInitSequence:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:329    .text.tofInitSequence:00000000 tofInitSequence
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:832    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:854    .text.tofParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:861    .text.tofParseCommand:00000000 tofParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:972    .text.tofParseCommand:000000a4 $d
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:990    .text.tofInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:997    .text.tofInit:00000000 tofInit
+C:\Users\Blub\AppData\Local\Temp\ccaNaC9e.s:1091   .text.tofInit:0000009c $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.tof.h.15.c52dd967ff4566f0850c274a8f02f219
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+
+UNDEFINED SYMBOLS
+i2cStart
+i2cSendData
+i2cStop
+i2cRepeatedStart
+i2cReceiveData
+strcmp
+termWriteLine
+termWrite
+termWriteNum16s
+termWriteChar
+utilWaitUs
+termRegisterCommandLineHandler

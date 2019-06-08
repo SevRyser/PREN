@@ -1,0 +1,2111 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"util.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.utilStrcpy,"ax",%progbits
+  18              		.align	1
+  19              		.global	utilStrcpy
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	utilStrcpy:
+  26              	.LFB125:
+  27              		.file 1 "../Sources/utils/util.c"
+   1:../Sources/utils/util.c **** /**
+   2:../Sources/utils/util.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/utils/util.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/utils/util.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/utils/util.c ****  *
+   6:../Sources/utils/util.c ****  * \brief         util collection
+   7:../Sources/utils/util.c ****  * \file
+   8:../Sources/utils/util.c ****  * \author        Christian Jost, christian.jost@hslu.ch
+   9:../Sources/utils/util.c ****  * \date          26.03.20018
+  10:../Sources/utils/util.c ****  *
+  11:../Sources/utils/util.c ****  * $Id: util.c 102 2018-05-01 14:06:17Z zajost $
+  12:../Sources/utils/util.c ****  *
+  13:../Sources/utils/util.c ****  * This file contains as well as modified functions from the utility
+  14:../Sources/utils/util.c ****  * component of processor expert:
+  15:../Sources/utils/util.c ****  *
+  16:../Sources/utils/util.c ****  * Copyright(c) 2014 - 2017, Erich Styger
+  17:../Sources/utils/util.c ****  * Web : https://mcuoneclipse.com
+  18:../Sources/utils/util.c ****  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+  19:../Sources/utils/util.c ****  * Git : https ://github.com/ErichStyger/McuOnEclipse_PEx
+  20:../Sources/utils/util.c ****  * All rights reserved.
+  21:../Sources/utils/util.c ****  *
+  22:../Sources/utils/util.c ****  * Redistribution and use in source and binary forms, with or without modification,
+  23:../Sources/utils/util.c ****  * are permitted provided that the following conditions are met :
+  24:../Sources/utils/util.c ****  *
+  25:../Sources/utils/util.c ****  * -Redistributions of source code must retain the above copyright notice, this list
+  26:../Sources/utils/util.c ****  * of conditions and the following disclaimer.
+  27:../Sources/utils/util.c ****  *
+  28:../Sources/utils/util.c ****  * - Redistributions in binary form must reproduce the above copyright notice, this
+  29:../Sources/utils/util.c ****  * list of conditions and the following disclaimer in the documentation and / or
+  30:../Sources/utils/util.c ****  * other materials provided with the distribution.
+  31:../Sources/utils/util.c ****  *
+  32:../Sources/utils/util.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  33:../Sources/utils/util.c ****  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  34:../Sources/utils/util.c ****  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  35:../Sources/utils/util.c ****  * DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+  36:../Sources/utils/util.c ****  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  37:../Sources/utils/util.c ****  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  38:../Sources/utils/util.c ****  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+  39:../Sources/utils/util.c ****  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  40:../Sources/utils/util.c ****  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  41:../Sources/utils/util.c ****  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  42:../Sources/utils/util.c ****  *--------------------------------------------------------------------
+  43:../Sources/utils/util.c ****  */
+  44:../Sources/utils/util.c **** 
+  45:../Sources/utils/util.c **** #include <stdlib.h>
+  46:../Sources/utils/util.c **** #include "platform.h"
+  47:../Sources/utils/util.c **** #include "util.h"
+  48:../Sources/utils/util.c **** 
+  49:../Sources/utils/util.c **** 
+  50:../Sources/utils/util.c **** 
+  51:../Sources/utils/util.c **** /**
+  52:../Sources/utils/util.c ****  * copy the string src into dst. It performs the same task as strncpy, except
+  53:../Sources/utils/util.c ****  * - always terminates the result string.
+  54:../Sources/utils/util.c ****  * - does not zero out the remaining part in dst.
+  55:../Sources/utils/util.c ****  *
+  56:../Sources/utils/util.c ****  * Note: dstSize is the size of dst INCLUDING zero byte.
+  57:../Sources/utils/util.c ****  * Precondition: src, dst != NULL
+  58:../Sources/utils/util.c ****  *
+  59:../Sources/utils/util.c ****  * @param[in,out] dst
+  60:../Sources/utils/util.c ****  *    Start of buffer, where to append the number string
+  61:../Sources/utils/util.c ****  * @param[in] dstSize
+  62:../Sources/utils/util.c ****  *    The size of the buffer, including the zero byte
+  63:../Sources/utils/util.c ****  * @param[in] src
+  64:../Sources/utils/util.c ****  *    The source string to copy
+  65:../Sources/utils/util.c ****  */
+  66:../Sources/utils/util.c **** void utilStrcpy(uint8_t *dst, size_t dstSize, const uint8_t *src)
+  67:../Sources/utils/util.c **** {
+  28              		.loc 1 67 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 16
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 80B4     		push	{r7}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 7, -4
+  36 0002 85B0     		sub	sp, sp, #20
+  37              		.cfi_def_cfa_offset 24
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  40 0006 F860     		str	r0, [r7, #12]
+  41 0008 B960     		str	r1, [r7, #8]
+  42 000a 7A60     		str	r2, [r7, #4]
+  68:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+  43              		.loc 1 68 0
+  44 000c BB68     		ldr	r3, [r7, #8]
+  45 000e 013B     		subs	r3, r3, #1
+  46 0010 BB60     		str	r3, [r7, #8]
+  69:../Sources/utils/util.c ****   while (dstSize > 0 && *src != '\0') {
+  47              		.loc 1 69 0
+  48 0012 0AE0     		b	.L2
+  49              	.L4:
+  70:../Sources/utils/util.c ****     *dst++ = *src++;
+  50              		.loc 1 70 0
+  51 0014 FB68     		ldr	r3, [r7, #12]
+  52 0016 5A1C     		adds	r2, r3, #1
+  53 0018 FA60     		str	r2, [r7, #12]
+  54 001a 7A68     		ldr	r2, [r7, #4]
+  55 001c 511C     		adds	r1, r2, #1
+  56 001e 7960     		str	r1, [r7, #4]
+  57 0020 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+  58 0022 1A70     		strb	r2, [r3]
+  71:../Sources/utils/util.c ****     dstSize--;
+  59              		.loc 1 71 0
+  60 0024 BB68     		ldr	r3, [r7, #8]
+  61 0026 013B     		subs	r3, r3, #1
+  62 0028 BB60     		str	r3, [r7, #8]
+  63              	.L2:
+  69:../Sources/utils/util.c ****   while (dstSize > 0 && *src != '\0') {
+  64              		.loc 1 69 0
+  65 002a BB68     		ldr	r3, [r7, #8]
+  66 002c 002B     		cmp	r3, #0
+  67 002e 03D0     		beq	.L3
+  69:../Sources/utils/util.c ****   while (dstSize > 0 && *src != '\0') {
+  68              		.loc 1 69 0 is_stmt 0 discriminator 1
+  69 0030 7B68     		ldr	r3, [r7, #4]
+  70 0032 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  71 0034 002B     		cmp	r3, #0
+  72 0036 EDD1     		bne	.L4
+  73              	.L3:
+  72:../Sources/utils/util.c ****   }
+  73:../Sources/utils/util.c ****   *dst = '\0';
+  74              		.loc 1 73 0 is_stmt 1
+  75 0038 FB68     		ldr	r3, [r7, #12]
+  76 003a 0022     		movs	r2, #0
+  77 003c 1A70     		strb	r2, [r3]
+  74:../Sources/utils/util.c **** }
+  78              		.loc 1 74 0
+  79 003e 00BF     		nop
+  80 0040 1437     		adds	r7, r7, #20
+  81              		.cfi_def_cfa_offset 4
+  82 0042 BD46     		mov	sp, r7
+  83              		.cfi_def_cfa_register 13
+  84              		@ sp needed
+  85 0044 5DF8047B 		ldr	r7, [sp], #4
+  86              		.cfi_restore 7
+  87              		.cfi_def_cfa_offset 0
+  88 0048 7047     		bx	lr
+  89              		.cfi_endproc
+  90              	.LFE125:
+  92              		.section	.text.utilStrcat,"ax",%progbits
+  93              		.align	1
+  94              		.global	utilStrcat
+  95              		.syntax unified
+  96              		.thumb
+  97              		.thumb_func
+  98              		.fpu fpv4-sp-d16
+ 100              	utilStrcat:
+ 101              	.LFB126:
+  75:../Sources/utils/util.c **** 
+  76:../Sources/utils/util.c **** 
+  77:../Sources/utils/util.c **** 
+  78:../Sources/utils/util.c **** /**
+  79:../Sources/utils/util.c ****  * Concat the string src into dst. Always terminates the result string.
+  80:../Sources/utils/util.c ****  *   Note: count is the size of dst INCLUDING zero byte.
+  81:../Sources/utils/util.c ****  *   Precondition: src, dst != NULL
+  82:../Sources/utils/util.c ****  *
+  83:../Sources/utils/util.c ****  * @param[in,out] dst
+  84:../Sources/utils/util.c ****  *    Start of buffer, where to append the number string.
+  85:../Sources/utils/util.c ****  * @param[in] dstSize
+  86:../Sources/utils/util.c ****  *    The size of the buffer, including the zero byte.
+  87:../Sources/utils/util.c ****  * @param[in] src
+  88:../Sources/utils/util.c ****  *    The source string to add.
+  89:../Sources/utils/util.c ****  */
+  90:../Sources/utils/util.c **** void utilStrcat(uint8_t *dst, size_t dstSize, const uint8_t *src)
+  91:../Sources/utils/util.c **** {
+ 102              		.loc 1 91 0
+ 103              		.cfi_startproc
+ 104              		@ args = 0, pretend = 0, frame = 16
+ 105              		@ frame_needed = 1, uses_anonymous_args = 0
+ 106              		@ link register save eliminated.
+ 107 0000 80B4     		push	{r7}
+ 108              		.cfi_def_cfa_offset 4
+ 109              		.cfi_offset 7, -4
+ 110 0002 85B0     		sub	sp, sp, #20
+ 111              		.cfi_def_cfa_offset 24
+ 112 0004 00AF     		add	r7, sp, #0
+ 113              		.cfi_def_cfa_register 7
+ 114 0006 F860     		str	r0, [r7, #12]
+ 115 0008 B960     		str	r1, [r7, #8]
+ 116 000a 7A60     		str	r2, [r7, #4]
+  92:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+ 117              		.loc 1 92 0
+ 118 000c BB68     		ldr	r3, [r7, #8]
+ 119 000e 013B     		subs	r3, r3, #1
+ 120 0010 BB60     		str	r3, [r7, #8]
+  93:../Sources/utils/util.c ****   /* point to the end of the source */
+  94:../Sources/utils/util.c ****   while (dstSize > 0 && *dst != '\0') {
+ 121              		.loc 1 94 0
+ 122 0012 05E0     		b	.L6
+ 123              	.L8:
+  95:../Sources/utils/util.c ****     dst++;
+ 124              		.loc 1 95 0
+ 125 0014 FB68     		ldr	r3, [r7, #12]
+ 126 0016 0133     		adds	r3, r3, #1
+ 127 0018 FB60     		str	r3, [r7, #12]
+  96:../Sources/utils/util.c ****     dstSize--;
+ 128              		.loc 1 96 0
+ 129 001a BB68     		ldr	r3, [r7, #8]
+ 130 001c 013B     		subs	r3, r3, #1
+ 131 001e BB60     		str	r3, [r7, #8]
+ 132              	.L6:
+  94:../Sources/utils/util.c ****     dst++;
+ 133              		.loc 1 94 0
+ 134 0020 BB68     		ldr	r3, [r7, #8]
+ 135 0022 002B     		cmp	r3, #0
+ 136 0024 0FD0     		beq	.L9
+  94:../Sources/utils/util.c ****     dst++;
+ 137              		.loc 1 94 0 is_stmt 0 discriminator 1
+ 138 0026 FB68     		ldr	r3, [r7, #12]
+ 139 0028 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 140 002a 002B     		cmp	r3, #0
+ 141 002c F2D1     		bne	.L8
+  97:../Sources/utils/util.c ****   }
+  98:../Sources/utils/util.c ****   /* copy the src in the destination */
+  99:../Sources/utils/util.c ****   while (dstSize > 0 && *src != '\0') {
+ 142              		.loc 1 99 0 is_stmt 1
+ 143 002e 0AE0     		b	.L9
+ 144              	.L11:
+ 100:../Sources/utils/util.c ****     *dst++ = *src++;
+ 145              		.loc 1 100 0
+ 146 0030 FB68     		ldr	r3, [r7, #12]
+ 147 0032 5A1C     		adds	r2, r3, #1
+ 148 0034 FA60     		str	r2, [r7, #12]
+ 149 0036 7A68     		ldr	r2, [r7, #4]
+ 150 0038 511C     		adds	r1, r2, #1
+ 151 003a 7960     		str	r1, [r7, #4]
+ 152 003c 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 153 003e 1A70     		strb	r2, [r3]
+ 101:../Sources/utils/util.c ****     dstSize--;
+ 154              		.loc 1 101 0
+ 155 0040 BB68     		ldr	r3, [r7, #8]
+ 156 0042 013B     		subs	r3, r3, #1
+ 157 0044 BB60     		str	r3, [r7, #8]
+ 158              	.L9:
+  99:../Sources/utils/util.c ****     *dst++ = *src++;
+ 159              		.loc 1 99 0
+ 160 0046 BB68     		ldr	r3, [r7, #8]
+ 161 0048 002B     		cmp	r3, #0
+ 162 004a 03D0     		beq	.L10
+  99:../Sources/utils/util.c ****     *dst++ = *src++;
+ 163              		.loc 1 99 0 is_stmt 0 discriminator 1
+ 164 004c 7B68     		ldr	r3, [r7, #4]
+ 165 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 166 0050 002B     		cmp	r3, #0
+ 167 0052 EDD1     		bne	.L11
+ 168              	.L10:
+ 102:../Sources/utils/util.c ****   }
+ 103:../Sources/utils/util.c ****   /* terminate the string */
+ 104:../Sources/utils/util.c ****   *dst = '\0';
+ 169              		.loc 1 104 0 is_stmt 1
+ 170 0054 FB68     		ldr	r3, [r7, #12]
+ 171 0056 0022     		movs	r2, #0
+ 172 0058 1A70     		strb	r2, [r3]
+ 105:../Sources/utils/util.c **** }
+ 173              		.loc 1 105 0
+ 174 005a 00BF     		nop
+ 175 005c 1437     		adds	r7, r7, #20
+ 176              		.cfi_def_cfa_offset 4
+ 177 005e BD46     		mov	sp, r7
+ 178              		.cfi_def_cfa_register 13
+ 179              		@ sp needed
+ 180 0060 5DF8047B 		ldr	r7, [sp], #4
+ 181              		.cfi_restore 7
+ 182              		.cfi_def_cfa_offset 0
+ 183 0064 7047     		bx	lr
+ 184              		.cfi_endproc
+ 185              	.LFE126:
+ 187              		.section	.text.utilNum16uToStr,"ax",%progbits
+ 188              		.align	1
+ 189              		.global	utilNum16uToStr
+ 190              		.syntax unified
+ 191              		.thumb
+ 192              		.thumb_func
+ 193              		.fpu fpv4-sp-d16
+ 195              	utilNum16uToStr:
+ 196              	.LFB127:
+ 106:../Sources/utils/util.c **** 
+ 107:../Sources/utils/util.c **** 
+ 108:../Sources/utils/util.c **** /**
+ 109:../Sources/utils/util.c ****  * Converts a 16bit unsigned number into a string.
+ 110:../Sources/utils/util.c ****  * @param[in,out] dst
+ 111:../Sources/utils/util.c ****  *    String buffer to store the number.
+ 112:../Sources/utils/util.c ****  * @param[in] dstSize
+ 113:../Sources/utils/util.c ****  *    Size of the destination buffer in bytes.
+ 114:../Sources/utils/util.c ****  * @param[in] num
+ 115:../Sources/utils/util.c ****  *    16bit unsigned number to convert.
+ 116:../Sources/utils/util.c ****  */
+ 117:../Sources/utils/util.c **** void utilNum16uToStr(uint8_t *dst, uint16_t dstSize, uint16_t num)
+ 118:../Sources/utils/util.c **** {
+ 197              		.loc 1 118 0
+ 198              		.cfi_startproc
+ 199              		@ args = 0, pretend = 0, frame = 24
+ 200              		@ frame_needed = 1, uses_anonymous_args = 0
+ 201              		@ link register save eliminated.
+ 202 0000 80B4     		push	{r7}
+ 203              		.cfi_def_cfa_offset 4
+ 204              		.cfi_offset 7, -4
+ 205 0002 87B0     		sub	sp, sp, #28
+ 206              		.cfi_def_cfa_offset 32
+ 207 0004 00AF     		add	r7, sp, #0
+ 208              		.cfi_def_cfa_register 7
+ 209 0006 7860     		str	r0, [r7, #4]
+ 210 0008 0B46     		mov	r3, r1
+ 211 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 212 000c 1346     		mov	r3, r2	@ movhi
+ 213 000e 3B80     		strh	r3, [r7]	@ movhi
+ 119:../Sources/utils/util.c ****   unsigned char *ptr = ((unsigned char *)dst);
+ 214              		.loc 1 119 0
+ 215 0010 7B68     		ldr	r3, [r7, #4]
+ 216 0012 3B61     		str	r3, [r7, #16]
+ 120:../Sources/utils/util.c ****   unsigned char i=0, j;
+ 217              		.loc 1 120 0
+ 218 0014 0023     		movs	r3, #0
+ 219 0016 FB75     		strb	r3, [r7, #23]
+ 121:../Sources/utils/util.c ****   unsigned char tmp;
+ 122:../Sources/utils/util.c **** 
+ 123:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+ 220              		.loc 1 123 0
+ 221 0018 7B88     		ldrh	r3, [r7, #2]
+ 222 001a 013B     		subs	r3, r3, #1
+ 223 001c 7B80     		strh	r3, [r7, #2]	@ movhi
+ 124:../Sources/utils/util.c ****   if (num == 0 && dstSize > 0){
+ 224              		.loc 1 124 0
+ 225 001e 3B88     		ldrh	r3, [r7]
+ 226 0020 002B     		cmp	r3, #0
+ 227 0022 2CD1     		bne	.L14
+ 228              		.loc 1 124 0 is_stmt 0 discriminator 1
+ 229 0024 7B88     		ldrh	r3, [r7, #2]
+ 230 0026 002B     		cmp	r3, #0
+ 231 0028 29D0     		beq	.L14
+ 125:../Sources/utils/util.c ****     ptr[i++] = '0';
+ 232              		.loc 1 125 0 is_stmt 1
+ 233 002a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 234 002c 5A1C     		adds	r2, r3, #1
+ 235 002e FA75     		strb	r2, [r7, #23]
+ 236 0030 1A46     		mov	r2, r3
+ 237 0032 3B69     		ldr	r3, [r7, #16]
+ 238 0034 1344     		add	r3, r3, r2
+ 239 0036 3022     		movs	r2, #48
+ 240 0038 1A70     		strb	r2, [r3]
+ 126:../Sources/utils/util.c ****     dstSize--;
+ 241              		.loc 1 126 0
+ 242 003a 7B88     		ldrh	r3, [r7, #2]
+ 243 003c 013B     		subs	r3, r3, #1
+ 244 003e 7B80     		strh	r3, [r7, #2]	@ movhi
+ 127:../Sources/utils/util.c ****   }
+ 128:../Sources/utils/util.c ****   while (num > 0 && dstSize > 0) {
+ 245              		.loc 1 128 0
+ 246 0040 1DE0     		b	.L14
+ 247              	.L16:
+ 129:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 248              		.loc 1 129 0
+ 249 0042 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 250 0044 5A1C     		adds	r2, r3, #1
+ 251 0046 FA75     		strb	r2, [r7, #23]
+ 252 0048 1A46     		mov	r2, r3
+ 253 004a 3B69     		ldr	r3, [r7, #16]
+ 254 004c 9818     		adds	r0, r3, r2
+ 255 004e 3A88     		ldrh	r2, [r7]
+ 256 0050 254B     		ldr	r3, .L19
+ 257 0052 A3FB0213 		umull	r1, r3, r3, r2
+ 258 0056 D908     		lsrs	r1, r3, #3
+ 259 0058 0B46     		mov	r3, r1
+ 260 005a 9B00     		lsls	r3, r3, #2
+ 261 005c 0B44     		add	r3, r3, r1
+ 262 005e 5B00     		lsls	r3, r3, #1
+ 263 0060 D31A     		subs	r3, r2, r3
+ 264 0062 9BB2     		uxth	r3, r3
+ 265 0064 DBB2     		uxtb	r3, r3
+ 266 0066 3033     		adds	r3, r3, #48
+ 267 0068 DBB2     		uxtb	r3, r3
+ 268 006a 0370     		strb	r3, [r0]
+ 130:../Sources/utils/util.c ****     dstSize--;
+ 269              		.loc 1 130 0
+ 270 006c 7B88     		ldrh	r3, [r7, #2]
+ 271 006e 013B     		subs	r3, r3, #1
+ 272 0070 7B80     		strh	r3, [r7, #2]	@ movhi
+ 131:../Sources/utils/util.c ****     num /= 10;
+ 273              		.loc 1 131 0
+ 274 0072 3B88     		ldrh	r3, [r7]
+ 275 0074 1C4A     		ldr	r2, .L19
+ 276 0076 A2FB0323 		umull	r2, r3, r2, r3
+ 277 007a DB08     		lsrs	r3, r3, #3
+ 278 007c 3B80     		strh	r3, [r7]	@ movhi
+ 279              	.L14:
+ 128:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 280              		.loc 1 128 0
+ 281 007e 3B88     		ldrh	r3, [r7]
+ 282 0080 002B     		cmp	r3, #0
+ 283 0082 02D0     		beq	.L15
+ 128:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 284              		.loc 1 128 0 is_stmt 0 discriminator 1
+ 285 0084 7B88     		ldrh	r3, [r7, #2]
+ 286 0086 002B     		cmp	r3, #0
+ 287 0088 DBD1     		bne	.L16
+ 288              	.L15:
+ 132:../Sources/utils/util.c ****   }
+ 133:../Sources/utils/util.c ****   for(j=0; j<(i/2); j++) { /* swap buffer */
+ 289              		.loc 1 133 0 is_stmt 1
+ 290 008a 0023     		movs	r3, #0
+ 291 008c BB75     		strb	r3, [r7, #22]
+ 292 008e 1AE0     		b	.L17
+ 293              	.L18:
+ 134:../Sources/utils/util.c ****     tmp = ptr[j];
+ 294              		.loc 1 134 0 discriminator 3
+ 295 0090 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 296 0092 3A69     		ldr	r2, [r7, #16]
+ 297 0094 1344     		add	r3, r3, r2
+ 298 0096 1B78     		ldrb	r3, [r3]
+ 299 0098 FB73     		strb	r3, [r7, #15]
+ 135:../Sources/utils/util.c ****     ptr[j] = ptr[(i-j)-1];
+ 300              		.loc 1 135 0 discriminator 3
+ 301 009a BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 302 009c 3A69     		ldr	r2, [r7, #16]
+ 303 009e 1344     		add	r3, r3, r2
+ 304 00a0 F97D     		ldrb	r1, [r7, #23]	@ zero_extendqisi2
+ 305 00a2 BA7D     		ldrb	r2, [r7, #22]	@ zero_extendqisi2
+ 306 00a4 8A1A     		subs	r2, r1, r2
+ 307 00a6 013A     		subs	r2, r2, #1
+ 308 00a8 3969     		ldr	r1, [r7, #16]
+ 309 00aa 0A44     		add	r2, r2, r1
+ 310 00ac 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 311 00ae 1A70     		strb	r2, [r3]
+ 136:../Sources/utils/util.c ****     ptr[(i-j)-1] = tmp;
+ 312              		.loc 1 136 0 discriminator 3
+ 313 00b0 FA7D     		ldrb	r2, [r7, #23]	@ zero_extendqisi2
+ 314 00b2 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 315 00b4 D31A     		subs	r3, r2, r3
+ 316 00b6 013B     		subs	r3, r3, #1
+ 317 00b8 3A69     		ldr	r2, [r7, #16]
+ 318 00ba 1344     		add	r3, r3, r2
+ 319 00bc FA7B     		ldrb	r2, [r7, #15]
+ 320 00be 1A70     		strb	r2, [r3]
+ 133:../Sources/utils/util.c ****     tmp = ptr[j];
+ 321              		.loc 1 133 0 discriminator 3
+ 322 00c0 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 323 00c2 0133     		adds	r3, r3, #1
+ 324 00c4 BB75     		strb	r3, [r7, #22]
+ 325              	.L17:
+ 133:../Sources/utils/util.c ****     tmp = ptr[j];
+ 326              		.loc 1 133 0 is_stmt 0 discriminator 1
+ 327 00c6 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 328 00c8 5B08     		lsrs	r3, r3, #1
+ 329 00ca DBB2     		uxtb	r3, r3
+ 330 00cc BA7D     		ldrb	r2, [r7, #22]	@ zero_extendqisi2
+ 331 00ce 9A42     		cmp	r2, r3
+ 332 00d0 DED3     		bcc	.L18
+ 137:../Sources/utils/util.c ****   }
+ 138:../Sources/utils/util.c ****   ptr[i] = '\0';
+ 333              		.loc 1 138 0 is_stmt 1
+ 334 00d2 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 335 00d4 3A69     		ldr	r2, [r7, #16]
+ 336 00d6 1344     		add	r3, r3, r2
+ 337 00d8 0022     		movs	r2, #0
+ 338 00da 1A70     		strb	r2, [r3]
+ 139:../Sources/utils/util.c **** }
+ 339              		.loc 1 139 0
+ 340 00dc 00BF     		nop
+ 341 00de 1C37     		adds	r7, r7, #28
+ 342              		.cfi_def_cfa_offset 4
+ 343 00e0 BD46     		mov	sp, r7
+ 344              		.cfi_def_cfa_register 13
+ 345              		@ sp needed
+ 346 00e2 5DF8047B 		ldr	r7, [sp], #4
+ 347              		.cfi_restore 7
+ 348              		.cfi_def_cfa_offset 0
+ 349 00e6 7047     		bx	lr
+ 350              	.L20:
+ 351              		.align	2
+ 352              	.L19:
+ 353 00e8 CDCCCCCC 		.word	-858993459
+ 354              		.cfi_endproc
+ 355              	.LFE127:
+ 357              		.section	.rodata
+ 358              		.align	2
+ 359              	.LC0:
+ 360 0000 2D333237 		.ascii	"-32768\000"
+ 360      363800
+ 361              		.section	.text.utilNum16sToStr,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	utilNum16sToStr
+ 364              		.syntax unified
+ 365              		.thumb
+ 366              		.thumb_func
+ 367              		.fpu fpv4-sp-d16
+ 369              	utilNum16sToStr:
+ 370              	.LFB128:
+ 140:../Sources/utils/util.c **** 
+ 141:../Sources/utils/util.c **** 
+ 142:../Sources/utils/util.c **** /**
+ 143:../Sources/utils/util.c ****  * Converts a 16bit signed number into a string.
+ 144:../Sources/utils/util.c ****  *
+ 145:../Sources/utils/util.c ****  * @param[in,out] dst String buffer to store the number.
+ 146:../Sources/utils/util.c ****  * @param[in] dstSize Size of the destination buffer in bytes.
+ 147:../Sources/utils/util.c ****  * @param[in] val 16bit signed number to convert.
+ 148:../Sources/utils/util.c ****  */
+ 149:../Sources/utils/util.c **** void utilNum16sToStr(uint8_t *dst, size_t dstSize, int16_t val)
+ 150:../Sources/utils/util.c **** {
+ 371              		.loc 1 150 0
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 32
+ 374              		@ frame_needed = 1, uses_anonymous_args = 0
+ 375 0000 80B5     		push	{r7, lr}
+ 376              		.cfi_def_cfa_offset 8
+ 377              		.cfi_offset 7, -8
+ 378              		.cfi_offset 14, -4
+ 379 0002 88B0     		sub	sp, sp, #32
+ 380              		.cfi_def_cfa_offset 40
+ 381 0004 00AF     		add	r7, sp, #0
+ 382              		.cfi_def_cfa_register 7
+ 383 0006 F860     		str	r0, [r7, #12]
+ 384 0008 B960     		str	r1, [r7, #8]
+ 385 000a 1346     		mov	r3, r2
+ 386 000c FB80     		strh	r3, [r7, #6]	@ movhi
+ 151:../Sources/utils/util.c ****   unsigned char *ptr =  ((unsigned char *)dst);
+ 387              		.loc 1 151 0
+ 388 000e FB68     		ldr	r3, [r7, #12]
+ 389 0010 BB61     		str	r3, [r7, #24]
+ 152:../Sources/utils/util.c ****   unsigned char i=0, j;
+ 390              		.loc 1 152 0
+ 391 0012 0023     		movs	r3, #0
+ 392 0014 FB77     		strb	r3, [r7, #31]
+ 153:../Sources/utils/util.c ****   unsigned char tmp;
+ 154:../Sources/utils/util.c ****   unsigned char sign = (unsigned char)(val < 0);
+ 393              		.loc 1 154 0
+ 394 0016 FB88     		ldrh	r3, [r7, #6]
+ 395 0018 DB0B     		lsrs	r3, r3, #15
+ 396 001a DBB2     		uxtb	r3, r3
+ 397 001c FB75     		strb	r3, [r7, #23]
+ 155:../Sources/utils/util.c **** 
+ 156:../Sources/utils/util.c ****   if (val==(int16_t)(0x8000)) { /* special case 0x8000/-32768: prevent overflow below. */
+ 398              		.loc 1 156 0
+ 399 001e B7F90630 		ldrsh	r3, [r7, #6]
+ 400 0022 13F5004F 		cmn	r3, #32768
+ 401 0026 05D1     		bne	.L22
+ 157:../Sources/utils/util.c ****     utilStrcpy(dst, dstSize, (unsigned char*)"-32768");
+ 402              		.loc 1 157 0
+ 403 0028 434A     		ldr	r2, .L32
+ 404 002a B968     		ldr	r1, [r7, #8]
+ 405 002c F868     		ldr	r0, [r7, #12]
+ 406 002e FFF7FEFF 		bl	utilStrcpy
+ 158:../Sources/utils/util.c ****     return;
+ 407              		.loc 1 158 0
+ 408 0032 7EE0     		b	.L21
+ 409              	.L22:
+ 159:../Sources/utils/util.c ****   }
+ 160:../Sources/utils/util.c **** 
+ 161:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+ 410              		.loc 1 161 0
+ 411 0034 BB68     		ldr	r3, [r7, #8]
+ 412 0036 013B     		subs	r3, r3, #1
+ 413 0038 BB60     		str	r3, [r7, #8]
+ 162:../Sources/utils/util.c ****   if (sign) {
+ 414              		.loc 1 162 0
+ 415 003a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 416 003c 002B     		cmp	r3, #0
+ 417 003e 03D0     		beq	.L24
+ 163:../Sources/utils/util.c ****     val = (int16_t)(-val);
+ 418              		.loc 1 163 0
+ 419 0040 FB88     		ldrh	r3, [r7, #6]
+ 420 0042 5B42     		negs	r3, r3
+ 421 0044 9BB2     		uxth	r3, r3
+ 422 0046 FB80     		strh	r3, [r7, #6]	@ movhi
+ 423              	.L24:
+ 164:../Sources/utils/util.c ****   }
+ 165:../Sources/utils/util.c ****   if (val == 0 && dstSize > 0){
+ 424              		.loc 1 165 0
+ 425 0048 B7F90630 		ldrsh	r3, [r7, #6]
+ 426 004c 002B     		cmp	r3, #0
+ 427 004e 32D1     		bne	.L26
+ 428              		.loc 1 165 0 is_stmt 0 discriminator 1
+ 429 0050 BB68     		ldr	r3, [r7, #8]
+ 430 0052 002B     		cmp	r3, #0
+ 431 0054 2FD0     		beq	.L26
+ 166:../Sources/utils/util.c ****     ptr[i++] = '0';
+ 432              		.loc 1 166 0 is_stmt 1
+ 433 0056 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 434 0058 5A1C     		adds	r2, r3, #1
+ 435 005a FA77     		strb	r2, [r7, #31]
+ 436 005c 1A46     		mov	r2, r3
+ 437 005e BB69     		ldr	r3, [r7, #24]
+ 438 0060 1344     		add	r3, r3, r2
+ 439 0062 3022     		movs	r2, #48
+ 440 0064 1A70     		strb	r2, [r3]
+ 167:../Sources/utils/util.c ****     dstSize--;
+ 441              		.loc 1 167 0
+ 442 0066 BB68     		ldr	r3, [r7, #8]
+ 443 0068 013B     		subs	r3, r3, #1
+ 444 006a BB60     		str	r3, [r7, #8]
+ 168:../Sources/utils/util.c ****   }
+ 169:../Sources/utils/util.c ****   while (val > 0 && dstSize > 0) {
+ 445              		.loc 1 169 0
+ 446 006c 23E0     		b	.L26
+ 447              	.L28:
+ 170:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 448              		.loc 1 170 0
+ 449 006e FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 450 0070 5A1C     		adds	r2, r3, #1
+ 451 0072 FA77     		strb	r2, [r7, #31]
+ 452 0074 1A46     		mov	r2, r3
+ 453 0076 BB69     		ldr	r3, [r7, #24]
+ 454 0078 9818     		adds	r0, r3, r2
+ 455 007a B7F90620 		ldrsh	r2, [r7, #6]
+ 456 007e 2F4B     		ldr	r3, .L32+4
+ 457 0080 83FB0213 		smull	r1, r3, r3, r2
+ 458 0084 9910     		asrs	r1, r3, #2
+ 459 0086 D317     		asrs	r3, r2, #31
+ 460 0088 C91A     		subs	r1, r1, r3
+ 461 008a 0B46     		mov	r3, r1
+ 462 008c 9B00     		lsls	r3, r3, #2
+ 463 008e 0B44     		add	r3, r3, r1
+ 464 0090 5B00     		lsls	r3, r3, #1
+ 465 0092 D31A     		subs	r3, r2, r3
+ 466 0094 1BB2     		sxth	r3, r3
+ 467 0096 DBB2     		uxtb	r3, r3
+ 468 0098 3033     		adds	r3, r3, #48
+ 469 009a DBB2     		uxtb	r3, r3
+ 470 009c 0370     		strb	r3, [r0]
+ 171:../Sources/utils/util.c ****     dstSize--;
+ 471              		.loc 1 171 0
+ 472 009e BB68     		ldr	r3, [r7, #8]
+ 473 00a0 013B     		subs	r3, r3, #1
+ 474 00a2 BB60     		str	r3, [r7, #8]
+ 172:../Sources/utils/util.c ****     val /= 10;
+ 475              		.loc 1 172 0
+ 476 00a4 B7F90630 		ldrsh	r3, [r7, #6]
+ 477 00a8 244A     		ldr	r2, .L32+4
+ 478 00aa 82FB0312 		smull	r1, r2, r2, r3
+ 479 00ae 9210     		asrs	r2, r2, #2
+ 480 00b0 DB17     		asrs	r3, r3, #31
+ 481 00b2 D31A     		subs	r3, r2, r3
+ 482 00b4 FB80     		strh	r3, [r7, #6]	@ movhi
+ 483              	.L26:
+ 169:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 484              		.loc 1 169 0
+ 485 00b6 B7F90630 		ldrsh	r3, [r7, #6]
+ 486 00ba 002B     		cmp	r3, #0
+ 487 00bc 02DD     		ble	.L27
+ 169:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 488              		.loc 1 169 0 is_stmt 0 discriminator 1
+ 489 00be BB68     		ldr	r3, [r7, #8]
+ 490 00c0 002B     		cmp	r3, #0
+ 491 00c2 D4D1     		bne	.L28
+ 492              	.L27:
+ 173:../Sources/utils/util.c ****   }
+ 174:../Sources/utils/util.c ****   if (sign && dstSize > 0){
+ 493              		.loc 1 174 0 is_stmt 1
+ 494 00c4 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 495 00c6 002B     		cmp	r3, #0
+ 496 00c8 0AD0     		beq	.L29
+ 497              		.loc 1 174 0 is_stmt 0 discriminator 1
+ 498 00ca BB68     		ldr	r3, [r7, #8]
+ 499 00cc 002B     		cmp	r3, #0
+ 500 00ce 07D0     		beq	.L29
+ 175:../Sources/utils/util.c ****     ptr[i++] = '-';
+ 501              		.loc 1 175 0 is_stmt 1
+ 502 00d0 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 503 00d2 5A1C     		adds	r2, r3, #1
+ 504 00d4 FA77     		strb	r2, [r7, #31]
+ 505 00d6 1A46     		mov	r2, r3
+ 506 00d8 BB69     		ldr	r3, [r7, #24]
+ 507 00da 1344     		add	r3, r3, r2
+ 508 00dc 2D22     		movs	r2, #45
+ 509 00de 1A70     		strb	r2, [r3]
+ 510              	.L29:
+ 176:../Sources/utils/util.c ****   }
+ 177:../Sources/utils/util.c ****   for(j=0; j<(i/2); j++) { /* swap buffer */
+ 511              		.loc 1 177 0
+ 512 00e0 0023     		movs	r3, #0
+ 513 00e2 BB77     		strb	r3, [r7, #30]
+ 514 00e4 1AE0     		b	.L30
+ 515              	.L31:
+ 178:../Sources/utils/util.c ****     tmp = ptr[j];
+ 516              		.loc 1 178 0 discriminator 3
+ 517 00e6 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 518 00e8 BA69     		ldr	r2, [r7, #24]
+ 519 00ea 1344     		add	r3, r3, r2
+ 520 00ec 1B78     		ldrb	r3, [r3]
+ 521 00ee BB75     		strb	r3, [r7, #22]
+ 179:../Sources/utils/util.c ****     ptr[j] = ptr[(i-j)-1];
+ 522              		.loc 1 179 0 discriminator 3
+ 523 00f0 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 524 00f2 BA69     		ldr	r2, [r7, #24]
+ 525 00f4 1344     		add	r3, r3, r2
+ 526 00f6 F97F     		ldrb	r1, [r7, #31]	@ zero_extendqisi2
+ 527 00f8 BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 528 00fa 8A1A     		subs	r2, r1, r2
+ 529 00fc 013A     		subs	r2, r2, #1
+ 530 00fe B969     		ldr	r1, [r7, #24]
+ 531 0100 0A44     		add	r2, r2, r1
+ 532 0102 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 533 0104 1A70     		strb	r2, [r3]
+ 180:../Sources/utils/util.c ****     ptr[(i-j)-1] = tmp;
+ 534              		.loc 1 180 0 discriminator 3
+ 535 0106 FA7F     		ldrb	r2, [r7, #31]	@ zero_extendqisi2
+ 536 0108 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 537 010a D31A     		subs	r3, r2, r3
+ 538 010c 013B     		subs	r3, r3, #1
+ 539 010e BA69     		ldr	r2, [r7, #24]
+ 540 0110 1344     		add	r3, r3, r2
+ 541 0112 BA7D     		ldrb	r2, [r7, #22]
+ 542 0114 1A70     		strb	r2, [r3]
+ 177:../Sources/utils/util.c ****     tmp = ptr[j];
+ 543              		.loc 1 177 0 discriminator 3
+ 544 0116 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 545 0118 0133     		adds	r3, r3, #1
+ 546 011a BB77     		strb	r3, [r7, #30]
+ 547              	.L30:
+ 177:../Sources/utils/util.c ****     tmp = ptr[j];
+ 548              		.loc 1 177 0 is_stmt 0 discriminator 1
+ 549 011c FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 550 011e 5B08     		lsrs	r3, r3, #1
+ 551 0120 DBB2     		uxtb	r3, r3
+ 552 0122 BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 553 0124 9A42     		cmp	r2, r3
+ 554 0126 DED3     		bcc	.L31
+ 181:../Sources/utils/util.c ****   }
+ 182:../Sources/utils/util.c ****   ptr[i] = '\0';
+ 555              		.loc 1 182 0 is_stmt 1
+ 556 0128 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 557 012a BA69     		ldr	r2, [r7, #24]
+ 558 012c 1344     		add	r3, r3, r2
+ 559 012e 0022     		movs	r2, #0
+ 560 0130 1A70     		strb	r2, [r3]
+ 561              	.L21:
+ 183:../Sources/utils/util.c **** }
+ 562              		.loc 1 183 0
+ 563 0132 2037     		adds	r7, r7, #32
+ 564              		.cfi_def_cfa_offset 8
+ 565 0134 BD46     		mov	sp, r7
+ 566              		.cfi_def_cfa_register 13
+ 567              		@ sp needed
+ 568 0136 80BD     		pop	{r7, pc}
+ 569              	.L33:
+ 570              		.align	2
+ 571              	.L32:
+ 572 0138 00000000 		.word	.LC0
+ 573 013c 67666666 		.word	1717986919
+ 574              		.cfi_endproc
+ 575              	.LFE128:
+ 577              		.section	.text.utilNum32uToStr,"ax",%progbits
+ 578              		.align	1
+ 579              		.global	utilNum32uToStr
+ 580              		.syntax unified
+ 581              		.thumb
+ 582              		.thumb_func
+ 583              		.fpu fpv4-sp-d16
+ 585              	utilNum32uToStr:
+ 586              	.LFB129:
+ 184:../Sources/utils/util.c **** 
+ 185:../Sources/utils/util.c **** 
+ 186:../Sources/utils/util.c **** 
+ 187:../Sources/utils/util.c **** /**
+ 188:../Sources/utils/util.c ****  * Converts a 32bit unsigned number into a string.
+ 189:../Sources/utils/util.c ****  * @param[in,out] dst
+ 190:../Sources/utils/util.c ****  *    String buffer to store the number.
+ 191:../Sources/utils/util.c ****  * @param[in] dstSize
+ 192:../Sources/utils/util.c ****  *    Size of the destination buffer in bytes.
+ 193:../Sources/utils/util.c ****  * @param[in] num
+ 194:../Sources/utils/util.c ****  *    16bit unsigned number to convert.
+ 195:../Sources/utils/util.c ****  */
+ 196:../Sources/utils/util.c **** void utilNum32uToStr(uint8_t *dst, size_t dstSize, uint32_t num)
+ 197:../Sources/utils/util.c **** {
+ 587              		.loc 1 197 0
+ 588              		.cfi_startproc
+ 589              		@ args = 0, pretend = 0, frame = 32
+ 590              		@ frame_needed = 1, uses_anonymous_args = 0
+ 591              		@ link register save eliminated.
+ 592 0000 80B4     		push	{r7}
+ 593              		.cfi_def_cfa_offset 4
+ 594              		.cfi_offset 7, -4
+ 595 0002 89B0     		sub	sp, sp, #36
+ 596              		.cfi_def_cfa_offset 40
+ 597 0004 00AF     		add	r7, sp, #0
+ 598              		.cfi_def_cfa_register 7
+ 599 0006 F860     		str	r0, [r7, #12]
+ 600 0008 B960     		str	r1, [r7, #8]
+ 601 000a 7A60     		str	r2, [r7, #4]
+ 198:../Sources/utils/util.c ****   unsigned char *ptr = ((unsigned char *)dst);
+ 602              		.loc 1 198 0
+ 603 000c FB68     		ldr	r3, [r7, #12]
+ 604 000e BB61     		str	r3, [r7, #24]
+ 199:../Sources/utils/util.c ****   unsigned char i=0, j;
+ 605              		.loc 1 199 0
+ 606 0010 0023     		movs	r3, #0
+ 607 0012 FB77     		strb	r3, [r7, #31]
+ 200:../Sources/utils/util.c ****   unsigned char tmp;
+ 201:../Sources/utils/util.c **** 
+ 202:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+ 608              		.loc 1 202 0
+ 609 0014 BB68     		ldr	r3, [r7, #8]
+ 610 0016 013B     		subs	r3, r3, #1
+ 611 0018 BB60     		str	r3, [r7, #8]
+ 203:../Sources/utils/util.c ****   if (num == 0 && dstSize > 0){
+ 612              		.loc 1 203 0
+ 613 001a 7B68     		ldr	r3, [r7, #4]
+ 614 001c 002B     		cmp	r3, #0
+ 615 001e 2BD1     		bne	.L36
+ 616              		.loc 1 203 0 is_stmt 0 discriminator 1
+ 617 0020 BB68     		ldr	r3, [r7, #8]
+ 618 0022 002B     		cmp	r3, #0
+ 619 0024 28D0     		beq	.L36
+ 204:../Sources/utils/util.c ****     ptr[i++] = '0';
+ 620              		.loc 1 204 0 is_stmt 1
+ 621 0026 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 622 0028 5A1C     		adds	r2, r3, #1
+ 623 002a FA77     		strb	r2, [r7, #31]
+ 624 002c 1A46     		mov	r2, r3
+ 625 002e BB69     		ldr	r3, [r7, #24]
+ 626 0030 1344     		add	r3, r3, r2
+ 627 0032 3022     		movs	r2, #48
+ 628 0034 1A70     		strb	r2, [r3]
+ 205:../Sources/utils/util.c ****     dstSize--;
+ 629              		.loc 1 205 0
+ 630 0036 BB68     		ldr	r3, [r7, #8]
+ 631 0038 013B     		subs	r3, r3, #1
+ 632 003a BB60     		str	r3, [r7, #8]
+ 206:../Sources/utils/util.c ****   }
+ 207:../Sources/utils/util.c ****   while (num > 0 && dstSize > 0) {
+ 633              		.loc 1 207 0
+ 634 003c 1CE0     		b	.L36
+ 635              	.L38:
+ 208:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 636              		.loc 1 208 0
+ 637 003e FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 638 0040 5A1C     		adds	r2, r3, #1
+ 639 0042 FA77     		strb	r2, [r7, #31]
+ 640 0044 1A46     		mov	r2, r3
+ 641 0046 BB69     		ldr	r3, [r7, #24]
+ 642 0048 9818     		adds	r0, r3, r2
+ 643 004a 7968     		ldr	r1, [r7, #4]
+ 644 004c 254B     		ldr	r3, .L41
+ 645 004e A3FB0123 		umull	r2, r3, r3, r1
+ 646 0052 DA08     		lsrs	r2, r3, #3
+ 647 0054 1346     		mov	r3, r2
+ 648 0056 9B00     		lsls	r3, r3, #2
+ 649 0058 1344     		add	r3, r3, r2
+ 650 005a 5B00     		lsls	r3, r3, #1
+ 651 005c CA1A     		subs	r2, r1, r3
+ 652 005e D3B2     		uxtb	r3, r2
+ 653 0060 3033     		adds	r3, r3, #48
+ 654 0062 DBB2     		uxtb	r3, r3
+ 655 0064 0370     		strb	r3, [r0]
+ 209:../Sources/utils/util.c ****     dstSize--;
+ 656              		.loc 1 209 0
+ 657 0066 BB68     		ldr	r3, [r7, #8]
+ 658 0068 013B     		subs	r3, r3, #1
+ 659 006a BB60     		str	r3, [r7, #8]
+ 210:../Sources/utils/util.c ****     num /= 10;
+ 660              		.loc 1 210 0
+ 661 006c 7B68     		ldr	r3, [r7, #4]
+ 662 006e 1D4A     		ldr	r2, .L41
+ 663 0070 A2FB0323 		umull	r2, r3, r2, r3
+ 664 0074 DB08     		lsrs	r3, r3, #3
+ 665 0076 7B60     		str	r3, [r7, #4]
+ 666              	.L36:
+ 207:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 667              		.loc 1 207 0
+ 668 0078 7B68     		ldr	r3, [r7, #4]
+ 669 007a 002B     		cmp	r3, #0
+ 670 007c 02D0     		beq	.L37
+ 207:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((num % 10) + '0');
+ 671              		.loc 1 207 0 is_stmt 0 discriminator 1
+ 672 007e BB68     		ldr	r3, [r7, #8]
+ 673 0080 002B     		cmp	r3, #0
+ 674 0082 DCD1     		bne	.L38
+ 675              	.L37:
+ 211:../Sources/utils/util.c ****   }
+ 212:../Sources/utils/util.c ****   for(j=0; j<(i/2); j++) { /* swap buffer */
+ 676              		.loc 1 212 0 is_stmt 1
+ 677 0084 0023     		movs	r3, #0
+ 678 0086 BB77     		strb	r3, [r7, #30]
+ 679 0088 1AE0     		b	.L39
+ 680              	.L40:
+ 213:../Sources/utils/util.c ****     tmp = ptr[j];
+ 681              		.loc 1 213 0 discriminator 3
+ 682 008a BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 683 008c BA69     		ldr	r2, [r7, #24]
+ 684 008e 1344     		add	r3, r3, r2
+ 685 0090 1B78     		ldrb	r3, [r3]
+ 686 0092 FB75     		strb	r3, [r7, #23]
+ 214:../Sources/utils/util.c ****     ptr[j] = ptr[(i-j)-1];
+ 687              		.loc 1 214 0 discriminator 3
+ 688 0094 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 689 0096 BA69     		ldr	r2, [r7, #24]
+ 690 0098 1344     		add	r3, r3, r2
+ 691 009a F97F     		ldrb	r1, [r7, #31]	@ zero_extendqisi2
+ 692 009c BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 693 009e 8A1A     		subs	r2, r1, r2
+ 694 00a0 013A     		subs	r2, r2, #1
+ 695 00a2 B969     		ldr	r1, [r7, #24]
+ 696 00a4 0A44     		add	r2, r2, r1
+ 697 00a6 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 698 00a8 1A70     		strb	r2, [r3]
+ 215:../Sources/utils/util.c ****     ptr[(i-j)-1] = tmp;
+ 699              		.loc 1 215 0 discriminator 3
+ 700 00aa FA7F     		ldrb	r2, [r7, #31]	@ zero_extendqisi2
+ 701 00ac BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 702 00ae D31A     		subs	r3, r2, r3
+ 703 00b0 013B     		subs	r3, r3, #1
+ 704 00b2 BA69     		ldr	r2, [r7, #24]
+ 705 00b4 1344     		add	r3, r3, r2
+ 706 00b6 FA7D     		ldrb	r2, [r7, #23]
+ 707 00b8 1A70     		strb	r2, [r3]
+ 212:../Sources/utils/util.c ****     tmp = ptr[j];
+ 708              		.loc 1 212 0 discriminator 3
+ 709 00ba BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 710 00bc 0133     		adds	r3, r3, #1
+ 711 00be BB77     		strb	r3, [r7, #30]
+ 712              	.L39:
+ 212:../Sources/utils/util.c ****     tmp = ptr[j];
+ 713              		.loc 1 212 0 is_stmt 0 discriminator 1
+ 714 00c0 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 715 00c2 5B08     		lsrs	r3, r3, #1
+ 716 00c4 DBB2     		uxtb	r3, r3
+ 717 00c6 BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 718 00c8 9A42     		cmp	r2, r3
+ 719 00ca DED3     		bcc	.L40
+ 216:../Sources/utils/util.c ****   }
+ 217:../Sources/utils/util.c ****   ptr[i] = '\0';
+ 720              		.loc 1 217 0 is_stmt 1
+ 721 00cc FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 722 00ce BA69     		ldr	r2, [r7, #24]
+ 723 00d0 1344     		add	r3, r3, r2
+ 724 00d2 0022     		movs	r2, #0
+ 725 00d4 1A70     		strb	r2, [r3]
+ 218:../Sources/utils/util.c **** }
+ 726              		.loc 1 218 0
+ 727 00d6 00BF     		nop
+ 728 00d8 2437     		adds	r7, r7, #36
+ 729              		.cfi_def_cfa_offset 4
+ 730 00da BD46     		mov	sp, r7
+ 731              		.cfi_def_cfa_register 13
+ 732              		@ sp needed
+ 733 00dc 5DF8047B 		ldr	r7, [sp], #4
+ 734              		.cfi_restore 7
+ 735              		.cfi_def_cfa_offset 0
+ 736 00e0 7047     		bx	lr
+ 737              	.L42:
+ 738 00e2 00BF     		.align	2
+ 739              	.L41:
+ 740 00e4 CDCCCCCC 		.word	-858993459
+ 741              		.cfi_endproc
+ 742              	.LFE129:
+ 744              		.section	.rodata
+ 745 0007 00       		.align	2
+ 746              	.LC1:
+ 747 0008 2D323134 		.ascii	"-2147483648\000"
+ 747      37343833 
+ 747      36343800 
+ 748              		.section	.text.utilNum32sToStr,"ax",%progbits
+ 749              		.align	1
+ 750              		.global	utilNum32sToStr
+ 751              		.syntax unified
+ 752              		.thumb
+ 753              		.thumb_func
+ 754              		.fpu fpv4-sp-d16
+ 756              	utilNum32sToStr:
+ 757              	.LFB130:
+ 219:../Sources/utils/util.c **** 
+ 220:../Sources/utils/util.c **** 
+ 221:../Sources/utils/util.c **** /**
+ 222:../Sources/utils/util.c ****  * Converts a 32bit signed number into a string.
+ 223:../Sources/utils/util.c ****  *
+ 224:../Sources/utils/util.c ****  * @param[in,out] dst String buffer to store the number.
+ 225:../Sources/utils/util.c ****  * @param[in] dstSize Size of the destination buffer in bytes.
+ 226:../Sources/utils/util.c ****  * @param[in] val 32bit signed number to convert.
+ 227:../Sources/utils/util.c ****  */
+ 228:../Sources/utils/util.c **** void utilNum32sToStr(uint8_t *dst, size_t dstSize, int32_t val)
+ 229:../Sources/utils/util.c **** {
+ 758              		.loc 1 229 0
+ 759              		.cfi_startproc
+ 760              		@ args = 0, pretend = 0, frame = 32
+ 761              		@ frame_needed = 1, uses_anonymous_args = 0
+ 762 0000 80B5     		push	{r7, lr}
+ 763              		.cfi_def_cfa_offset 8
+ 764              		.cfi_offset 7, -8
+ 765              		.cfi_offset 14, -4
+ 766 0002 88B0     		sub	sp, sp, #32
+ 767              		.cfi_def_cfa_offset 40
+ 768 0004 00AF     		add	r7, sp, #0
+ 769              		.cfi_def_cfa_register 7
+ 770 0006 F860     		str	r0, [r7, #12]
+ 771 0008 B960     		str	r1, [r7, #8]
+ 772 000a 7A60     		str	r2, [r7, #4]
+ 230:../Sources/utils/util.c ****   unsigned char *ptr = ((unsigned char *)dst);
+ 773              		.loc 1 230 0
+ 774 000c FB68     		ldr	r3, [r7, #12]
+ 775 000e BB61     		str	r3, [r7, #24]
+ 231:../Sources/utils/util.c ****   unsigned char i=0, j;
+ 776              		.loc 1 231 0
+ 777 0010 0023     		movs	r3, #0
+ 778 0012 FB77     		strb	r3, [r7, #31]
+ 232:../Sources/utils/util.c ****   unsigned char tmp;
+ 233:../Sources/utils/util.c ****   unsigned char sign = (unsigned char)(val < 0);
+ 779              		.loc 1 233 0
+ 780 0014 7B68     		ldr	r3, [r7, #4]
+ 781 0016 DB0F     		lsrs	r3, r3, #31
+ 782 0018 DBB2     		uxtb	r3, r3
+ 783 001a FB75     		strb	r3, [r7, #23]
+ 234:../Sources/utils/util.c **** 
+ 235:../Sources/utils/util.c ****   if (val==(int32_t)(0x80000000)) { /* special case 0x80000000/-2147483648: prevent overflow below.
+ 784              		.loc 1 235 0
+ 785 001c 7B68     		ldr	r3, [r7, #4]
+ 786 001e B3F1004F 		cmp	r3, #-2147483648
+ 787 0022 05D1     		bne	.L44
+ 236:../Sources/utils/util.c ****     utilStrcpy(dst, dstSize, (unsigned char*)"-2147483648");
+ 788              		.loc 1 236 0
+ 789 0024 404A     		ldr	r2, .L54
+ 790 0026 B968     		ldr	r1, [r7, #8]
+ 791 0028 F868     		ldr	r0, [r7, #12]
+ 792 002a FFF7FEFF 		bl	utilStrcpy
+ 237:../Sources/utils/util.c ****     return;
+ 793              		.loc 1 237 0
+ 794 002e 78E0     		b	.L43
+ 795              	.L44:
+ 238:../Sources/utils/util.c ****   }
+ 239:../Sources/utils/util.c ****   dstSize--; /* for zero byte */
+ 796              		.loc 1 239 0
+ 797 0030 BB68     		ldr	r3, [r7, #8]
+ 798 0032 013B     		subs	r3, r3, #1
+ 799 0034 BB60     		str	r3, [r7, #8]
+ 240:../Sources/utils/util.c ****   if (sign) {
+ 800              		.loc 1 240 0
+ 801 0036 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 802 0038 002B     		cmp	r3, #0
+ 803 003a 02D0     		beq	.L46
+ 241:../Sources/utils/util.c ****     val = -val;
+ 804              		.loc 1 241 0
+ 805 003c 7B68     		ldr	r3, [r7, #4]
+ 806 003e 5B42     		negs	r3, r3
+ 807 0040 7B60     		str	r3, [r7, #4]
+ 808              	.L46:
+ 242:../Sources/utils/util.c ****   }
+ 243:../Sources/utils/util.c ****   if (val == 0 && dstSize > 0){
+ 809              		.loc 1 243 0
+ 810 0042 7B68     		ldr	r3, [r7, #4]
+ 811 0044 002B     		cmp	r3, #0
+ 812 0046 2FD1     		bne	.L48
+ 813              		.loc 1 243 0 is_stmt 0 discriminator 1
+ 814 0048 BB68     		ldr	r3, [r7, #8]
+ 815 004a 002B     		cmp	r3, #0
+ 816 004c 2CD0     		beq	.L48
+ 244:../Sources/utils/util.c ****     ptr[i++] = '0';
+ 817              		.loc 1 244 0 is_stmt 1
+ 818 004e FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 819 0050 5A1C     		adds	r2, r3, #1
+ 820 0052 FA77     		strb	r2, [r7, #31]
+ 821 0054 1A46     		mov	r2, r3
+ 822 0056 BB69     		ldr	r3, [r7, #24]
+ 823 0058 1344     		add	r3, r3, r2
+ 824 005a 3022     		movs	r2, #48
+ 825 005c 1A70     		strb	r2, [r3]
+ 245:../Sources/utils/util.c ****     dstSize--;
+ 826              		.loc 1 245 0
+ 827 005e BB68     		ldr	r3, [r7, #8]
+ 828 0060 013B     		subs	r3, r3, #1
+ 829 0062 BB60     		str	r3, [r7, #8]
+ 246:../Sources/utils/util.c ****   }
+ 247:../Sources/utils/util.c ****   while (val > 0 && dstSize > 0) {
+ 830              		.loc 1 247 0
+ 831 0064 20E0     		b	.L48
+ 832              	.L50:
+ 248:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 833              		.loc 1 248 0
+ 834 0066 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 835 0068 5A1C     		adds	r2, r3, #1
+ 836 006a FA77     		strb	r2, [r7, #31]
+ 837 006c 1A46     		mov	r2, r3
+ 838 006e BB69     		ldr	r3, [r7, #24]
+ 839 0070 9818     		adds	r0, r3, r2
+ 840 0072 7A68     		ldr	r2, [r7, #4]
+ 841 0074 2D4B     		ldr	r3, .L54+4
+ 842 0076 83FB0213 		smull	r1, r3, r3, r2
+ 843 007a 9910     		asrs	r1, r3, #2
+ 844 007c D317     		asrs	r3, r2, #31
+ 845 007e C91A     		subs	r1, r1, r3
+ 846 0080 0B46     		mov	r3, r1
+ 847 0082 9B00     		lsls	r3, r3, #2
+ 848 0084 0B44     		add	r3, r3, r1
+ 849 0086 5B00     		lsls	r3, r3, #1
+ 850 0088 D11A     		subs	r1, r2, r3
+ 851 008a CBB2     		uxtb	r3, r1
+ 852 008c 3033     		adds	r3, r3, #48
+ 853 008e DBB2     		uxtb	r3, r3
+ 854 0090 0370     		strb	r3, [r0]
+ 249:../Sources/utils/util.c ****     dstSize--;
+ 855              		.loc 1 249 0
+ 856 0092 BB68     		ldr	r3, [r7, #8]
+ 857 0094 013B     		subs	r3, r3, #1
+ 858 0096 BB60     		str	r3, [r7, #8]
+ 250:../Sources/utils/util.c ****     val /= 10;
+ 859              		.loc 1 250 0
+ 860 0098 7B68     		ldr	r3, [r7, #4]
+ 861 009a 244A     		ldr	r2, .L54+4
+ 862 009c 82FB0312 		smull	r1, r2, r2, r3
+ 863 00a0 9210     		asrs	r2, r2, #2
+ 864 00a2 DB17     		asrs	r3, r3, #31
+ 865 00a4 D31A     		subs	r3, r2, r3
+ 866 00a6 7B60     		str	r3, [r7, #4]
+ 867              	.L48:
+ 247:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 868              		.loc 1 247 0
+ 869 00a8 7B68     		ldr	r3, [r7, #4]
+ 870 00aa 002B     		cmp	r3, #0
+ 871 00ac 02DD     		ble	.L49
+ 247:../Sources/utils/util.c ****     ptr[i++] = (unsigned char)((val % 10) + '0');
+ 872              		.loc 1 247 0 is_stmt 0 discriminator 1
+ 873 00ae BB68     		ldr	r3, [r7, #8]
+ 874 00b0 002B     		cmp	r3, #0
+ 875 00b2 D8D1     		bne	.L50
+ 876              	.L49:
+ 251:../Sources/utils/util.c ****   }
+ 252:../Sources/utils/util.c ****   if (sign && dstSize > 0){
+ 877              		.loc 1 252 0 is_stmt 1
+ 878 00b4 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 879 00b6 002B     		cmp	r3, #0
+ 880 00b8 0AD0     		beq	.L51
+ 881              		.loc 1 252 0 is_stmt 0 discriminator 1
+ 882 00ba BB68     		ldr	r3, [r7, #8]
+ 883 00bc 002B     		cmp	r3, #0
+ 884 00be 07D0     		beq	.L51
+ 253:../Sources/utils/util.c ****     ptr[i++] = '-';
+ 885              		.loc 1 253 0 is_stmt 1
+ 886 00c0 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 887 00c2 5A1C     		adds	r2, r3, #1
+ 888 00c4 FA77     		strb	r2, [r7, #31]
+ 889 00c6 1A46     		mov	r2, r3
+ 890 00c8 BB69     		ldr	r3, [r7, #24]
+ 891 00ca 1344     		add	r3, r3, r2
+ 892 00cc 2D22     		movs	r2, #45
+ 893 00ce 1A70     		strb	r2, [r3]
+ 894              	.L51:
+ 254:../Sources/utils/util.c ****   }
+ 255:../Sources/utils/util.c ****   for(j=0; j<(i/2); j++) { /* swap buffer */
+ 895              		.loc 1 255 0
+ 896 00d0 0023     		movs	r3, #0
+ 897 00d2 BB77     		strb	r3, [r7, #30]
+ 898 00d4 1AE0     		b	.L52
+ 899              	.L53:
+ 256:../Sources/utils/util.c ****     tmp = ptr[j];
+ 900              		.loc 1 256 0 discriminator 3
+ 901 00d6 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 902 00d8 BA69     		ldr	r2, [r7, #24]
+ 903 00da 1344     		add	r3, r3, r2
+ 904 00dc 1B78     		ldrb	r3, [r3]
+ 905 00de BB75     		strb	r3, [r7, #22]
+ 257:../Sources/utils/util.c ****     ptr[j] = ptr[(i-j)-1];
+ 906              		.loc 1 257 0 discriminator 3
+ 907 00e0 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 908 00e2 BA69     		ldr	r2, [r7, #24]
+ 909 00e4 1344     		add	r3, r3, r2
+ 910 00e6 F97F     		ldrb	r1, [r7, #31]	@ zero_extendqisi2
+ 911 00e8 BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 912 00ea 8A1A     		subs	r2, r1, r2
+ 913 00ec 013A     		subs	r2, r2, #1
+ 914 00ee B969     		ldr	r1, [r7, #24]
+ 915 00f0 0A44     		add	r2, r2, r1
+ 916 00f2 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 917 00f4 1A70     		strb	r2, [r3]
+ 258:../Sources/utils/util.c ****     ptr[(i-j)-1] = tmp;
+ 918              		.loc 1 258 0 discriminator 3
+ 919 00f6 FA7F     		ldrb	r2, [r7, #31]	@ zero_extendqisi2
+ 920 00f8 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 921 00fa D31A     		subs	r3, r2, r3
+ 922 00fc 013B     		subs	r3, r3, #1
+ 923 00fe BA69     		ldr	r2, [r7, #24]
+ 924 0100 1344     		add	r3, r3, r2
+ 925 0102 BA7D     		ldrb	r2, [r7, #22]
+ 926 0104 1A70     		strb	r2, [r3]
+ 255:../Sources/utils/util.c ****     tmp = ptr[j];
+ 927              		.loc 1 255 0 discriminator 3
+ 928 0106 BB7F     		ldrb	r3, [r7, #30]	@ zero_extendqisi2
+ 929 0108 0133     		adds	r3, r3, #1
+ 930 010a BB77     		strb	r3, [r7, #30]
+ 931              	.L52:
+ 255:../Sources/utils/util.c ****     tmp = ptr[j];
+ 932              		.loc 1 255 0 is_stmt 0 discriminator 1
+ 933 010c FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 934 010e 5B08     		lsrs	r3, r3, #1
+ 935 0110 DBB2     		uxtb	r3, r3
+ 936 0112 BA7F     		ldrb	r2, [r7, #30]	@ zero_extendqisi2
+ 937 0114 9A42     		cmp	r2, r3
+ 938 0116 DED3     		bcc	.L53
+ 259:../Sources/utils/util.c ****   }
+ 260:../Sources/utils/util.c ****   ptr[i] = '\0';
+ 939              		.loc 1 260 0 is_stmt 1
+ 940 0118 FB7F     		ldrb	r3, [r7, #31]	@ zero_extendqisi2
+ 941 011a BA69     		ldr	r2, [r7, #24]
+ 942 011c 1344     		add	r3, r3, r2
+ 943 011e 0022     		movs	r2, #0
+ 944 0120 1A70     		strb	r2, [r3]
+ 945              	.L43:
+ 261:../Sources/utils/util.c **** }
+ 946              		.loc 1 261 0
+ 947 0122 2037     		adds	r7, r7, #32
+ 948              		.cfi_def_cfa_offset 8
+ 949 0124 BD46     		mov	sp, r7
+ 950              		.cfi_def_cfa_register 13
+ 951              		@ sp needed
+ 952 0126 80BD     		pop	{r7, pc}
+ 953              	.L55:
+ 954              		.align	2
+ 955              	.L54:
+ 956 0128 08000000 		.word	.LC1
+ 957 012c 67666666 		.word	1717986919
+ 958              		.cfi_endproc
+ 959              	.LFE130:
+ 961              		.section	.text.utilStrcatNum16u,"ax",%progbits
+ 962              		.align	1
+ 963              		.global	utilStrcatNum16u
+ 964              		.syntax unified
+ 965              		.thumb
+ 966              		.thumb_func
+ 967              		.fpu fpv4-sp-d16
+ 969              	utilStrcatNum16u:
+ 970              	.LFB131:
+ 262:../Sources/utils/util.c **** 
+ 263:../Sources/utils/util.c **** 
+ 264:../Sources/utils/util.c **** 
+ 265:../Sources/utils/util.c **** /**
+ 266:../Sources/utils/util.c ****  * appends a 16bit unsigned number to a string. Always terminates the result string.
+ 267:../Sources/utils/util.c ****  *   Note: count is the size of dst INCLUDING zero byte.
+ 268:../Sources/utils/util.c ****  *   Precondition: src, dst != NULL
+ 269:../Sources/utils/util.c ****  *
+ 270:../Sources/utils/util.c ****  * @param[in,out] dst
+ 271:../Sources/utils/util.c ****  *    Start of buffer, where to append the number string.
+ 272:../Sources/utils/util.c ****  * @param[in] dstSize
+ 273:../Sources/utils/util.c ****  *    The size of the buffer, including the zero byte.
+ 274:../Sources/utils/util.c ****  * @param[in] val
+ 275:../Sources/utils/util.c ****  *    The 16bit unsigned number to add.
+ 276:../Sources/utils/util.c ****  */
+ 277:../Sources/utils/util.c **** void utilStrcatNum16u(uint8_t *dst, size_t dstSize, uint16_t num)
+ 278:../Sources/utils/util.c **** {
+ 971              		.loc 1 278 0
+ 972              		.cfi_startproc
+ 973              		@ args = 0, pretend = 0, frame = 24
+ 974              		@ frame_needed = 1, uses_anonymous_args = 0
+ 975 0000 80B5     		push	{r7, lr}
+ 976              		.cfi_def_cfa_offset 8
+ 977              		.cfi_offset 7, -8
+ 978              		.cfi_offset 14, -4
+ 979 0002 86B0     		sub	sp, sp, #24
+ 980              		.cfi_def_cfa_offset 32
+ 981 0004 00AF     		add	r7, sp, #0
+ 982              		.cfi_def_cfa_register 7
+ 983 0006 F860     		str	r0, [r7, #12]
+ 984 0008 B960     		str	r1, [r7, #8]
+ 985 000a 1346     		mov	r3, r2
+ 986 000c FB80     		strh	r3, [r7, #6]	@ movhi
+ 279:../Sources/utils/util.c ****   unsigned char buf[sizeof("32768")]; /* maximum buffer size we need */
+ 280:../Sources/utils/util.c **** 
+ 281:../Sources/utils/util.c ****   utilNum16uToStr(buf, sizeof(buf), num);
+ 987              		.loc 1 281 0
+ 988 000e FA88     		ldrh	r2, [r7, #6]
+ 989 0010 07F11003 		add	r3, r7, #16
+ 990 0014 0621     		movs	r1, #6
+ 991 0016 1846     		mov	r0, r3
+ 992 0018 FFF7FEFF 		bl	utilNum16uToStr
+ 282:../Sources/utils/util.c ****   utilStrcat(dst, dstSize, buf);
+ 993              		.loc 1 282 0
+ 994 001c 07F11003 		add	r3, r7, #16
+ 995 0020 1A46     		mov	r2, r3
+ 996 0022 B968     		ldr	r1, [r7, #8]
+ 997 0024 F868     		ldr	r0, [r7, #12]
+ 998 0026 FFF7FEFF 		bl	utilStrcat
+ 283:../Sources/utils/util.c **** }
+ 999              		.loc 1 283 0
+ 1000 002a 00BF     		nop
+ 1001 002c 1837     		adds	r7, r7, #24
+ 1002              		.cfi_def_cfa_offset 8
+ 1003 002e BD46     		mov	sp, r7
+ 1004              		.cfi_def_cfa_register 13
+ 1005              		@ sp needed
+ 1006 0030 80BD     		pop	{r7, pc}
+ 1007              		.cfi_endproc
+ 1008              	.LFE131:
+ 1010              		.section	.text.utilStrcatNum16s,"ax",%progbits
+ 1011              		.align	1
+ 1012              		.global	utilStrcatNum16s
+ 1013              		.syntax unified
+ 1014              		.thumb
+ 1015              		.thumb_func
+ 1016              		.fpu fpv4-sp-d16
+ 1018              	utilStrcatNum16s:
+ 1019              	.LFB132:
+ 284:../Sources/utils/util.c **** 
+ 285:../Sources/utils/util.c **** 
+ 286:../Sources/utils/util.c **** /**
+ 287:../Sources/utils/util.c ****  * appends a 16bit signed number to a string. Always terminates the result string.
+ 288:../Sources/utils/util.c ****  *   Note: count is the size of dst INCLUDING zero byte.
+ 289:../Sources/utils/util.c ****  *   Precondition: src, dst != NULL
+ 290:../Sources/utils/util.c ****  *
+ 291:../Sources/utils/util.c ****  * @param[in,out] dst
+ 292:../Sources/utils/util.c ****  *    Start of buffer, where to append the number string.
+ 293:../Sources/utils/util.c ****  * @param[in] dstSize
+ 294:../Sources/utils/util.c ****  *    The size of the buffer, including the zero byte.
+ 295:../Sources/utils/util.c ****  * @param[in] val
+ 296:../Sources/utils/util.c ****  *    The 16bit signed number to add.
+ 297:../Sources/utils/util.c ****  */
+ 298:../Sources/utils/util.c **** void utilStrcatNum16s(uint8_t *dst, size_t dstSize, int16_t num)
+ 299:../Sources/utils/util.c **** {
+ 1020              		.loc 1 299 0
+ 1021              		.cfi_startproc
+ 1022              		@ args = 0, pretend = 0, frame = 24
+ 1023              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1024 0000 80B5     		push	{r7, lr}
+ 1025              		.cfi_def_cfa_offset 8
+ 1026              		.cfi_offset 7, -8
+ 1027              		.cfi_offset 14, -4
+ 1028 0002 86B0     		sub	sp, sp, #24
+ 1029              		.cfi_def_cfa_offset 32
+ 1030 0004 00AF     		add	r7, sp, #0
+ 1031              		.cfi_def_cfa_register 7
+ 1032 0006 F860     		str	r0, [r7, #12]
+ 1033 0008 B960     		str	r1, [r7, #8]
+ 1034 000a 1346     		mov	r3, r2
+ 1035 000c FB80     		strh	r3, [r7, #6]	@ movhi
+ 300:../Sources/utils/util.c ****   unsigned char buf[sizeof("-32768")]; /* maximum buffer size we need */
+ 301:../Sources/utils/util.c **** 
+ 302:../Sources/utils/util.c ****   utilNum16sToStr(buf, sizeof(buf), num);
+ 1036              		.loc 1 302 0
+ 1037 000e B7F90620 		ldrsh	r2, [r7, #6]
+ 1038 0012 07F11003 		add	r3, r7, #16
+ 1039 0016 0721     		movs	r1, #7
+ 1040 0018 1846     		mov	r0, r3
+ 1041 001a FFF7FEFF 		bl	utilNum16sToStr
+ 303:../Sources/utils/util.c ****   utilStrcat(dst, dstSize, buf);
+ 1042              		.loc 1 303 0
+ 1043 001e 07F11003 		add	r3, r7, #16
+ 1044 0022 1A46     		mov	r2, r3
+ 1045 0024 B968     		ldr	r1, [r7, #8]
+ 1046 0026 F868     		ldr	r0, [r7, #12]
+ 1047 0028 FFF7FEFF 		bl	utilStrcat
+ 304:../Sources/utils/util.c **** }
+ 1048              		.loc 1 304 0
+ 1049 002c 00BF     		nop
+ 1050 002e 1837     		adds	r7, r7, #24
+ 1051              		.cfi_def_cfa_offset 8
+ 1052 0030 BD46     		mov	sp, r7
+ 1053              		.cfi_def_cfa_register 13
+ 1054              		@ sp needed
+ 1055 0032 80BD     		pop	{r7, pc}
+ 1056              		.cfi_endproc
+ 1057              	.LFE132:
+ 1059              		.section	.text.utilStrcatNum32u,"ax",%progbits
+ 1060              		.align	1
+ 1061              		.global	utilStrcatNum32u
+ 1062              		.syntax unified
+ 1063              		.thumb
+ 1064              		.thumb_func
+ 1065              		.fpu fpv4-sp-d16
+ 1067              	utilStrcatNum32u:
+ 1068              	.LFB133:
+ 305:../Sources/utils/util.c **** 
+ 306:../Sources/utils/util.c **** 
+ 307:../Sources/utils/util.c **** /**
+ 308:../Sources/utils/util.c ****  * appends a 32bit (unsigned long) number to a string. Always terminates the result string.
+ 309:../Sources/utils/util.c ****  * Note: count is the size of dst INCLUDING zero byte.
+ 310:../Sources/utils/util.c ****  * Precondition: src, dst != NULL
+ 311:../Sources/utils/util.c ****  *
+ 312:../Sources/utils/util.c ****  * @param[in,out] dst Start of string buffer, where to append the number string
+ 313:../Sources/utils/util.c ****  * @param[in] dstSize The size of the buffer, including the zero byte
+ 314:../Sources/utils/util.c ****  * @param[in] val The 32bit unsigned number to add
+ 315:../Sources/utils/util.c ****  */
+ 316:../Sources/utils/util.c **** void utilStrcatNum32u(uint8_t *dst, size_t dstSize, uint32_t val)
+ 317:../Sources/utils/util.c **** {
+ 1069              		.loc 1 317 0
+ 1070              		.cfi_startproc
+ 1071              		@ args = 0, pretend = 0, frame = 32
+ 1072              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1073 0000 80B5     		push	{r7, lr}
+ 1074              		.cfi_def_cfa_offset 8
+ 1075              		.cfi_offset 7, -8
+ 1076              		.cfi_offset 14, -4
+ 1077 0002 88B0     		sub	sp, sp, #32
+ 1078              		.cfi_def_cfa_offset 40
+ 1079 0004 00AF     		add	r7, sp, #0
+ 1080              		.cfi_def_cfa_register 7
+ 1081 0006 F860     		str	r0, [r7, #12]
+ 1082 0008 B960     		str	r1, [r7, #8]
+ 1083 000a 7A60     		str	r2, [r7, #4]
+ 318:../Sources/utils/util.c ****   unsigned char buf[sizeof("4294967295")]; /* maximum buffer size we need */
+ 319:../Sources/utils/util.c **** 
+ 320:../Sources/utils/util.c ****   utilNum32uToStr(buf, sizeof(buf), val);
+ 1084              		.loc 1 320 0
+ 1085 000c 07F11403 		add	r3, r7, #20
+ 1086 0010 7A68     		ldr	r2, [r7, #4]
+ 1087 0012 0B21     		movs	r1, #11
+ 1088 0014 1846     		mov	r0, r3
+ 1089 0016 FFF7FEFF 		bl	utilNum32uToStr
+ 321:../Sources/utils/util.c ****   utilStrcat(dst, dstSize, buf);
+ 1090              		.loc 1 321 0
+ 1091 001a 07F11403 		add	r3, r7, #20
+ 1092 001e 1A46     		mov	r2, r3
+ 1093 0020 B968     		ldr	r1, [r7, #8]
+ 1094 0022 F868     		ldr	r0, [r7, #12]
+ 1095 0024 FFF7FEFF 		bl	utilStrcat
+ 322:../Sources/utils/util.c **** }
+ 1096              		.loc 1 322 0
+ 1097 0028 00BF     		nop
+ 1098 002a 2037     		adds	r7, r7, #32
+ 1099              		.cfi_def_cfa_offset 8
+ 1100 002c BD46     		mov	sp, r7
+ 1101              		.cfi_def_cfa_register 13
+ 1102              		@ sp needed
+ 1103 002e 80BD     		pop	{r7, pc}
+ 1104              		.cfi_endproc
+ 1105              	.LFE133:
+ 1107              		.section	.text.utilStrcatNum32s,"ax",%progbits
+ 1108              		.align	1
+ 1109              		.global	utilStrcatNum32s
+ 1110              		.syntax unified
+ 1111              		.thumb
+ 1112              		.thumb_func
+ 1113              		.fpu fpv4-sp-d16
+ 1115              	utilStrcatNum32s:
+ 1116              	.LFB134:
+ 323:../Sources/utils/util.c **** 
+ 324:../Sources/utils/util.c **** /**
+ 325:../Sources/utils/util.c ****  * appends a 32bit (long) number to a string. Always terminates the result string.
+ 326:../Sources/utils/util.c ****  * Note: count is the size of dst INCLUDING zero byte.
+ 327:../Sources/utils/util.c ****  * Precondition: src, dst != NULL
+ 328:../Sources/utils/util.c ****  *
+ 329:../Sources/utils/util.c ****  * @param[in,out] dst Start of string buffer, where to append the number string
+ 330:../Sources/utils/util.c ****  * @param[in] dstSize The size of the buffer, including the zero byte
+ 331:../Sources/utils/util.c ****  * @param[in] val The 32bit number to add
+ 332:../Sources/utils/util.c ****  */
+ 333:../Sources/utils/util.c **** void utilStrcatNum32s(uint8_t *dst, size_t dstSize, int32_t val)
+ 334:../Sources/utils/util.c **** {
+ 1117              		.loc 1 334 0
+ 1118              		.cfi_startproc
+ 1119              		@ args = 0, pretend = 0, frame = 32
+ 1120              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1121 0000 80B5     		push	{r7, lr}
+ 1122              		.cfi_def_cfa_offset 8
+ 1123              		.cfi_offset 7, -8
+ 1124              		.cfi_offset 14, -4
+ 1125 0002 88B0     		sub	sp, sp, #32
+ 1126              		.cfi_def_cfa_offset 40
+ 1127 0004 00AF     		add	r7, sp, #0
+ 1128              		.cfi_def_cfa_register 7
+ 1129 0006 F860     		str	r0, [r7, #12]
+ 1130 0008 B960     		str	r1, [r7, #8]
+ 1131 000a 7A60     		str	r2, [r7, #4]
+ 335:../Sources/utils/util.c ****   unsigned char buf[sizeof("-4294967295")]; /* maximum buffer size we need */
+ 336:../Sources/utils/util.c **** 
+ 337:../Sources/utils/util.c ****   utilNum32sToStr(buf, sizeof(buf), val);
+ 1132              		.loc 1 337 0
+ 1133 000c 07F11403 		add	r3, r7, #20
+ 1134 0010 7A68     		ldr	r2, [r7, #4]
+ 1135 0012 0C21     		movs	r1, #12
+ 1136 0014 1846     		mov	r0, r3
+ 1137 0016 FFF7FEFF 		bl	utilNum32sToStr
+ 338:../Sources/utils/util.c ****   utilStrcat(dst, dstSize, buf);
+ 1138              		.loc 1 338 0
+ 1139 001a 07F11403 		add	r3, r7, #20
+ 1140 001e 1A46     		mov	r2, r3
+ 1141 0020 B968     		ldr	r1, [r7, #8]
+ 1142 0022 F868     		ldr	r0, [r7, #12]
+ 1143 0024 FFF7FEFF 		bl	utilStrcat
+ 339:../Sources/utils/util.c **** }
+ 1144              		.loc 1 339 0
+ 1145 0028 00BF     		nop
+ 1146 002a 2037     		adds	r7, r7, #32
+ 1147              		.cfi_def_cfa_offset 8
+ 1148 002c BD46     		mov	sp, r7
+ 1149              		.cfi_def_cfa_register 13
+ 1150              		@ sp needed
+ 1151 002e 80BD     		pop	{r7, pc}
+ 1152              		.cfi_endproc
+ 1153              	.LFE134:
+ 1155              		.section	.text.utilScanDecimal16u,"ax",%progbits
+ 1156              		.align	1
+ 1157              		.global	utilScanDecimal16u
+ 1158              		.syntax unified
+ 1159              		.thumb
+ 1160              		.thumb_func
+ 1161              		.fpu fpv4-sp-d16
+ 1163              	utilScanDecimal16u:
+ 1164              	.LFB135:
+ 340:../Sources/utils/util.c **** 
+ 341:../Sources/utils/util.c **** 
+ 342:../Sources/utils/util.c **** /**
+ 343:../Sources/utils/util.c ****  * Scans a decimal number, and stops at any non-number.
+ 344:../Sources/utils/util.c ****  * Number can have any preceding zeros or spaces.
+ 345:../Sources/utils/util.c ****  *
+ 346:../Sources/utils/util.c ****  * @param[inout] str
+ 347:../Sources/utils/util.c ****  *   the string to parse
+ 348:../Sources/utils/util.c ****  * @param[in] value
+ 349:../Sources/utils/util.c ****  *   pointer to a variable to store the value
+ 350:../Sources/utils/util.c ****  * @returns
+ 351:../Sources/utils/util.c ****  *   EC_SUCCESS: parsing succeeded
+ 352:../Sources/utils/util.c ****  *   EC_OVERFLOW: to many digits
+ 353:../Sources/utils/util.c ****  *   EC_INVALID_ARG: string doesn't starts with a digit or spaces
+ 354:../Sources/utils/util.c ****  */
+ 355:../Sources/utils/util.c **** tError utilScanDecimal16u(const unsigned char **str, uint16_t *value)
+ 356:../Sources/utils/util.c **** {
+ 1165              		.loc 1 356 0
+ 1166              		.cfi_startproc
+ 1167              		@ args = 0, pretend = 0, frame = 16
+ 1168              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1169              		@ link register save eliminated.
+ 1170 0000 80B4     		push	{r7}
+ 1171              		.cfi_def_cfa_offset 4
+ 1172              		.cfi_offset 7, -4
+ 1173 0002 85B0     		sub	sp, sp, #20
+ 1174              		.cfi_def_cfa_offset 24
+ 1175 0004 00AF     		add	r7, sp, #0
+ 1176              		.cfi_def_cfa_register 7
+ 1177 0006 7860     		str	r0, [r7, #4]
+ 1178 0008 3960     		str	r1, [r7]
+ 357:../Sources/utils/util.c ****   const char *p = *str;
+ 1179              		.loc 1 357 0
+ 1180 000a 7B68     		ldr	r3, [r7, #4]
+ 1181 000c 1B68     		ldr	r3, [r3]
+ 1182 000e FB60     		str	r3, [r7, #12]
+ 358:../Sources/utils/util.c ****   uint8_t nofDigits = 5+1;
+ 1183              		.loc 1 358 0
+ 1184 0010 0623     		movs	r3, #6
+ 1185 0012 FB72     		strb	r3, [r7, #11]
+ 359:../Sources/utils/util.c **** 
+ 360:../Sources/utils/util.c ****   while (*p == ' ') p++;  // skip leading spaces
+ 1186              		.loc 1 360 0
+ 1187 0014 02E0     		b	.L61
+ 1188              	.L62:
+ 1189              		.loc 1 360 0 is_stmt 0 discriminator 2
+ 1190 0016 FB68     		ldr	r3, [r7, #12]
+ 1191 0018 0133     		adds	r3, r3, #1
+ 1192 001a FB60     		str	r3, [r7, #12]
+ 1193              	.L61:
+ 1194              		.loc 1 360 0 discriminator 1
+ 1195 001c FB68     		ldr	r3, [r7, #12]
+ 1196 001e 93F90030 		ldrsb	r3, [r3]
+ 1197 0022 202B     		cmp	r3, #32
+ 1198 0024 F7D0     		beq	.L62
+ 361:../Sources/utils/util.c **** 
+ 362:../Sources/utils/util.c ****   *value = 0;
+ 1199              		.loc 1 362 0 is_stmt 1
+ 1200 0026 3B68     		ldr	r3, [r7]
+ 1201 0028 0022     		movs	r2, #0
+ 1202 002a 1A80     		strh	r2, [r3]	@ movhi
+ 363:../Sources/utils/util.c ****   while (*p >= '0' && *p <= '9' && nofDigits > 0) {
+ 1203              		.loc 1 363 0
+ 1204 002c 16E0     		b	.L63
+ 1205              	.L65:
+ 364:../Sources/utils/util.c ****     *value = (uint16_t)((*value) * 10 + *p-'0');
+ 1206              		.loc 1 364 0
+ 1207 002e 3B68     		ldr	r3, [r7]
+ 1208 0030 1B88     		ldrh	r3, [r3]
+ 1209 0032 1A46     		mov	r2, r3	@ movhi
+ 1210 0034 9200     		lsls	r2, r2, #2
+ 1211 0036 1344     		add	r3, r3, r2
+ 1212 0038 5B00     		lsls	r3, r3, #1
+ 1213 003a 9AB2     		uxth	r2, r3
+ 1214 003c FB68     		ldr	r3, [r7, #12]
+ 1215 003e 93F90030 		ldrsb	r3, [r3]
+ 1216 0042 9BB2     		uxth	r3, r3
+ 1217 0044 1344     		add	r3, r3, r2
+ 1218 0046 9BB2     		uxth	r3, r3
+ 1219 0048 303B     		subs	r3, r3, #48
+ 1220 004a 9AB2     		uxth	r2, r3
+ 1221 004c 3B68     		ldr	r3, [r7]
+ 1222 004e 1A80     		strh	r2, [r3]	@ movhi
+ 365:../Sources/utils/util.c ****     nofDigits--;
+ 1223              		.loc 1 365 0
+ 1224 0050 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 1225 0052 013B     		subs	r3, r3, #1
+ 1226 0054 FB72     		strb	r3, [r7, #11]
+ 366:../Sources/utils/util.c ****     p++;
+ 1227              		.loc 1 366 0
+ 1228 0056 FB68     		ldr	r3, [r7, #12]
+ 1229 0058 0133     		adds	r3, r3, #1
+ 1230 005a FB60     		str	r3, [r7, #12]
+ 1231              	.L63:
+ 363:../Sources/utils/util.c ****     *value = (uint16_t)((*value) * 10 + *p-'0');
+ 1232              		.loc 1 363 0
+ 1233 005c FB68     		ldr	r3, [r7, #12]
+ 1234 005e 93F90030 		ldrsb	r3, [r3]
+ 1235 0062 2F2B     		cmp	r3, #47
+ 1236 0064 07DD     		ble	.L64
+ 363:../Sources/utils/util.c ****     *value = (uint16_t)((*value) * 10 + *p-'0');
+ 1237              		.loc 1 363 0 is_stmt 0 discriminator 1
+ 1238 0066 FB68     		ldr	r3, [r7, #12]
+ 1239 0068 93F90030 		ldrsb	r3, [r3]
+ 1240 006c 392B     		cmp	r3, #57
+ 1241 006e 02DC     		bgt	.L64
+ 363:../Sources/utils/util.c ****     *value = (uint16_t)((*value) * 10 + *p-'0');
+ 1242              		.loc 1 363 0 discriminator 2
+ 1243 0070 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 1244 0072 002B     		cmp	r3, #0
+ 1245 0074 DBD1     		bne	.L65
+ 1246              	.L64:
+ 367:../Sources/utils/util.c ****   }
+ 368:../Sources/utils/util.c ****   if (nofDigits == 0) return EC_OVERFLOW;
+ 1247              		.loc 1 368 0 is_stmt 1
+ 1248 0076 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 1249 0078 002B     		cmp	r3, #0
+ 1250 007a 01D1     		bne	.L66
+ 1251              		.loc 1 368 0 is_stmt 0 discriminator 1
+ 1252 007c 0423     		movs	r3, #4
+ 1253 007e 08E0     		b	.L67
+ 1254              	.L66:
+ 369:../Sources/utils/util.c ****   if (nofDigits == 5+1) return EC_INVALID_ARG; // no digits at all?
+ 1255              		.loc 1 369 0 is_stmt 1
+ 1256 0080 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 1257 0082 062B     		cmp	r3, #6
+ 1258 0084 01D1     		bne	.L68
+ 1259              		.loc 1 369 0 is_stmt 0 discriminator 1
+ 1260 0086 0323     		movs	r3, #3
+ 1261 0088 03E0     		b	.L67
+ 1262              	.L68:
+ 370:../Sources/utils/util.c ****   *str = p;
+ 1263              		.loc 1 370 0 is_stmt 1
+ 1264 008a 7B68     		ldr	r3, [r7, #4]
+ 1265 008c FA68     		ldr	r2, [r7, #12]
+ 1266 008e 1A60     		str	r2, [r3]
+ 371:../Sources/utils/util.c ****   return EC_SUCCESS;
+ 1267              		.loc 1 371 0
+ 1268 0090 0023     		movs	r3, #0
+ 1269              	.L67:
+ 372:../Sources/utils/util.c **** }
+ 1270              		.loc 1 372 0
+ 1271 0092 1846     		mov	r0, r3
+ 1272 0094 1437     		adds	r7, r7, #20
+ 1273              		.cfi_def_cfa_offset 4
+ 1274 0096 BD46     		mov	sp, r7
+ 1275              		.cfi_def_cfa_register 13
+ 1276              		@ sp needed
+ 1277 0098 5DF8047B 		ldr	r7, [sp], #4
+ 1278              		.cfi_restore 7
+ 1279              		.cfi_def_cfa_offset 0
+ 1280 009c 7047     		bx	lr
+ 1281              		.cfi_endproc
+ 1282              	.LFE135:
+ 1284              		.section	.text.utilScanDecimal16s,"ax",%progbits
+ 1285              		.align	1
+ 1286              		.global	utilScanDecimal16s
+ 1287              		.syntax unified
+ 1288              		.thumb
+ 1289              		.thumb_func
+ 1290              		.fpu fpv4-sp-d16
+ 1292              	utilScanDecimal16s:
+ 1293              	.LFB136:
+ 373:../Sources/utils/util.c **** 
+ 374:../Sources/utils/util.c **** 
+ 375:../Sources/utils/util.c **** /**
+ 376:../Sources/utils/util.c ****  * Scans a decimal number, and stops at any non-number.
+ 377:../Sources/utils/util.c ****  * Number can have any preceding zeros or spaces.
+ 378:../Sources/utils/util.c ****  *
+ 379:../Sources/utils/util.c ****  * @param[inout] str
+ 380:../Sources/utils/util.c ****  *   the string to parse
+ 381:../Sources/utils/util.c ****  * @param[in] value
+ 382:../Sources/utils/util.c ****  *   pointer to a variable to store the value
+ 383:../Sources/utils/util.c ****  * @returns
+ 384:../Sources/utils/util.c ****  *   EC_SUCCESS: parsing succeeded
+ 385:../Sources/utils/util.c ****  *   EC_OVERFLOW: to many digits
+ 386:../Sources/utils/util.c ****  *   EC_INVALID_ARG: string doesn't starts with a digit or spaces
+ 387:../Sources/utils/util.c ****  */
+ 388:../Sources/utils/util.c **** tError utilScanDecimal16s(const unsigned char **str, int16_t *value)
+ 389:../Sources/utils/util.c **** {
+ 1294              		.loc 1 389 0
+ 1295              		.cfi_startproc
+ 1296              		@ args = 0, pretend = 0, frame = 24
+ 1297              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1298 0000 80B5     		push	{r7, lr}
+ 1299              		.cfi_def_cfa_offset 8
+ 1300              		.cfi_offset 7, -8
+ 1301              		.cfi_offset 14, -4
+ 1302 0002 86B0     		sub	sp, sp, #24
+ 1303              		.cfi_def_cfa_offset 32
+ 1304 0004 00AF     		add	r7, sp, #0
+ 1305              		.cfi_def_cfa_register 7
+ 1306 0006 7860     		str	r0, [r7, #4]
+ 1307 0008 3960     		str	r1, [r7]
+ 390:../Sources/utils/util.c ****   const unsigned char *p = *str;
+ 1308              		.loc 1 390 0
+ 1309 000a 7B68     		ldr	r3, [r7, #4]
+ 1310 000c 1B68     		ldr	r3, [r3]
+ 1311 000e 3B61     		str	r3, [r7, #16]
+ 391:../Sources/utils/util.c ****   bool isNeg;
+ 392:../Sources/utils/util.c ****   uint16_t val16u;
+ 393:../Sources/utils/util.c ****   uint8_t res;
+ 394:../Sources/utils/util.c **** 
+ 395:../Sources/utils/util.c ****   while (*p == ' ') p++;  // skip leading spaces
+ 1312              		.loc 1 395 0
+ 1313 0010 02E0     		b	.L70
+ 1314              	.L71:
+ 1315              		.loc 1 395 0 is_stmt 0 discriminator 2
+ 1316 0012 3B69     		ldr	r3, [r7, #16]
+ 1317 0014 0133     		adds	r3, r3, #1
+ 1318 0016 3B61     		str	r3, [r7, #16]
+ 1319              	.L70:
+ 1320              		.loc 1 395 0 discriminator 1
+ 1321 0018 3B69     		ldr	r3, [r7, #16]
+ 1322 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1323 001c 202B     		cmp	r3, #32
+ 1324 001e F8D0     		beq	.L71
+ 396:../Sources/utils/util.c **** 
+ 397:../Sources/utils/util.c ****   *value = 0;
+ 1325              		.loc 1 397 0 is_stmt 1
+ 1326 0020 3B68     		ldr	r3, [r7]
+ 1327 0022 0022     		movs	r2, #0
+ 1328 0024 1A80     		strh	r2, [r3]	@ movhi
+ 398:../Sources/utils/util.c ****   if (*p=='-') {
+ 1329              		.loc 1 398 0
+ 1330 0026 3B69     		ldr	r3, [r7, #16]
+ 1331 0028 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1332 002a 2D2B     		cmp	r3, #45
+ 1333 002c 05D1     		bne	.L72
+ 399:../Sources/utils/util.c ****     isNeg = TRUE;
+ 1334              		.loc 1 399 0
+ 1335 002e 0123     		movs	r3, #1
+ 1336 0030 FB75     		strb	r3, [r7, #23]
+ 400:../Sources/utils/util.c ****     p++; /* skip minus */
+ 1337              		.loc 1 400 0
+ 1338 0032 3B69     		ldr	r3, [r7, #16]
+ 1339 0034 0133     		adds	r3, r3, #1
+ 1340 0036 3B61     		str	r3, [r7, #16]
+ 1341 0038 01E0     		b	.L73
+ 1342              	.L72:
+ 401:../Sources/utils/util.c ****   } else {
+ 402:../Sources/utils/util.c ****     isNeg = FALSE;
+ 1343              		.loc 1 402 0
+ 1344 003a 0023     		movs	r3, #0
+ 1345 003c FB75     		strb	r3, [r7, #23]
+ 1346              	.L73:
+ 403:../Sources/utils/util.c ****   }
+ 404:../Sources/utils/util.c **** 
+ 405:../Sources/utils/util.c ****   res = utilScanDecimal16u(&p, (uint16_t*)&val16u);
+ 1347              		.loc 1 405 0
+ 1348 003e 07F10E02 		add	r2, r7, #14
+ 1349 0042 07F11003 		add	r3, r7, #16
+ 1350 0046 1146     		mov	r1, r2
+ 1351 0048 1846     		mov	r0, r3
+ 1352 004a FFF7FEFF 		bl	utilScanDecimal16u
+ 1353 004e 0346     		mov	r3, r0
+ 1354 0050 BB75     		strb	r3, [r7, #22]
+ 406:../Sources/utils/util.c ****   if (res != EC_SUCCESS) return res;
+ 1355              		.loc 1 406 0
+ 1356 0052 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 1357 0054 002B     		cmp	r3, #0
+ 1358 0056 01D0     		beq	.L74
+ 1359              		.loc 1 406 0 is_stmt 0 discriminator 1
+ 1360 0058 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 1361 005a 12E0     		b	.L78
+ 1362              	.L74:
+ 407:../Sources/utils/util.c **** 
+ 408:../Sources/utils/util.c ****   if (isNeg) {
+ 1363              		.loc 1 408 0 is_stmt 1
+ 1364 005c 97F91730 		ldrsb	r3, [r7, #23]
+ 1365 0060 002B     		cmp	r3, #0
+ 1366 0062 06D0     		beq	.L76
+ 409:../Sources/utils/util.c ****     *value = (int16_t)(-(int16_t)val16u);
+ 1367              		.loc 1 409 0
+ 1368 0064 FB89     		ldrh	r3, [r7, #14]
+ 1369 0066 5B42     		negs	r3, r3
+ 1370 0068 9BB2     		uxth	r3, r3
+ 1371 006a 1AB2     		sxth	r2, r3
+ 1372 006c 3B68     		ldr	r3, [r7]
+ 1373 006e 1A80     		strh	r2, [r3]	@ movhi
+ 1374 0070 03E0     		b	.L77
+ 1375              	.L76:
+ 410:../Sources/utils/util.c ****   } else {
+ 411:../Sources/utils/util.c ****     *value = (int16_t)val16u;
+ 1376              		.loc 1 411 0
+ 1377 0072 FB89     		ldrh	r3, [r7, #14]
+ 1378 0074 1AB2     		sxth	r2, r3
+ 1379 0076 3B68     		ldr	r3, [r7]
+ 1380 0078 1A80     		strh	r2, [r3]	@ movhi
+ 1381              	.L77:
+ 412:../Sources/utils/util.c ****   }
+ 413:../Sources/utils/util.c ****   *str = p;
+ 1382              		.loc 1 413 0
+ 1383 007a 3A69     		ldr	r2, [r7, #16]
+ 1384 007c 7B68     		ldr	r3, [r7, #4]
+ 1385 007e 1A60     		str	r2, [r3]
+ 414:../Sources/utils/util.c ****   return EC_SUCCESS;
+ 1386              		.loc 1 414 0
+ 1387 0080 0023     		movs	r3, #0
+ 1388              	.L78:
+ 415:../Sources/utils/util.c **** }
+ 1389              		.loc 1 415 0 discriminator 1
+ 1390 0082 1846     		mov	r0, r3
+ 1391 0084 1837     		adds	r7, r7, #24
+ 1392              		.cfi_def_cfa_offset 8
+ 1393 0086 BD46     		mov	sp, r7
+ 1394              		.cfi_def_cfa_register 13
+ 1395              		@ sp needed
+ 1396 0088 80BD     		pop	{r7, pc}
+ 1397              		.cfi_endproc
+ 1398              	.LFE136:
+ 1400              		.section	.text.utilWaitUs,"ax",%progbits
+ 1401              		.align	1
+ 1402              		.global	utilWaitUs
+ 1403              		.syntax unified
+ 1404              		.thumb
+ 1405              		.thumb_func
+ 1406              		.fpu fpv4-sp-d16
+ 1408              	utilWaitUs:
+ 1409              	.LFB137:
+ 416:../Sources/utils/util.c **** 
+ 417:../Sources/utils/util.c **** 
+ 418:../Sources/utils/util.c **** /**
+ 419:../Sources/utils/util.c ****  * This functions waits for the specified time.
+ 420:../Sources/utils/util.c ****  *
+ 421:../Sources/utils/util.c ****  * Tested without Optimization and a CPU clock of 120MHz
+ 422:../Sources/utils/util.c ****  *
+ 423:../Sources/utils/util.c ****  * @param[in] us
+ 424:../Sources/utils/util.c ****  *   the desired time in microseconds.
+ 425:../Sources/utils/util.c ****  */
+ 426:../Sources/utils/util.c **** void utilWaitUs(uint16_t us)
+ 427:../Sources/utils/util.c **** {
+ 1410              		.loc 1 427 0
+ 1411              		.cfi_startproc
+ 1412              		@ args = 0, pretend = 0, frame = 16
+ 1413              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1414              		@ link register save eliminated.
+ 1415 0000 80B4     		push	{r7}
+ 1416              		.cfi_def_cfa_offset 4
+ 1417              		.cfi_offset 7, -4
+ 1418 0002 85B0     		sub	sp, sp, #20
+ 1419              		.cfi_def_cfa_offset 24
+ 1420 0004 00AF     		add	r7, sp, #0
+ 1421              		.cfi_def_cfa_register 7
+ 1422 0006 0346     		mov	r3, r0
+ 1423 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 428:../Sources/utils/util.c ****   us--;
+ 1424              		.loc 1 428 0
+ 1425 000a FB88     		ldrh	r3, [r7, #6]
+ 1426 000c 013B     		subs	r3, r3, #1
+ 1427 000e FB80     		strh	r3, [r7, #6]	@ movhi
+ 429:../Sources/utils/util.c ****   while(us--) {
+ 1428              		.loc 1 429 0
+ 1429 0010 08E0     		b	.L80
+ 1430              	.L83:
+ 1431              	.LBB2:
+ 430:../Sources/utils/util.c ****     uint8_t i = 13;
+ 1432              		.loc 1 430 0
+ 1433 0012 0D23     		movs	r3, #13
+ 1434 0014 FB73     		strb	r3, [r7, #15]
+ 431:../Sources/utils/util.c ****     while (i--) __asm("nop");
+ 1435              		.loc 1 431 0
+ 1436 0016 00E0     		b	.L81
+ 1437              	.L82:
+ 1438              		.loc 1 431 0 is_stmt 0 discriminator 2
+ 1439              		.syntax unified
+ 1440              	@ 431 "../Sources/utils/util.c" 1
+ 1441 0018 00BF     		nop
+ 1442              	@ 0 "" 2
+ 1443              		.thumb
+ 1444              		.syntax unified
+ 1445              	.L81:
+ 1446              		.loc 1 431 0 discriminator 1
+ 1447 001a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 1448 001c 5A1E     		subs	r2, r3, #1
+ 1449 001e FA73     		strb	r2, [r7, #15]
+ 1450 0020 002B     		cmp	r3, #0
+ 1451 0022 F9D1     		bne	.L82
+ 1452              	.L80:
+ 1453              	.LBE2:
+ 429:../Sources/utils/util.c ****   while(us--) {
+ 1454              		.loc 1 429 0 is_stmt 1
+ 1455 0024 FB88     		ldrh	r3, [r7, #6]
+ 1456 0026 5A1E     		subs	r2, r3, #1
+ 1457 0028 FA80     		strh	r2, [r7, #6]	@ movhi
+ 1458 002a 002B     		cmp	r3, #0
+ 1459 002c F1D1     		bne	.L83
+ 432:../Sources/utils/util.c ****   }
+ 433:../Sources/utils/util.c **** }
+ 1460              		.loc 1 433 0
+ 1461 002e 00BF     		nop
+ 1462 0030 1437     		adds	r7, r7, #20
+ 1463              		.cfi_def_cfa_offset 4
+ 1464 0032 BD46     		mov	sp, r7
+ 1465              		.cfi_def_cfa_register 13
+ 1466              		@ sp needed
+ 1467 0034 5DF8047B 		ldr	r7, [sp], #4
+ 1468              		.cfi_restore 7
+ 1469              		.cfi_def_cfa_offset 0
+ 1470 0038 7047     		bx	lr
+ 1471              		.cfi_endproc
+ 1472              	.LFE137:
+ 1474              		.section	.text.utilCheckStackSize,"ax",%progbits
+ 1475              		.align	1
+ 1476              		.global	utilCheckStackSize
+ 1477              		.syntax unified
+ 1478              		.thumb
+ 1479              		.thumb_func
+ 1480              		.fpu fpv4-sp-d16
+ 1482              	utilCheckStackSize:
+ 1483              	.LFB138:
+ 434:../Sources/utils/util.c **** 
+ 435:../Sources/utils/util.c **** 
+ 436:../Sources/utils/util.c **** /**
+ 437:../Sources/utils/util.c ****  * This function checks the size of the used stack
+ 438:../Sources/utils/util.c ****  *
+ 439:../Sources/utils/util.c ****  * @return information about the used and free stack size
+ 440:../Sources/utils/util.c ****  */
+ 441:../Sources/utils/util.c **** tStackData utilCheckStackSize(void)
+ 442:../Sources/utils/util.c **** {
+ 1484              		.loc 1 442 0
+ 1485              		.cfi_startproc
+ 1486              		@ args = 0, pretend = 0, frame = 16
+ 1487              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1488              		@ link register save eliminated.
+ 1489 0000 80B4     		push	{r7}
+ 1490              		.cfi_def_cfa_offset 4
+ 1491              		.cfi_offset 7, -4
+ 1492 0002 85B0     		sub	sp, sp, #20
+ 1493              		.cfi_def_cfa_offset 24
+ 1494 0004 00AF     		add	r7, sp, #0
+ 1495              		.cfi_def_cfa_register 7
+ 443:../Sources/utils/util.c ****   char* i;
+ 444:../Sources/utils/util.c ****   extern char __StackTop[];
+ 445:../Sources/utils/util.c ****   extern char __StackLimit[];
+ 446:../Sources/utils/util.c ****   int stackSize = __StackTop - __StackLimit;
+ 1496              		.loc 1 446 0
+ 1497 0006 194A     		ldr	r2, .L92
+ 1498 0008 194B     		ldr	r3, .L92+4
+ 1499 000a D31A     		subs	r3, r2, r3
+ 1500 000c BB60     		str	r3, [r7, #8]
+ 447:../Sources/utils/util.c **** 
+ 448:../Sources/utils/util.c ****   tStackData stackData;
+ 449:../Sources/utils/util.c ****   stackData.stackFree = 0;
+ 1501              		.loc 1 449 0
+ 1502 000e 0023     		movs	r3, #0
+ 1503 0010 3B80     		strh	r3, [r7]	@ movhi
+ 450:../Sources/utils/util.c ****   stackData.stackUsed = stackSize;
+ 1504              		.loc 1 450 0
+ 1505 0012 BB68     		ldr	r3, [r7, #8]
+ 1506 0014 9BB2     		uxth	r3, r3
+ 1507 0016 7B80     		strh	r3, [r7, #2]	@ movhi
+ 451:../Sources/utils/util.c ****   for (i=__StackLimit; i<__StackTop; i++)
+ 1508              		.loc 1 451 0
+ 1509 0018 154B     		ldr	r3, .L92+4
+ 1510 001a FB60     		str	r3, [r7, #12]
+ 1511 001c 0BE0     		b	.L85
+ 1512              	.L89:
+ 452:../Sources/utils/util.c ****   {
+ 453:../Sources/utils/util.c ****     if (*i == 0x55) stackData.stackFree++;
+ 1513              		.loc 1 453 0
+ 1514 001e FB68     		ldr	r3, [r7, #12]
+ 1515 0020 93F90030 		ldrsb	r3, [r3]
+ 1516 0024 552B     		cmp	r3, #85
+ 1517 0026 0BD1     		bne	.L91
+ 1518              		.loc 1 453 0 is_stmt 0 discriminator 1
+ 1519 0028 3B88     		ldrh	r3, [r7]
+ 1520 002a 0133     		adds	r3, r3, #1
+ 1521 002c 9BB2     		uxth	r3, r3
+ 1522 002e 3B80     		strh	r3, [r7]	@ movhi
+ 451:../Sources/utils/util.c ****   for (i=__StackLimit; i<__StackTop; i++)
+ 1523              		.loc 1 451 0 is_stmt 1 discriminator 1
+ 1524 0030 FB68     		ldr	r3, [r7, #12]
+ 1525 0032 0133     		adds	r3, r3, #1
+ 1526 0034 FB60     		str	r3, [r7, #12]
+ 1527              	.L85:
+ 1528 0036 FB68     		ldr	r3, [r7, #12]
+ 1529 0038 0C4A     		ldr	r2, .L92
+ 1530 003a 9342     		cmp	r3, r2
+ 1531 003c EFD3     		bcc	.L89
+ 1532 003e 00E0     		b	.L88
+ 1533              	.L91:
+ 454:../Sources/utils/util.c ****     else break;
+ 1534              		.loc 1 454 0
+ 1535 0040 00BF     		nop
+ 1536              	.L88:
+ 455:../Sources/utils/util.c ****   }
+ 456:../Sources/utils/util.c ****   stackData.stackUsed -= stackData.stackFree;
+ 1537              		.loc 1 456 0
+ 1538 0042 7A88     		ldrh	r2, [r7, #2]
+ 1539 0044 3B88     		ldrh	r3, [r7]
+ 1540 0046 D31A     		subs	r3, r2, r3
+ 1541 0048 9BB2     		uxth	r3, r3
+ 1542 004a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 457:../Sources/utils/util.c ****   return stackData;
+ 1543              		.loc 1 457 0
+ 1544 004c 3B68     		ldr	r3, [r7]
+ 1545 004e 7B60     		str	r3, [r7, #4]
+ 1546 0050 0023     		movs	r3, #0
+ 1547 0052 BA88     		ldrh	r2, [r7, #4]
+ 1548 0054 62F30F03 		bfi	r3, r2, #0, #16
+ 1549 0058 FA88     		ldrh	r2, [r7, #6]
+ 1550 005a 62F31F43 		bfi	r3, r2, #16, #16
+ 458:../Sources/utils/util.c **** }
+ 1551              		.loc 1 458 0
+ 1552 005e 1846     		mov	r0, r3
+ 1553 0060 1437     		adds	r7, r7, #20
+ 1554              		.cfi_def_cfa_offset 4
+ 1555 0062 BD46     		mov	sp, r7
+ 1556              		.cfi_def_cfa_register 13
+ 1557              		@ sp needed
+ 1558 0064 5DF8047B 		ldr	r7, [sp], #4
+ 1559              		.cfi_restore 7
+ 1560              		.cfi_def_cfa_offset 0
+ 1561 0068 7047     		bx	lr
+ 1562              	.L93:
+ 1563 006a 00BF     		.align	2
+ 1564              	.L92:
+ 1565 006c 00000000 		.word	__StackTop
+ 1566 0070 00000000 		.word	__StackLimit
+ 1567              		.cfi_endproc
+ 1568              	.LFE138:
+ 1570              		.text
+ 1571              	.Letext0:
+ 1572              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 1573              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1574              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1575              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1576              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1577              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 1578              		.file 8 "../Includes/core_cm4.h"
+ 1579              		.file 9 "../Includes/system_MK22F51212.h"
+ 1580              		.file 10 "../Includes/platform.h"
+ 1581              		.file 11 "../Sources/utils/util.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 util.c
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:18     .text.utilStrcpy:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:25     .text.utilStrcpy:00000000 utilStrcpy
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:93     .text.utilStrcat:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:100    .text.utilStrcat:00000000 utilStrcat
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:188    .text.utilNum16uToStr:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:195    .text.utilNum16uToStr:00000000 utilNum16uToStr
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:353    .text.utilNum16uToStr:000000e8 $d
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:358    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:362    .text.utilNum16sToStr:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:369    .text.utilNum16sToStr:00000000 utilNum16sToStr
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:572    .text.utilNum16sToStr:00000138 $d
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:578    .text.utilNum32uToStr:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:585    .text.utilNum32uToStr:00000000 utilNum32uToStr
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:740    .text.utilNum32uToStr:000000e4 $d
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:749    .text.utilNum32sToStr:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:756    .text.utilNum32sToStr:00000000 utilNum32sToStr
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:956    .text.utilNum32sToStr:00000128 $d
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:962    .text.utilStrcatNum16u:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:969    .text.utilStrcatNum16u:00000000 utilStrcatNum16u
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1011   .text.utilStrcatNum16s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1018   .text.utilStrcatNum16s:00000000 utilStrcatNum16s
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1060   .text.utilStrcatNum32u:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1067   .text.utilStrcatNum32u:00000000 utilStrcatNum32u
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1108   .text.utilStrcatNum32s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1115   .text.utilStrcatNum32s:00000000 utilStrcatNum32s
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1156   .text.utilScanDecimal16u:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1163   .text.utilScanDecimal16u:00000000 utilScanDecimal16u
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1285   .text.utilScanDecimal16s:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1292   .text.utilScanDecimal16s:00000000 utilScanDecimal16s
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1401   .text.utilWaitUs:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1408   .text.utilWaitUs:00000000 utilWaitUs
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1475   .text.utilCheckStackSize:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1482   .text.utilCheckStackSize:00000000 utilCheckStackSize
+C:\Users\Blub\AppData\Local\Temp\ccwkuNFe.s:1565   .text.utilCheckStackSize:0000006c $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.stddef.h.187.e1c83cba2098ce92b68f6311de19e6b1
+                           .group:00000000 wm4.stddef.h.39.d5a83c17f38162a5dd6f834eaf38f8ef
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.stdlib.h.56.b4ddaf162082f284ba35b4444af99a9a
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+
+UNDEFINED SYMBOLS
+__StackTop
+__StackLimit

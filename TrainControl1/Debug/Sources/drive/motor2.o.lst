@@ -1,0 +1,652 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"motor2.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.motor2Set,"ax",%progbits
+  24              		.align	1
+  25              		.global	motor2Set
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	motor2Set:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/drive/motor2.c"
+   1:../Sources/drive/motor2.c **** /*
+   2:../Sources/drive/motor2.c ****  * spindel.c
+   3:../Sources/drive/motor2.c ****  *
+   4:../Sources/drive/motor2.c ****  *  Created on: 22.03.2019
+   5:../Sources/drive/motor2.c ****  *      Author: Blub
+   6:../Sources/drive/motor2.c ****  */
+   7:../Sources/drive/motor2.c **** 
+   8:../Sources/drive/motor2.c **** #include <string.h>
+   9:../Sources/drive/motor2.c **** #include "platform.h"
+  10:../Sources/drive/motor2.c **** #include "motor2.h"
+  11:../Sources/drive/motor2.c **** #include "ftm0.h"
+  12:../Sources/drive/motor2.c **** #include "term.h"
+  13:../Sources/drive/motor2.c **** #include "util.h"
+  14:../Sources/drive/motor2.c **** 
+  15:../Sources/drive/motor2.c **** 
+  16:../Sources/drive/motor2.c **** 
+  17:../Sources/drive/motor2.c **** static tCommandLineHandler clh;
+  18:../Sources/drive/motor2.c **** 
+  19:../Sources/drive/motor2.c **** 
+  20:../Sources/drive/motor2.c **** void motor2Set(int8_t value)
+  21:../Sources/drive/motor2.c **** {
+  34              		.loc 1 21 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 85B0     		sub	sp, sp, #20
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB71     		strb	r3, [r7, #7]
+  22:../Sources/drive/motor2.c ****   if (value > MOTOR2_MAX_VALUE) value = MOTOR2_MAX_VALUE;
+  23:../Sources/drive/motor2.c **** 
+  24:../Sources/drive/motor2.c ****   int16_t v = (uint16_t)(((FTM0_MODULO + 1) * ((uint32_t)value)) / MOTOR2_MAX_VALUE);
+  48              		.loc 1 24 0
+  49 000a 97F90730 		ldrsb	r3, [r7, #7]
+  50 000e 41F28832 		movw	r2, #5000
+  51 0012 02FB03F3 		mul	r3, r2, r3
+  52 0016 074A     		ldr	r2, .L2
+  53 0018 A2FB0323 		umull	r2, r3, r2, r3
+  54 001c DB09     		lsrs	r3, r3, #7
+  55 001e FB81     		strh	r3, [r7, #14]	@ movhi
+  25:../Sources/drive/motor2.c ****   FTM0_C3V = v;
+  56              		.loc 1 25 0
+  57 0020 054A     		ldr	r2, .L2+4
+  58 0022 B7F90E30 		ldrsh	r3, [r7, #14]
+  59 0026 9362     		str	r3, [r2, #40]
+  26:../Sources/drive/motor2.c **** }
+  60              		.loc 1 26 0
+  61 0028 00BF     		nop
+  62 002a 1437     		adds	r7, r7, #20
+  63              		.cfi_def_cfa_offset 4
+  64 002c BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+  66              		@ sp needed
+  67 002e 5DF8047B 		ldr	r7, [sp], #4
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 0032 7047     		bx	lr
+  71              	.L3:
+  72              		.align	2
+  73              	.L2:
+  74 0034 81808080 		.word	-2139062143
+  75 0038 00800340 		.word	1073971200
+  76              		.cfi_endproc
+  77              	.LFE125:
+  79              		.section	.rodata
+  80              		.align	2
+  81              	.LC0:
+  82 0000 68656C70 		.ascii	"help\000"
+  82      00
+  83 0005 000000   		.align	2
+  84              	.LC1:
+  85 0008 20736572 		.ascii	" servo commands:\000"
+  85      766F2063 
+  85      6F6D6D61 
+  85      6E64733A 
+  85      00
+  86 0019 000000   		.align	2
+  87              	.LC2:
+  88 001c 20207365 		.ascii	"  servo 1  => 0.6ms\000"
+  88      72766F20 
+  88      3120203D 
+  88      3E20302E 
+  88      366D7300 
+  89              		.align	2
+  90              	.LC3:
+  91 0030 20207365 		.ascii	"  servo 2  => 0.8ms\000"
+  91      72766F20 
+  91      3220203D 
+  91      3E20302E 
+  91      386D7300 
+  92              		.align	2
+  93              	.LC4:
+  94 0044 20207365 		.ascii	"  servo 3  => 1.0ms\000"
+  94      72766F20 
+  94      3320203D 
+  94      3E20312E 
+  94      306D7300 
+  95              		.align	2
+  96              	.LC5:
+  97 0058 20207365 		.ascii	"  servo 4  => 1.2ms\000"
+  97      72766F20 
+  97      3420203D 
+  97      3E20312E 
+  97      326D7300 
+  98              		.align	2
+  99              	.LC6:
+ 100 006c 20207365 		.ascii	"  servo 5  => 1.4ms\000"
+ 100      72766F20 
+ 100      3520203D 
+ 100      3E20312E 
+ 100      346D7300 
+ 101              		.align	2
+ 102              	.LC7:
+ 103 0080 20207365 		.ascii	"  servo 6  => 1.6ms\000"
+ 103      72766F20 
+ 103      3620203D 
+ 103      3E20312E 
+ 103      366D7300 
+ 104              		.align	2
+ 105              	.LC8:
+ 106 0094 20207365 		.ascii	"  servo 7  => 1.8ms\000"
+ 106      72766F20 
+ 106      3720203D 
+ 106      3E20312E 
+ 106      386D7300 
+ 107              		.align	2
+ 108              	.LC9:
+ 109 00a8 20207365 		.ascii	"  servo 8  => 2.0ms\000"
+ 109      72766F20 
+ 109      3820203D 
+ 109      3E20322E 
+ 109      306D7300 
+ 110              		.align	2
+ 111              	.LC10:
+ 112 00bc 20207365 		.ascii	"  servo 9  => 2.2ms\000"
+ 112      72766F20 
+ 112      3920203D 
+ 112      3E20322E 
+ 112      326D7300 
+ 113              		.align	2
+ 114              	.LC11:
+ 115 00d0 3100     		.ascii	"1\000"
+ 116 00d2 0000     		.align	2
+ 117              	.LC12:
+ 118 00d4 3200     		.ascii	"2\000"
+ 119 00d6 0000     		.align	2
+ 120              	.LC13:
+ 121 00d8 3300     		.ascii	"3\000"
+ 122 00da 0000     		.align	2
+ 123              	.LC14:
+ 124 00dc 3400     		.ascii	"4\000"
+ 125 00de 0000     		.align	2
+ 126              	.LC15:
+ 127 00e0 3500     		.ascii	"5\000"
+ 128 00e2 0000     		.align	2
+ 129              	.LC16:
+ 130 00e4 3600     		.ascii	"6\000"
+ 131 00e6 0000     		.align	2
+ 132              	.LC17:
+ 133 00e8 3700     		.ascii	"7\000"
+ 134 00ea 0000     		.align	2
+ 135              	.LC18:
+ 136 00ec 3800     		.ascii	"8\000"
+ 137 00ee 0000     		.align	2
+ 138              	.LC19:
+ 139 00f0 3900     		.ascii	"9\000"
+ 140              		.section	.text.motor2ParseCommand,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	motor2ParseCommand
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 146              		.fpu fpv4-sp-d16
+ 148              	motor2ParseCommand:
+ 149              	.LFB126:
+  27:../Sources/drive/motor2.c **** 
+  28:../Sources/drive/motor2.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  29:../Sources/drive/motor2.c **** /**
+  30:../Sources/drive/motor2.c ****  * This function parses one command line, executes the command and returns the status
+  31:../Sources/drive/motor2.c ****  *
+  32:../Sources/drive/motor2.c ****  * @param[in] cmd
+  33:../Sources/drive/motor2.c ****  *   the null terminated string to parse
+  34:../Sources/drive/motor2.c ****  * @returns
+  35:../Sources/drive/motor2.c ****  *   EC_SUCCESS if there was a valid command
+  36:../Sources/drive/motor2.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  37:../Sources/drive/motor2.c ****  */
+  38:../Sources/drive/motor2.c **** tError motor2ParseCommand(const unsigned char *cmd)
+  39:../Sources/drive/motor2.c **** {
+ 150              		.loc 1 39 0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 16
+ 153              		@ frame_needed = 1, uses_anonymous_args = 0
+ 154 0000 80B5     		push	{r7, lr}
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 7, -8
+ 157              		.cfi_offset 14, -4
+ 158 0002 84B0     		sub	sp, sp, #16
+ 159              		.cfi_def_cfa_offset 24
+ 160 0004 00AF     		add	r7, sp, #0
+ 161              		.cfi_def_cfa_register 7
+ 162 0006 7860     		str	r0, [r7, #4]
+  40:../Sources/drive/motor2.c ****   tError result = EC_INVALID_ARG;
+ 163              		.loc 1 40 0
+ 164 0008 0323     		movs	r3, #3
+ 165 000a FB73     		strb	r3, [r7, #15]
+  41:../Sources/drive/motor2.c ****   if (strcmp(cmd, "help") == 0)
+ 166              		.loc 1 41 0
+ 167 000c 4B49     		ldr	r1, .L16
+ 168 000e 7868     		ldr	r0, [r7, #4]
+ 169 0010 FFF7FEFF 		bl	strcmp
+ 170 0014 0346     		mov	r3, r0
+ 171 0016 002B     		cmp	r3, #0
+ 172 0018 20D1     		bne	.L5
+  42:../Sources/drive/motor2.c ****   {
+  43:../Sources/drive/motor2.c ****     termWriteLine(" servo commands:");
+ 173              		.loc 1 43 0
+ 174 001a 4948     		ldr	r0, .L16+4
+ 175 001c FFF7FEFF 		bl	termWriteLine
+  44:../Sources/drive/motor2.c ****     termWriteLine("  servo 1  => 0.6ms");
+ 176              		.loc 1 44 0
+ 177 0020 4848     		ldr	r0, .L16+8
+ 178 0022 FFF7FEFF 		bl	termWriteLine
+  45:../Sources/drive/motor2.c ****     termWriteLine("  servo 2  => 0.8ms");
+ 179              		.loc 1 45 0
+ 180 0026 4848     		ldr	r0, .L16+12
+ 181 0028 FFF7FEFF 		bl	termWriteLine
+  46:../Sources/drive/motor2.c ****     termWriteLine("  servo 3  => 1.0ms");
+ 182              		.loc 1 46 0
+ 183 002c 4748     		ldr	r0, .L16+16
+ 184 002e FFF7FEFF 		bl	termWriteLine
+  47:../Sources/drive/motor2.c ****     termWriteLine("  servo 4  => 1.2ms");
+ 185              		.loc 1 47 0
+ 186 0032 4748     		ldr	r0, .L16+20
+ 187 0034 FFF7FEFF 		bl	termWriteLine
+  48:../Sources/drive/motor2.c ****     termWriteLine("  servo 5  => 1.4ms");
+ 188              		.loc 1 48 0
+ 189 0038 4648     		ldr	r0, .L16+24
+ 190 003a FFF7FEFF 		bl	termWriteLine
+  49:../Sources/drive/motor2.c ****     termWriteLine("  servo 6  => 1.6ms");
+ 191              		.loc 1 49 0
+ 192 003e 4648     		ldr	r0, .L16+28
+ 193 0040 FFF7FEFF 		bl	termWriteLine
+  50:../Sources/drive/motor2.c ****     termWriteLine("  servo 7  => 1.8ms");
+ 194              		.loc 1 50 0
+ 195 0044 4548     		ldr	r0, .L16+32
+ 196 0046 FFF7FEFF 		bl	termWriteLine
+  51:../Sources/drive/motor2.c ****     termWriteLine("  servo 8  => 2.0ms");
+ 197              		.loc 1 51 0
+ 198 004a 4548     		ldr	r0, .L16+36
+ 199 004c FFF7FEFF 		bl	termWriteLine
+  52:../Sources/drive/motor2.c ****     termWriteLine("  servo 9  => 2.2ms");
+ 200              		.loc 1 52 0
+ 201 0050 4448     		ldr	r0, .L16+40
+ 202 0052 FFF7FEFF 		bl	termWriteLine
+  53:../Sources/drive/motor2.c **** 
+  54:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 203              		.loc 1 54 0
+ 204 0056 0023     		movs	r3, #0
+ 205 0058 FB73     		strb	r3, [r7, #15]
+ 206 005a 6AE0     		b	.L6
+ 207              	.L5:
+  55:../Sources/drive/motor2.c ****   }
+  56:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "1"))
+ 208              		.loc 1 56 0
+ 209 005c 7B68     		ldr	r3, [r7, #4]
+ 210 005e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 211 0060 414B     		ldr	r3, .L16+44
+ 212 0062 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 213 0064 9A42     		cmp	r2, r3
+ 214 0066 05D1     		bne	.L7
+  57:../Sources/drive/motor2.c ****   {
+  58:../Sources/drive/motor2.c ****     motor2Set(6);
+ 215              		.loc 1 58 0
+ 216 0068 0620     		movs	r0, #6
+ 217 006a FFF7FEFF 		bl	motor2Set
+  59:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 218              		.loc 1 59 0
+ 219 006e 0023     		movs	r3, #0
+ 220 0070 FB73     		strb	r3, [r7, #15]
+ 221 0072 5EE0     		b	.L6
+ 222              	.L7:
+  60:../Sources/drive/motor2.c ****   }
+  61:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "2"))
+ 223              		.loc 1 61 0
+ 224 0074 7B68     		ldr	r3, [r7, #4]
+ 225 0076 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 226 0078 3C4B     		ldr	r3, .L16+48
+ 227 007a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 228 007c 9A42     		cmp	r2, r3
+ 229 007e 05D1     		bne	.L8
+  62:../Sources/drive/motor2.c ****   {
+  63:../Sources/drive/motor2.c ****     motor2Set(10);
+ 230              		.loc 1 63 0
+ 231 0080 0A20     		movs	r0, #10
+ 232 0082 FFF7FEFF 		bl	motor2Set
+  64:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 233              		.loc 1 64 0
+ 234 0086 0023     		movs	r3, #0
+ 235 0088 FB73     		strb	r3, [r7, #15]
+ 236 008a 52E0     		b	.L6
+ 237              	.L8:
+  65:../Sources/drive/motor2.c ****   }
+  66:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "3"))
+ 238              		.loc 1 66 0
+ 239 008c 7B68     		ldr	r3, [r7, #4]
+ 240 008e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 241 0090 374B     		ldr	r3, .L16+52
+ 242 0092 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 243 0094 9A42     		cmp	r2, r3
+ 244 0096 05D1     		bne	.L9
+  67:../Sources/drive/motor2.c ****   {
+  68:../Sources/drive/motor2.c ****     motor2Set(12);
+ 245              		.loc 1 68 0
+ 246 0098 0C20     		movs	r0, #12
+ 247 009a FFF7FEFF 		bl	motor2Set
+  69:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 248              		.loc 1 69 0
+ 249 009e 0023     		movs	r3, #0
+ 250 00a0 FB73     		strb	r3, [r7, #15]
+ 251 00a2 46E0     		b	.L6
+ 252              	.L9:
+  70:../Sources/drive/motor2.c ****   }
+  71:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "4"))
+ 253              		.loc 1 71 0
+ 254 00a4 7B68     		ldr	r3, [r7, #4]
+ 255 00a6 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 256 00a8 324B     		ldr	r3, .L16+56
+ 257 00aa 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 258 00ac 9A42     		cmp	r2, r3
+ 259 00ae 05D1     		bne	.L10
+  72:../Sources/drive/motor2.c ****   {
+  73:../Sources/drive/motor2.c ****     motor2Set(15);
+ 260              		.loc 1 73 0
+ 261 00b0 0F20     		movs	r0, #15
+ 262 00b2 FFF7FEFF 		bl	motor2Set
+  74:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 263              		.loc 1 74 0
+ 264 00b6 0023     		movs	r3, #0
+ 265 00b8 FB73     		strb	r3, [r7, #15]
+ 266 00ba 3AE0     		b	.L6
+ 267              	.L10:
+  75:../Sources/drive/motor2.c ****   }
+  76:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "5"))
+ 268              		.loc 1 76 0
+ 269 00bc 7B68     		ldr	r3, [r7, #4]
+ 270 00be 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 271 00c0 2D4B     		ldr	r3, .L16+60
+ 272 00c2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 273 00c4 9A42     		cmp	r2, r3
+ 274 00c6 05D1     		bne	.L11
+  77:../Sources/drive/motor2.c ****   {
+  78:../Sources/drive/motor2.c ****     motor2Set(18);
+ 275              		.loc 1 78 0
+ 276 00c8 1220     		movs	r0, #18
+ 277 00ca FFF7FEFF 		bl	motor2Set
+  79:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 278              		.loc 1 79 0
+ 279 00ce 0023     		movs	r3, #0
+ 280 00d0 FB73     		strb	r3, [r7, #15]
+ 281 00d2 2EE0     		b	.L6
+ 282              	.L11:
+  80:../Sources/drive/motor2.c ****   }
+  81:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "6"))
+ 283              		.loc 1 81 0
+ 284 00d4 7B68     		ldr	r3, [r7, #4]
+ 285 00d6 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 286 00d8 284B     		ldr	r3, .L16+64
+ 287 00da 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 288 00dc 9A42     		cmp	r2, r3
+ 289 00de 05D1     		bne	.L12
+  82:../Sources/drive/motor2.c ****   {
+  83:../Sources/drive/motor2.c ****     motor2Set(20);
+ 290              		.loc 1 83 0
+ 291 00e0 1420     		movs	r0, #20
+ 292 00e2 FFF7FEFF 		bl	motor2Set
+  84:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 293              		.loc 1 84 0
+ 294 00e6 0023     		movs	r3, #0
+ 295 00e8 FB73     		strb	r3, [r7, #15]
+ 296 00ea 22E0     		b	.L6
+ 297              	.L12:
+  85:../Sources/drive/motor2.c ****   }
+  86:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "7"))
+ 298              		.loc 1 86 0
+ 299 00ec 7B68     		ldr	r3, [r7, #4]
+ 300 00ee 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 301 00f0 234B     		ldr	r3, .L16+68
+ 302 00f2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 303 00f4 9A42     		cmp	r2, r3
+ 304 00f6 05D1     		bne	.L13
+  87:../Sources/drive/motor2.c ****   {
+  88:../Sources/drive/motor2.c ****     motor2Set(23);
+ 305              		.loc 1 88 0
+ 306 00f8 1720     		movs	r0, #23
+ 307 00fa FFF7FEFF 		bl	motor2Set
+  89:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 308              		.loc 1 89 0
+ 309 00fe 0023     		movs	r3, #0
+ 310 0100 FB73     		strb	r3, [r7, #15]
+ 311 0102 16E0     		b	.L6
+ 312              	.L13:
+  90:../Sources/drive/motor2.c ****   }
+  91:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "8"))
+ 313              		.loc 1 91 0
+ 314 0104 7B68     		ldr	r3, [r7, #4]
+ 315 0106 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 316 0108 1E4B     		ldr	r3, .L16+72
+ 317 010a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 318 010c 9A42     		cmp	r2, r3
+ 319 010e 05D1     		bne	.L14
+  92:../Sources/drive/motor2.c ****   {
+  93:../Sources/drive/motor2.c ****     motor2Set(26);
+ 320              		.loc 1 93 0
+ 321 0110 1A20     		movs	r0, #26
+ 322 0112 FFF7FEFF 		bl	motor2Set
+  94:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 323              		.loc 1 94 0
+ 324 0116 0023     		movs	r3, #0
+ 325 0118 FB73     		strb	r3, [r7, #15]
+ 326 011a 0AE0     		b	.L6
+ 327              	.L14:
+  95:../Sources/drive/motor2.c ****   }
+  96:../Sources/drive/motor2.c ****   else if (CheckCommand(cmd, "9"))
+ 328              		.loc 1 96 0
+ 329 011c 7B68     		ldr	r3, [r7, #4]
+ 330 011e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 331 0120 194B     		ldr	r3, .L16+76
+ 332 0122 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 333 0124 9A42     		cmp	r2, r3
+ 334 0126 04D1     		bne	.L6
+  97:../Sources/drive/motor2.c ****   {
+  98:../Sources/drive/motor2.c ****     motor2Set(28);
+ 335              		.loc 1 98 0
+ 336 0128 1C20     		movs	r0, #28
+ 337 012a FFF7FEFF 		bl	motor2Set
+  99:../Sources/drive/motor2.c ****     result = EC_SUCCESS;
+ 338              		.loc 1 99 0
+ 339 012e 0023     		movs	r3, #0
+ 340 0130 FB73     		strb	r3, [r7, #15]
+ 341              	.L6:
+ 100:../Sources/drive/motor2.c ****   }
+ 101:../Sources/drive/motor2.c **** 
+ 102:../Sources/drive/motor2.c ****   return result;
+ 342              		.loc 1 102 0
+ 343 0132 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 103:../Sources/drive/motor2.c **** }
+ 344              		.loc 1 103 0
+ 345 0134 1846     		mov	r0, r3
+ 346 0136 1037     		adds	r7, r7, #16
+ 347              		.cfi_def_cfa_offset 8
+ 348 0138 BD46     		mov	sp, r7
+ 349              		.cfi_def_cfa_register 13
+ 350              		@ sp needed
+ 351 013a 80BD     		pop	{r7, pc}
+ 352              	.L17:
+ 353              		.align	2
+ 354              	.L16:
+ 355 013c 00000000 		.word	.LC0
+ 356 0140 08000000 		.word	.LC1
+ 357 0144 1C000000 		.word	.LC2
+ 358 0148 30000000 		.word	.LC3
+ 359 014c 44000000 		.word	.LC4
+ 360 0150 58000000 		.word	.LC5
+ 361 0154 6C000000 		.word	.LC6
+ 362 0158 80000000 		.word	.LC7
+ 363 015c 94000000 		.word	.LC8
+ 364 0160 A8000000 		.word	.LC9
+ 365 0164 BC000000 		.word	.LC10
+ 366 0168 D0000000 		.word	.LC11
+ 367 016c D4000000 		.word	.LC12
+ 368 0170 D8000000 		.word	.LC13
+ 369 0174 DC000000 		.word	.LC14
+ 370 0178 E0000000 		.word	.LC15
+ 371 017c E4000000 		.word	.LC16
+ 372 0180 E8000000 		.word	.LC17
+ 373 0184 EC000000 		.word	.LC18
+ 374 0188 F0000000 		.word	.LC19
+ 375              		.cfi_endproc
+ 376              	.LFE126:
+ 378              		.section	.text.motor2Init,"ax",%progbits
+ 379              		.align	1
+ 380              		.global	motor2Init
+ 381              		.syntax unified
+ 382              		.thumb
+ 383              		.thumb_func
+ 384              		.fpu fpv4-sp-d16
+ 386              	motor2Init:
+ 387              	.LFB127:
+ 104:../Sources/drive/motor2.c **** 
+ 105:../Sources/drive/motor2.c **** 
+ 106:../Sources/drive/motor2.c **** void motor2Init(void)
+ 107:../Sources/drive/motor2.c **** {
+ 388              		.loc 1 107 0
+ 389              		.cfi_startproc
+ 390              		@ args = 0, pretend = 0, frame = 0
+ 391              		@ frame_needed = 1, uses_anonymous_args = 0
+ 392              		@ link register save eliminated.
+ 393 0000 80B4     		push	{r7}
+ 394              		.cfi_def_cfa_offset 4
+ 395              		.cfi_offset 7, -4
+ 396 0002 00AF     		add	r7, sp, #0
+ 397              		.cfi_def_cfa_register 7
+ 108:../Sources/drive/motor2.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+ 109:../Sources/drive/motor2.c ****   GPIOB_PDDR |= 1<<2;               // configure PTA12
+ 398              		.loc 1 109 0
+ 399 0004 0A4A     		ldr	r2, .L19
+ 400 0006 0A4B     		ldr	r3, .L19
+ 401 0008 5B69     		ldr	r3, [r3, #20]
+ 402 000a 43F00403 		orr	r3, r3, #4
+ 403 000e 5361     		str	r3, [r2, #20]
+ 110:../Sources/drive/motor2.c **** 
+ 111:../Sources/drive/motor2.c **** 
+ 112:../Sources/drive/motor2.c ****   PORTB_PCR2 = PORT_PCR_MUX(6);
+ 404              		.loc 1 112 0
+ 405 0010 084B     		ldr	r3, .L19+4
+ 406 0012 4FF4C062 		mov	r2, #1536
+ 407 0016 9A60     		str	r2, [r3, #8]
+ 113:../Sources/drive/motor2.c **** 
+ 114:../Sources/drive/motor2.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+ 115:../Sources/drive/motor2.c ****   FTM0_C3SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(1);
+ 408              		.loc 1 115 0
+ 409 0018 074B     		ldr	r3, .L19+8
+ 410 001a 2422     		movs	r2, #36
+ 411 001c 5A62     		str	r2, [r3, #36]
+ 116:../Sources/drive/motor2.c **** 
+ 117:../Sources/drive/motor2.c ****   FTM0_C3V = 1000;
+ 412              		.loc 1 117 0
+ 413 001e 064B     		ldr	r3, .L19+8
+ 414 0020 4FF47A72 		mov	r2, #1000
+ 415 0024 9A62     		str	r2, [r3, #40]
+ 118:../Sources/drive/motor2.c ****   // register terminal command line handler
+ 119:../Sources/drive/motor2.c ****     //termRegisterCommandLineHandler(&clh, "servo", "1, 2, 3, 4, 5, 6, 7, 8, 9", servoParseCommand)
+ 120:../Sources/drive/motor2.c **** }
+ 416              		.loc 1 120 0
+ 417 0026 00BF     		nop
+ 418 0028 BD46     		mov	sp, r7
+ 419              		.cfi_def_cfa_register 13
+ 420              		@ sp needed
+ 421 002a 5DF8047B 		ldr	r7, [sp], #4
+ 422              		.cfi_restore 7
+ 423              		.cfi_def_cfa_offset 0
+ 424 002e 7047     		bx	lr
+ 425              	.L20:
+ 426              		.align	2
+ 427              	.L19:
+ 428 0030 40F00F40 		.word	1074786368
+ 429 0034 00A00440 		.word	1074044928
+ 430 0038 00800340 		.word	1073971200
+ 431              		.cfi_endproc
+ 432              	.LFE127:
+ 434              		.text
+ 435              	.Letext0:
+ 436              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 437              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 438              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 439              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 440              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 441              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 442              		.file 8 "../Includes/core_cm4.h"
+ 443              		.file 9 "../Includes/system_MK22F51212.h"
+ 444              		.file 10 "../Includes/MK22F51212.h"
+ 445              		.file 11 "../Includes/platform.h"
+ 446              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 motor2.c
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:24     .text.motor2Set:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:31     .text.motor2Set:00000000 motor2Set
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:74     .text.motor2Set:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:80     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:141    .text.motor2ParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:148    .text.motor2ParseCommand:00000000 motor2ParseCommand
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:355    .text.motor2ParseCommand:0000013c $d
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:379    .text.motor2Init:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:386    .text.motor2Init:00000000 motor2Init
+C:\Users\Blub\AppData\Local\Temp\cckfZ9uW.s:428    .text.motor2Init:00000030 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.f74e607392e0b505ace5d00108430fa1
+                           .group:00000000 wm4.motor2.h.9.6b29effbd3b3666e6b4c3a62d8ff2d5e
+                           .group:00000000 wm4.ftm0.h.17.d3f6a7be46f5abbe226bfd7a329ba2a9
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine

@@ -1,0 +1,705 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"test.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.state,"aw",%nobits
+  20              	state:
+  21 0000 00       		.space	1
+  22              		.global	tof1
+  23              		.section	.bss.tof1,"aw",%nobits
+  26              	tof1:
+  27 0000 00       		.space	1
+  28              		.global	tof2
+  29              		.section	.bss.tof2,"aw",%nobits
+  32              	tof2:
+  33 0000 00       		.space	1
+  34              		.global	accel
+  35              		.section	.bss.accel,"aw",%nobits
+  38              	accel:
+  39 0000 00       		.space	1
+  40              		.global	spindle
+  41              		.section	.bss.spindle,"aw",%nobits
+  44              	spindle:
+  45 0000 00       		.space	1
+  46              		.global	drive
+  47              		.section	.bss.drive,"aw",%nobits
+  50              	drive:
+  51 0000 00       		.space	1
+  52              		.global	range_tof1
+  53              		.section	.bss.range_tof1,"aw",%nobits
+  56              	range_tof1:
+  57 0000 00       		.space	1
+  58              		.global	range_tof2
+  59              		.section	.bss.range_tof2,"aw",%nobits
+  62              	range_tof2:
+  63 0000 00       		.space	1
+  64              		.comm	accel_data,6,4
+  65              		.comm	j,2,2
+  66              		.section	.bss.clh,"aw",%nobits
+  67              		.align	2
+  70              	clh:
+  71 0000 00000000 		.space	56
+  71      00000000 
+  71      00000000 
+  71      00000000 
+  71      00000000 
+  72              		.section	.text.testStateMachine,"ax",%progbits
+  73              		.align	1
+  74              		.global	testStateMachine
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  78              		.fpu fpv4-sp-d16
+  80              	testStateMachine:
+  81              	.LFB125:
+  82              		.file 1 "../Sources/utils/test.c"
+   1:../Sources/utils/test.c **** /*
+   2:../Sources/utils/test.c ****  * beep.c
+   3:../Sources/utils/test.c ****  *
+   4:../Sources/utils/test.c ****  *  Created on: 09.05.2019
+   5:../Sources/utils/test.c ****  *      Author: Blub
+   6:../Sources/utils/test.c ****  */
+   7:../Sources/utils/test.c **** 
+   8:../Sources/utils/test.c **** #include "platform.h"
+   9:../Sources/utils/test.c **** #include "string.h"
+  10:../Sources/utils/test.c **** #include "term.h"
+  11:../Sources/utils/test.c **** #include "util.h"
+  12:../Sources/utils/test.c **** #include "ftm0.h"
+  13:../Sources/utils/test.c **** #include "test.h"
+  14:../Sources/utils/test.c **** #include "tof.h"
+  15:../Sources/utils/test.c **** #include "drive.h"
+  16:../Sources/utils/test.c **** #include "spindle.h"
+  17:../Sources/utils/test.c **** #include "switch.h"
+  18:../Sources/utils/test.c **** #include "accel.h"
+  19:../Sources/utils/test.c **** 
+  20:../Sources/utils/test.c **** typedef enum
+  21:../Sources/utils/test.c **** {
+  22:../Sources/utils/test.c ****   Tof1, Tof2, Accel, Spindle, Drive, Ok, Fail
+  23:../Sources/utils/test.c **** } state_t;
+  24:../Sources/utils/test.c **** 
+  25:../Sources/utils/test.c **** static state_t state = Tof1;
+  26:../Sources/utils/test.c **** 
+  27:../Sources/utils/test.c **** uint8_t tof1 = 0;
+  28:../Sources/utils/test.c **** uint8_t tof2 = 0;
+  29:../Sources/utils/test.c **** uint8_t accel = 0;
+  30:../Sources/utils/test.c **** uint8_t spindle = 0;
+  31:../Sources/utils/test.c **** uint8_t drive = 0;
+  32:../Sources/utils/test.c **** 
+  33:../Sources/utils/test.c **** uint8_t range_tof1 = 0;
+  34:../Sources/utils/test.c **** uint8_t range_tof2 = 0;
+  35:../Sources/utils/test.c **** tSensAccel accel_data;
+  36:../Sources/utils/test.c **** uint16_t j;
+  37:../Sources/utils/test.c **** 
+  38:../Sources/utils/test.c **** static tCommandLineHandler clh;
+  39:../Sources/utils/test.c **** 
+  40:../Sources/utils/test.c **** void testStateMachine(void)
+  41:../Sources/utils/test.c **** {
+  83              		.loc 1 41 0
+  84              		.cfi_startproc
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 1, uses_anonymous_args = 0
+  87 0000 80B5     		push	{r7, lr}
+  88              		.cfi_def_cfa_offset 8
+  89              		.cfi_offset 7, -8
+  90              		.cfi_offset 14, -4
+  91 0002 00AF     		add	r7, sp, #0
+  92              		.cfi_def_cfa_register 7
+  42:../Sources/utils/test.c ****   switch (state) {
+  93              		.loc 1 42 0
+  94 0004 6B4B     		ldr	r3, .L28
+  95 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  96 0008 062B     		cmp	r3, #6
+  97 000a 00F2D180 		bhi	.L20
+  98 000e 01A2     		adr	r2, .L4
+  99 0010 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 100              		.p2align 2
+ 101              	.L4:
+ 102 0014 31000000 		.word	.L3+1
+ 103 0018 5F000000 		.word	.L5+1
+ 104 001c 8D000000 		.word	.L6+1
+ 105 0020 E7000000 		.word	.L7+1
+ 106 0024 2F010000 		.word	.L8+1
+ 107 0028 63010000 		.word	.L9+1
+ 108 002c 97010000 		.word	.L21+1
+ 109              		.p2align 1
+ 110              	.L3:
+ 111              	.LBB2:
+  43:../Sources/utils/test.c ****   case Tof1:
+  44:../Sources/utils/test.c ****     if (i2cTest(TOFADD1) == EC_SUCCESS)
+ 112              		.loc 1 44 0
+ 113 0030 2920     		movs	r0, #41
+ 114 0032 FFF7FEFF 		bl	i2cTest
+ 115 0036 0346     		mov	r3, r0
+ 116 0038 002B     		cmp	r3, #0
+ 117 003a 40F0AE80 		bne	.L22
+  45:../Sources/utils/test.c ****     {
+  46:../Sources/utils/test.c ****       tofRange(TOFADD1, &range_tof1);
+ 118              		.loc 1 46 0
+ 119 003e 5E49     		ldr	r1, .L28+4
+ 120 0040 2920     		movs	r0, #41
+ 121 0042 FFF7FEFF 		bl	tofRange
+  47:../Sources/utils/test.c ****       if (range_tof1 < 80)
+ 122              		.loc 1 47 0
+ 123 0046 5C4B     		ldr	r3, .L28+4
+ 124 0048 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 125 004a 4F2B     		cmp	r3, #79
+ 126 004c 00F2A580 		bhi	.L22
+  48:../Sources/utils/test.c ****       {
+  49:../Sources/utils/test.c ****         tof1 = 1;
+ 127              		.loc 1 49 0
+ 128 0050 5A4B     		ldr	r3, .L28+8
+ 129 0052 0122     		movs	r2, #1
+ 130 0054 1A70     		strb	r2, [r3]
+  50:../Sources/utils/test.c ****         state = Tof2;
+ 131              		.loc 1 50 0
+ 132 0056 574B     		ldr	r3, .L28
+ 133 0058 0122     		movs	r2, #1
+ 134 005a 1A70     		strb	r2, [r3]
+ 135              	.LBE2:
+  51:../Sources/utils/test.c ****       }
+  52:../Sources/utils/test.c ****     }
+  53:../Sources/utils/test.c ****   break;
+ 136              		.loc 1 53 0
+ 137 005c 9DE0     		b	.L22
+ 138              	.L5:
+ 139              	.LBB3:
+  54:../Sources/utils/test.c **** 
+  55:../Sources/utils/test.c ****   case Tof2:
+  56:../Sources/utils/test.c ****     if (i2cTest(TOFADD1) == EC_SUCCESS)
+ 140              		.loc 1 56 0
+ 141 005e 2920     		movs	r0, #41
+ 142 0060 FFF7FEFF 		bl	i2cTest
+ 143 0064 0346     		mov	r3, r0
+ 144 0066 002B     		cmp	r3, #0
+ 145 0068 40F09980 		bne	.L23
+  57:../Sources/utils/test.c ****     {
+  58:../Sources/utils/test.c ****       tofRange(TOFADD2, &range_tof2);
+ 146              		.loc 1 58 0
+ 147 006c 5449     		ldr	r1, .L28+12
+ 148 006e 3920     		movs	r0, #57
+ 149 0070 FFF7FEFF 		bl	tofRange
+  59:../Sources/utils/test.c ****       if (range_tof2 < 80)
+ 150              		.loc 1 59 0
+ 151 0074 524B     		ldr	r3, .L28+12
+ 152 0076 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 153 0078 4F2B     		cmp	r3, #79
+ 154 007a 00F29080 		bhi	.L23
+  60:../Sources/utils/test.c ****       {
+  61:../Sources/utils/test.c ****         tof2 = 1;
+ 155              		.loc 1 61 0
+ 156 007e 514B     		ldr	r3, .L28+16
+ 157 0080 0122     		movs	r2, #1
+ 158 0082 1A70     		strb	r2, [r3]
+  62:../Sources/utils/test.c ****         state = Accel;
+ 159              		.loc 1 62 0
+ 160 0084 4B4B     		ldr	r3, .L28
+ 161 0086 0222     		movs	r2, #2
+ 162 0088 1A70     		strb	r2, [r3]
+ 163              	.LBE3:
+  63:../Sources/utils/test.c ****       }
+  64:../Sources/utils/test.c ****     }
+  65:../Sources/utils/test.c ****   break;
+ 164              		.loc 1 65 0
+ 165 008a 88E0     		b	.L23
+ 166              	.L6:
+  66:../Sources/utils/test.c **** 
+  67:../Sources/utils/test.c ****   case Accel:
+  68:../Sources/utils/test.c ****     accelRead(&accel_data);
+ 167              		.loc 1 68 0
+ 168 008c 4E48     		ldr	r0, .L28+20
+ 169 008e FFF7FEFF 		bl	accelRead
+  69:../Sources/utils/test.c ****     if ((accel_data.accel_x > -20 && accel_data.accel_x > 20)
+ 170              		.loc 1 69 0
+ 171 0092 4D4B     		ldr	r3, .L28+20
+ 172 0094 B3F90030 		ldrsh	r3, [r3]
+ 173 0098 13F1130F 		cmn	r3, #19
+ 174 009c C0F28180 		blt	.L24
+ 175              		.loc 1 69 0 is_stmt 0 discriminator 1
+ 176 00a0 494B     		ldr	r3, .L28+20
+ 177 00a2 B3F90030 		ldrsh	r3, [r3]
+ 178 00a6 142B     		cmp	r3, #20
+ 179 00a8 7BDD     		ble	.L24
+  70:../Sources/utils/test.c ****         && (accel_data.accel_y > -20 && accel_data.accel_y > 20)
+ 180              		.loc 1 70 0 is_stmt 1
+ 181 00aa 474B     		ldr	r3, .L28+20
+ 182 00ac B3F90230 		ldrsh	r3, [r3, #2]
+ 183 00b0 13F1130F 		cmn	r3, #19
+ 184 00b4 75DB     		blt	.L24
+ 185              		.loc 1 70 0 is_stmt 0 discriminator 1
+ 186 00b6 444B     		ldr	r3, .L28+20
+ 187 00b8 B3F90230 		ldrsh	r3, [r3, #2]
+ 188 00bc 142B     		cmp	r3, #20
+ 189 00be 70DD     		ble	.L24
+  71:../Sources/utils/test.c ****         && (accel_data.accel_z > 980 && accel_data.accel_z > 1020))
+ 190              		.loc 1 71 0 is_stmt 1
+ 191 00c0 414B     		ldr	r3, .L28+20
+ 192 00c2 B3F90430 		ldrsh	r3, [r3, #4]
+ 193 00c6 B3F5757F 		cmp	r3, #980
+ 194 00ca 6ADD     		ble	.L24
+ 195              		.loc 1 71 0 is_stmt 0 discriminator 1
+ 196 00cc 3E4B     		ldr	r3, .L28+20
+ 197 00ce B3F90430 		ldrsh	r3, [r3, #4]
+ 198 00d2 B3F57F7F 		cmp	r3, #1020
+ 199 00d6 64DD     		ble	.L24
+  72:../Sources/utils/test.c ****     {
+  73:../Sources/utils/test.c ****       accel = 1;
+ 200              		.loc 1 73 0 is_stmt 1
+ 201 00d8 3C4B     		ldr	r3, .L28+24
+ 202 00da 0122     		movs	r2, #1
+ 203 00dc 1A70     		strb	r2, [r3]
+  74:../Sources/utils/test.c ****       state = Spindle;
+ 204              		.loc 1 74 0
+ 205 00de 354B     		ldr	r3, .L28
+ 206 00e0 0322     		movs	r2, #3
+ 207 00e2 1A70     		strb	r2, [r3]
+  75:../Sources/utils/test.c ****     }
+  76:../Sources/utils/test.c ****   break;
+ 208              		.loc 1 76 0
+ 209 00e4 5DE0     		b	.L24
+ 210              	.L7:
+  77:../Sources/utils/test.c **** 
+  78:../Sources/utils/test.c ****   case Spindle:
+  79:../Sources/utils/test.c ****     spindleSet(-50);
+ 211              		.loc 1 79 0
+ 212 00e6 6FF03100 		mvn	r0, #49
+ 213 00ea FFF7FEFF 		bl	spindleSet
+  80:../Sources/utils/test.c ****     if (switchStateOpen())
+ 214              		.loc 1 80 0
+ 215 00ee FFF7FEFF 		bl	switchStateOpen
+ 216 00f2 0346     		mov	r3, r0
+ 217 00f4 002B     		cmp	r3, #0
+ 218 00f6 08D0     		beq	.L14
+  81:../Sources/utils/test.c ****     {
+  82:../Sources/utils/test.c ****       spindleSet(0);
+ 219              		.loc 1 82 0
+ 220 00f8 0020     		movs	r0, #0
+ 221 00fa FFF7FEFF 		bl	spindleSet
+  83:../Sources/utils/test.c ****       spindle = 1;
+ 222              		.loc 1 83 0
+ 223 00fe 344B     		ldr	r3, .L28+28
+ 224 0100 0122     		movs	r2, #1
+ 225 0102 1A70     		strb	r2, [r3]
+  84:../Sources/utils/test.c ****       state = Spindle;
+ 226              		.loc 1 84 0
+ 227 0104 2B4B     		ldr	r3, .L28
+ 228 0106 0322     		movs	r2, #3
+ 229 0108 1A70     		strb	r2, [r3]
+ 230              	.L14:
+  85:../Sources/utils/test.c ****     }
+  86:../Sources/utils/test.c **** 
+  87:../Sources/utils/test.c ****     if (j++ == 10)
+ 231              		.loc 1 87 0
+ 232 010a 324B     		ldr	r3, .L28+32
+ 233 010c 1B88     		ldrh	r3, [r3]
+ 234 010e 5A1C     		adds	r2, r3, #1
+ 235 0110 91B2     		uxth	r1, r2
+ 236 0112 304A     		ldr	r2, .L28+32
+ 237 0114 1180     		strh	r1, [r2]	@ movhi
+ 238 0116 0A2B     		cmp	r3, #10
+ 239 0118 45D1     		bne	.L25
+  88:../Sources/utils/test.c ****     {
+  89:../Sources/utils/test.c ****       j = 0;
+ 240              		.loc 1 89 0
+ 241 011a 2E4B     		ldr	r3, .L28+32
+ 242 011c 0022     		movs	r2, #0
+ 243 011e 1A80     		strh	r2, [r3]	@ movhi
+  90:../Sources/utils/test.c ****       spindleSet(0);
+ 244              		.loc 1 90 0
+ 245 0120 0020     		movs	r0, #0
+ 246 0122 FFF7FEFF 		bl	spindleSet
+  91:../Sources/utils/test.c ****       spindle = 0;
+ 247              		.loc 1 91 0
+ 248 0126 2A4B     		ldr	r3, .L28+28
+ 249 0128 0022     		movs	r2, #0
+ 250 012a 1A70     		strb	r2, [r3]
+  92:../Sources/utils/test.c ****     }
+  93:../Sources/utils/test.c **** 
+  94:../Sources/utils/test.c ****   break;
+ 251              		.loc 1 94 0
+ 252 012c 3BE0     		b	.L25
+ 253              	.L8:
+  95:../Sources/utils/test.c **** 
+  96:../Sources/utils/test.c ****   case Drive:
+  97:../Sources/utils/test.c ****     driveSetDistance(100);
+ 254              		.loc 1 97 0
+ 255 012e 6420     		movs	r0, #100
+ 256 0130 FFF7FEFF 		bl	driveSetDistance
+  98:../Sources/utils/test.c ****     if (driveGetDistanceInfo() == 0)
+ 257              		.loc 1 98 0
+ 258 0134 FFF7FEFF 		bl	driveGetDistanceInfo
+ 259 0138 0346     		mov	r3, r0
+ 260 013a 002B     		cmp	r3, #0
+ 261 013c 05D1     		bne	.L16
+  99:../Sources/utils/test.c ****     {
+ 100:../Sources/utils/test.c ****       drive = 1;
+ 262              		.loc 1 100 0
+ 263 013e 264B     		ldr	r3, .L28+36
+ 264 0140 0122     		movs	r2, #1
+ 265 0142 1A70     		strb	r2, [r3]
+ 101:../Sources/utils/test.c ****       state = Ok;
+ 266              		.loc 1 101 0
+ 267 0144 1B4B     		ldr	r3, .L28
+ 268 0146 0522     		movs	r2, #5
+ 269 0148 1A70     		strb	r2, [r3]
+ 270              	.L16:
+ 102:../Sources/utils/test.c ****     }
+ 103:../Sources/utils/test.c ****     if (j++ == 10)
+ 271              		.loc 1 103 0
+ 272 014a 224B     		ldr	r3, .L28+32
+ 273 014c 1B88     		ldrh	r3, [r3]
+ 274 014e 5A1C     		adds	r2, r3, #1
+ 275 0150 91B2     		uxth	r1, r2
+ 276 0152 204A     		ldr	r2, .L28+32
+ 277 0154 1180     		strh	r1, [r2]	@ movhi
+ 278 0156 0A2B     		cmp	r3, #10
+ 279 0158 27D1     		bne	.L26
+ 104:../Sources/utils/test.c ****     {
+ 105:../Sources/utils/test.c ****       drive = 0;
+ 280              		.loc 1 105 0
+ 281 015a 1F4B     		ldr	r3, .L28+36
+ 282 015c 0022     		movs	r2, #0
+ 283 015e 1A70     		strb	r2, [r3]
+ 106:../Sources/utils/test.c ****     }
+ 107:../Sources/utils/test.c ****   break;
+ 284              		.loc 1 107 0
+ 285 0160 23E0     		b	.L26
+ 286              	.L9:
+ 108:../Sources/utils/test.c **** 
+ 109:../Sources/utils/test.c ****   case Ok:
+ 110:../Sources/utils/test.c ****     driveSetDistance(100);
+ 287              		.loc 1 110 0
+ 288 0162 6420     		movs	r0, #100
+ 289 0164 FFF7FEFF 		bl	driveSetDistance
+ 111:../Sources/utils/test.c ****     if (driveGetDistanceInfo() == 0)
+ 290              		.loc 1 111 0
+ 291 0168 FFF7FEFF 		bl	driveGetDistanceInfo
+ 292 016c 0346     		mov	r3, r0
+ 293 016e 002B     		cmp	r3, #0
+ 294 0170 05D1     		bne	.L18
+ 112:../Sources/utils/test.c ****     {
+ 113:../Sources/utils/test.c ****       drive = 1;
+ 295              		.loc 1 113 0
+ 296 0172 194B     		ldr	r3, .L28+36
+ 297 0174 0122     		movs	r2, #1
+ 298 0176 1A70     		strb	r2, [r3]
+ 114:../Sources/utils/test.c ****       state = Ok;
+ 299              		.loc 1 114 0
+ 300 0178 0E4B     		ldr	r3, .L28
+ 301 017a 0522     		movs	r2, #5
+ 302 017c 1A70     		strb	r2, [r3]
+ 303              	.L18:
+ 115:../Sources/utils/test.c ****     }
+ 116:../Sources/utils/test.c **** 
+ 117:../Sources/utils/test.c ****     if (j++ == 10)
+ 304              		.loc 1 117 0
+ 305 017e 154B     		ldr	r3, .L28+32
+ 306 0180 1B88     		ldrh	r3, [r3]
+ 307 0182 5A1C     		adds	r2, r3, #1
+ 308 0184 91B2     		uxth	r1, r2
+ 309 0186 134A     		ldr	r2, .L28+32
+ 310 0188 1180     		strh	r1, [r2]	@ movhi
+ 311 018a 0A2B     		cmp	r3, #10
+ 312 018c 0FD1     		bne	.L27
+ 118:../Sources/utils/test.c ****     {
+ 119:../Sources/utils/test.c ****       drive = 0;
+ 313              		.loc 1 119 0
+ 314 018e 124B     		ldr	r3, .L28+36
+ 315 0190 0022     		movs	r2, #0
+ 316 0192 1A70     		strb	r2, [r3]
+ 120:../Sources/utils/test.c ****     }
+ 121:../Sources/utils/test.c ****   break;
+ 317              		.loc 1 121 0
+ 318 0194 0BE0     		b	.L27
+ 319              	.L21:
+ 122:../Sources/utils/test.c **** 
+ 123:../Sources/utils/test.c ****   case Fail:
+ 124:../Sources/utils/test.c **** 
+ 125:../Sources/utils/test.c ****   break;
+ 320              		.loc 1 125 0
+ 321 0196 00BF     		nop
+ 322 0198 0AE0     		b	.L20
+ 323              	.L22:
+  53:../Sources/utils/test.c **** 
+ 324              		.loc 1 53 0
+ 325 019a 00BF     		nop
+ 326 019c 08E0     		b	.L20
+ 327              	.L23:
+  65:../Sources/utils/test.c **** 
+ 328              		.loc 1 65 0
+ 329 019e 00BF     		nop
+ 330 01a0 06E0     		b	.L20
+ 331              	.L24:
+  76:../Sources/utils/test.c **** 
+ 332              		.loc 1 76 0
+ 333 01a2 00BF     		nop
+ 334 01a4 04E0     		b	.L20
+ 335              	.L25:
+  94:../Sources/utils/test.c **** 
+ 336              		.loc 1 94 0
+ 337 01a6 00BF     		nop
+ 338 01a8 02E0     		b	.L20
+ 339              	.L26:
+ 107:../Sources/utils/test.c **** 
+ 340              		.loc 1 107 0
+ 341 01aa 00BF     		nop
+ 342 01ac 00E0     		b	.L20
+ 343              	.L27:
+ 121:../Sources/utils/test.c **** 
+ 344              		.loc 1 121 0
+ 345 01ae 00BF     		nop
+ 346              	.L20:
+ 126:../Sources/utils/test.c **** 
+ 127:../Sources/utils/test.c ****   }
+ 128:../Sources/utils/test.c **** }
+ 347              		.loc 1 128 0
+ 348 01b0 00BF     		nop
+ 349 01b2 80BD     		pop	{r7, pc}
+ 350              	.L29:
+ 351              		.align	2
+ 352              	.L28:
+ 353 01b4 00000000 		.word	state
+ 354 01b8 00000000 		.word	range_tof1
+ 355 01bc 00000000 		.word	tof1
+ 356 01c0 00000000 		.word	range_tof2
+ 357 01c4 00000000 		.word	tof2
+ 358 01c8 00000000 		.word	accel_data
+ 359 01cc 00000000 		.word	accel
+ 360 01d0 00000000 		.word	spindle
+ 361 01d4 00000000 		.word	j
+ 362 01d8 00000000 		.word	drive
+ 363              		.cfi_endproc
+ 364              	.LFE125:
+ 366              		.section	.rodata
+ 367              		.align	2
+ 368              	.LC0:
+ 369 0000 616C6C00 		.ascii	"all\000"
+ 370              		.align	2
+ 371              	.LC1:
+ 372 0004 74657374 		.ascii	"test:ok\000"
+ 372      3A6F6B00 
+ 373              		.section	.text.testParseCommand,"ax",%progbits
+ 374              		.align	1
+ 375              		.global	testParseCommand
+ 376              		.syntax unified
+ 377              		.thumb
+ 378              		.thumb_func
+ 379              		.fpu fpv4-sp-d16
+ 381              	testParseCommand:
+ 382              	.LFB126:
+ 129:../Sources/utils/test.c **** 
+ 130:../Sources/utils/test.c **** tError testParseCommand(const unsigned char *cmd)
+ 131:../Sources/utils/test.c **** {
+ 383              		.loc 1 131 0
+ 384              		.cfi_startproc
+ 385              		@ args = 0, pretend = 0, frame = 16
+ 386              		@ frame_needed = 1, uses_anonymous_args = 0
+ 387 0000 80B5     		push	{r7, lr}
+ 388              		.cfi_def_cfa_offset 8
+ 389              		.cfi_offset 7, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 84B0     		sub	sp, sp, #16
+ 392              		.cfi_def_cfa_offset 24
+ 393 0004 00AF     		add	r7, sp, #0
+ 394              		.cfi_def_cfa_register 7
+ 395 0006 7860     		str	r0, [r7, #4]
+ 132:../Sources/utils/test.c ****   tError result = EC_INVALID_ARG;
+ 396              		.loc 1 132 0
+ 397 0008 0323     		movs	r3, #3
+ 398 000a FB73     		strb	r3, [r7, #15]
+ 133:../Sources/utils/test.c ****   if (strcmp(cmd, "all") == 0)
+ 399              		.loc 1 133 0
+ 400 000c 0849     		ldr	r1, .L33
+ 401 000e 7868     		ldr	r0, [r7, #4]
+ 402 0010 FFF7FEFF 		bl	strcmp
+ 403 0014 0346     		mov	r3, r0
+ 404 0016 002B     		cmp	r3, #0
+ 405 0018 04D1     		bne	.L31
+ 134:../Sources/utils/test.c ****   {
+ 135:../Sources/utils/test.c ****     termWriteLine("test:ok");
+ 406              		.loc 1 135 0
+ 407 001a 0648     		ldr	r0, .L33+4
+ 408 001c FFF7FEFF 		bl	termWriteLine
+ 136:../Sources/utils/test.c ****     result = EC_SUCCESS;
+ 409              		.loc 1 136 0
+ 410 0020 0023     		movs	r3, #0
+ 411 0022 FB73     		strb	r3, [r7, #15]
+ 412              	.L31:
+ 137:../Sources/utils/test.c ****   }
+ 138:../Sources/utils/test.c ****   return result;
+ 413              		.loc 1 138 0
+ 414 0024 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 139:../Sources/utils/test.c **** }
+ 415              		.loc 1 139 0
+ 416 0026 1846     		mov	r0, r3
+ 417 0028 1037     		adds	r7, r7, #16
+ 418              		.cfi_def_cfa_offset 8
+ 419 002a BD46     		mov	sp, r7
+ 420              		.cfi_def_cfa_register 13
+ 421              		@ sp needed
+ 422 002c 80BD     		pop	{r7, pc}
+ 423              	.L34:
+ 424 002e 00BF     		.align	2
+ 425              	.L33:
+ 426 0030 00000000 		.word	.LC0
+ 427 0034 04000000 		.word	.LC1
+ 428              		.cfi_endproc
+ 429              	.LFE126:
+ 431              		.section	.rodata
+ 432              		.align	2
+ 433              	.LC2:
+ 434 000c 00       		.ascii	"\000"
+ 435 000d 000000   		.align	2
+ 436              	.LC3:
+ 437 0010 74657374 		.ascii	"test\000"
+ 437      00
+ 438              		.section	.text.testInit,"ax",%progbits
+ 439              		.align	1
+ 440              		.global	testInit
+ 441              		.syntax unified
+ 442              		.thumb
+ 443              		.thumb_func
+ 444              		.fpu fpv4-sp-d16
+ 446              	testInit:
+ 447              	.LFB127:
+ 140:../Sources/utils/test.c **** 
+ 141:../Sources/utils/test.c **** tError testInit(void)
+ 142:../Sources/utils/test.c **** {
+ 448              		.loc 1 142 0
+ 449              		.cfi_startproc
+ 450              		@ args = 0, pretend = 0, frame = 0
+ 451              		@ frame_needed = 1, uses_anonymous_args = 0
+ 452 0000 80B5     		push	{r7, lr}
+ 453              		.cfi_def_cfa_offset 8
+ 454              		.cfi_offset 7, -8
+ 455              		.cfi_offset 14, -4
+ 456 0002 00AF     		add	r7, sp, #0
+ 457              		.cfi_def_cfa_register 7
+ 143:../Sources/utils/test.c ****   // register terminal command line handler
+ 144:../Sources/utils/test.c ****   termRegisterCommandLineHandler(&clh, "test", "", testParseCommand);
+ 458              		.loc 1 144 0
+ 459 0004 044B     		ldr	r3, .L37
+ 460 0006 054A     		ldr	r2, .L37+4
+ 461 0008 0549     		ldr	r1, .L37+8
+ 462 000a 0648     		ldr	r0, .L37+12
+ 463 000c FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 145:../Sources/utils/test.c ****   return EC_SUCCESS;
+ 464              		.loc 1 145 0
+ 465 0010 0023     		movs	r3, #0
+ 146:../Sources/utils/test.c **** }
+ 466              		.loc 1 146 0
+ 467 0012 1846     		mov	r0, r3
+ 468 0014 80BD     		pop	{r7, pc}
+ 469              	.L38:
+ 470 0016 00BF     		.align	2
+ 471              	.L37:
+ 472 0018 00000000 		.word	testParseCommand
+ 473 001c 0C000000 		.word	.LC2
+ 474 0020 10000000 		.word	.LC3
+ 475 0024 00000000 		.word	clh
+ 476              		.cfi_endproc
+ 477              	.LFE127:
+ 479              		.text
+ 480              	.Letext0:
+ 481              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 482              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 483              		.file 4 "../Includes/core_cm4.h"
+ 484              		.file 5 "../Includes/system_MK22F51212.h"
+ 485              		.file 6 "../Includes/platform.h"
+ 486              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 487              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 488              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 489              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 490              		.file 11 "../Sources/com/term.h"
+ 491              		.file 12 "C:\\PRG_G\\wsp_pren\\TrainControl1\\Sources\\sensors/accel.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 test.c
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:20     .bss.state:00000000 state
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:21     .bss.state:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:26     .bss.tof1:00000000 tof1
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:27     .bss.tof1:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:32     .bss.tof2:00000000 tof2
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:33     .bss.tof2:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:38     .bss.accel:00000000 accel
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:39     .bss.accel:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:44     .bss.spindle:00000000 spindle
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:45     .bss.spindle:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:50     .bss.drive:00000000 drive
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:51     .bss.drive:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:56     .bss.range_tof1:00000000 range_tof1
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:57     .bss.range_tof1:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:62     .bss.range_tof2:00000000 range_tof2
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:63     .bss.range_tof2:00000000 $d
+                            *COM*:00000006 accel_data
+                            *COM*:00000002 j
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:67     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:70     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:73     .text.testStateMachine:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:80     .text.testStateMachine:00000000 testStateMachine
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:102    .text.testStateMachine:00000014 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:109    .text.testStateMachine:00000030 $t
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:353    .text.testStateMachine:000001b4 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:367    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:374    .text.testParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:381    .text.testParseCommand:00000000 testParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:426    .text.testParseCommand:00000030 $d
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:439    .text.testInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:446    .text.testInit:00000000 testInit
+C:\Users\Blub\AppData\Local\Temp\ccMyfRO6.s:472    .text.testInit:00000018 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.ftm0.h.17.cec3e0a8843af04be56280b53fe960ea
+                           .group:00000000 wm4.tof.h.15.c52dd967ff4566f0850c274a8f02f219
+                           .group:00000000 wm4.drive.h.9.b7ae840a7169f82a3ba596e7b70991e7
+                           .group:00000000 wm4.spindle.h.9.a7b8f3c706fa7d67d54d32efbbfe7184
+                           .group:00000000 wm4.accel.h.14.19b5318ecce9016dbc420442e49f848c
+
+UNDEFINED SYMBOLS
+i2cTest
+tofRange
+accelRead
+spindleSet
+switchStateOpen
+driveSetDistance
+driveGetDistanceInfo
+strcmp
+termWriteLine
+termRegisterCommandLineHandler

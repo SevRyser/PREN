@@ -1,0 +1,1299 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"cube.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.bss.state,"aw",%nobits
+  26              	state:
+  27 0000 00       		.space	1
+  28              		.section	.bss.startPi,"aw",%nobits
+  31              	startPi:
+  32 0000 00       		.space	1
+  33              		.global	distance
+  34              		.section	.bss.distance,"aw",%nobits
+  37              	distance:
+  38 0000 00       		.space	1
+  39              		.global	distance1
+  40              		.section	.bss.distance1,"aw",%nobits
+  43              	distance1:
+  44 0000 00       		.space	1
+  45              		.global	accelXStart
+  46              		.section	.bss.accelXStart,"aw",%nobits
+  49              	accelXStart:
+  50 0000 00       		.space	1
+  51              		.global	fail
+  52              		.section	.bss.fail,"aw",%nobits
+  55              	fail:
+  56 0000 00       		.space	1
+  57              		.global	closeTime
+  58              		.section	.data.closeTime,"aw",%progbits
+  59              		.align	1
+  62              	closeTime:
+  63 0000 983A     		.short	15000
+  64              		.comm	accel_data,6,4
+  65              		.section	.rodata
+  66              		.align	2
+  67              	.LC0:
+  68 0000 63756265 		.ascii	"cube:on\000"
+  68      3A6F6E00 
+  69              		.align	2
+  70              	.LC1:
+  71 0008 63756265 		.ascii	"cube:fail\000"
+  71      3A666169 
+  71      6C00
+  72              		.section	.text.cubeStateMachine,"ax",%progbits
+  73              		.align	1
+  74              		.global	cubeStateMachine
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  78              		.fpu fpv4-sp-d16
+  80              	cubeStateMachine:
+  81              	.LFB125:
+  82              		.file 1 "../Sources/cube/cube.c"
+   1:../Sources/cube/cube.c **** /*
+   2:../Sources/cube/cube.c ****  * cube.c
+   3:../Sources/cube/cube.c ****  *
+   4:../Sources/cube/cube.c ****  *  Created on: 16.05.2019
+   5:../Sources/cube/cube.c ****  *      Author: Blub
+   6:../Sources/cube/cube.c ****  */
+   7:../Sources/cube/cube.c **** 
+   8:../Sources/cube/cube.c **** #include "platform.h"
+   9:../Sources/cube/cube.c **** #include "term.h"
+  10:../Sources/cube/cube.c **** #include "util.h"
+  11:../Sources/cube/cube.c **** #include "string.h"
+  12:../Sources/cube/cube.c **** #include "cube.h"
+  13:../Sources/cube/cube.c **** #include "tof.h"
+  14:../Sources/cube/cube.c **** #include "drive.h"
+  15:../Sources/cube/cube.c **** #include "encoder.h"
+  16:../Sources/cube/cube.c **** #include "spindle.h"
+  17:../Sources/cube/cube.c **** #include "servo.h"
+  18:../Sources/cube/cube.c **** #include "accel.h"
+  19:../Sources/cube/cube.c **** #include "switch.h"
+  20:../Sources/cube/cube.c **** 
+  21:../Sources/cube/cube.c **** #define TOFS_MS(x)   ((uint16_t)(x/25 ))
+  22:../Sources/cube/cube.c **** 
+  23:../Sources/cube/cube.c **** static tCommandLineHandler clh;       // terminal command line handler
+  24:../Sources/cube/cube.c **** 
+  25:../Sources/cube/cube.c **** typedef enum
+  26:../Sources/cube/cube.c **** {
+  27:../Sources/cube/cube.c ****   Start,
+  28:../Sources/cube/cube.c ****   DriveToCube,
+  29:../Sources/cube/cube.c ****   DriveDistance,
+  30:../Sources/cube/cube.c ****   MeassureCube,
+  31:../Sources/cube/cube.c ****   LoadDown,
+  32:../Sources/cube/cube.c ****   ControlGyro,
+  33:../Sources/cube/cube.c ****   DriveBack,
+  34:../Sources/cube/cube.c ****   CloseSpindle,
+  35:../Sources/cube/cube.c ****   OpenSpindle,
+  36:../Sources/cube/cube.c ****   LoadUp,
+  37:../Sources/cube/cube.c ****   SendStatusOk,
+  38:../Sources/cube/cube.c ****   SendStatusFail
+  39:../Sources/cube/cube.c **** 
+  40:../Sources/cube/cube.c **** } state_t;
+  41:../Sources/cube/cube.c **** 
+  42:../Sources/cube/cube.c **** static state_t state = Start;
+  43:../Sources/cube/cube.c **** static uint8_t startPi = 0;
+  44:../Sources/cube/cube.c **** uint8_t distance = 0;
+  45:../Sources/cube/cube.c **** uint8_t distance1 = 0;
+  46:../Sources/cube/cube.c **** uint8_t accelXStart = 0;
+  47:../Sources/cube/cube.c **** uint8_t fail = 0;
+  48:../Sources/cube/cube.c **** uint16_t closeTime = 15000;
+  49:../Sources/cube/cube.c **** 
+  50:../Sources/cube/cube.c **** tSensAccel accel_data;
+  51:../Sources/cube/cube.c **** 
+  52:../Sources/cube/cube.c **** void cubeStateMachine(void)
+  53:../Sources/cube/cube.c **** {
+  83              		.loc 1 53 0
+  84              		.cfi_startproc
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 1, uses_anonymous_args = 0
+  87 0000 80B5     		push	{r7, lr}
+  88              		.cfi_def_cfa_offset 8
+  89              		.cfi_offset 7, -8
+  90              		.cfi_offset 14, -4
+  91 0002 00AF     		add	r7, sp, #0
+  92              		.cfi_def_cfa_register 7
+  54:../Sources/cube/cube.c ****   static uint16_t i, j, k;
+  55:../Sources/cube/cube.c **** 
+  56:../Sources/cube/cube.c ****   if (fail > 1)
+  93              		.loc 1 56 0
+  94 0004 AC4B     		ldr	r3, .L47
+  95 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  96 0008 012B     		cmp	r3, #1
+  97 000a 02D9     		bls	.L2
+  57:../Sources/cube/cube.c ****   {
+  58:../Sources/cube/cube.c ****     state = SendStatusFail;
+  98              		.loc 1 58 0
+  99 000c AB4B     		ldr	r3, .L47+4
+ 100 000e 0B22     		movs	r2, #11
+ 101 0010 1A70     		strb	r2, [r3]
+ 102              	.L2:
+  59:../Sources/cube/cube.c ****   }
+  60:../Sources/cube/cube.c **** 
+  61:../Sources/cube/cube.c ****   switch (state) {
+ 103              		.loc 1 61 0
+ 104 0012 AA4B     		ldr	r3, .L47+4
+ 105 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 106 0016 0B2B     		cmp	r3, #11
+ 107 0018 00F2BB81 		bhi	.L35
+ 108 001c 01A2     		adr	r2, .L5
+ 109 001e 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 110 0022 00BF     		.p2align 2
+ 111              	.L5:
+ 112 0024 55000000 		.word	.L4+1
+ 113 0028 67000000 		.word	.L6+1
+ 114 002c 9F000000 		.word	.L7+1
+ 115 0030 93030000 		.word	.L35+1
+ 116 0034 B9000000 		.word	.L8+1
+ 117 0038 0F010000 		.word	.L9+1
+ 118 003c 41030000 		.word	.L10+1
+ 119 0040 A5010000 		.word	.L11+1
+ 120 0044 37020000 		.word	.L12+1
+ 121 0048 FB010000 		.word	.L13+1
+ 122 004c 77020000 		.word	.L14+1
+ 123 0050 ED020000 		.word	.L15+1
+ 124              		.p2align 1
+ 125              	.L4:
+  62:../Sources/cube/cube.c **** 
+  63:../Sources/cube/cube.c ****   case Start:
+  64:../Sources/cube/cube.c ****     if (startPi)
+ 126              		.loc 1 64 0
+ 127 0054 9A4B     		ldr	r3, .L47+8
+ 128 0056 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 129 0058 002B     		cmp	r3, #0
+ 130 005a 00F08581 		beq	.L36
+  65:../Sources/cube/cube.c ****     {
+  66:../Sources/cube/cube.c ****       state = DriveToCube;
+ 131              		.loc 1 66 0
+ 132 005e 974B     		ldr	r3, .L47+4
+ 133 0060 0122     		movs	r2, #1
+ 134 0062 1A70     		strb	r2, [r3]
+  67:../Sources/cube/cube.c ****     }
+  68:../Sources/cube/cube.c ****   break;
+ 135              		.loc 1 68 0
+ 136 0064 80E1     		b	.L36
+ 137              	.L6:
+  69:../Sources/cube/cube.c **** 
+  70:../Sources/cube/cube.c ****   case DriveToCube:
+  71:../Sources/cube/cube.c ****     driveSetDistance(2000);
+ 138              		.loc 1 71 0
+ 139 0066 4FF4FA60 		mov	r0, #2000
+ 140 006a FFF7FEFF 		bl	driveSetDistance
+  72:../Sources/cube/cube.c ****     if (driveGetDistanceInfo() == 0)
+ 141              		.loc 1 72 0
+ 142 006e FFF7FEFF 		bl	driveGetDistanceInfo
+ 143 0072 0346     		mov	r3, r0
+ 144 0074 002B     		cmp	r3, #0
+ 145 0076 02D1     		bne	.L17
+  73:../Sources/cube/cube.c ****     {
+  74:../Sources/cube/cube.c ****       state = SendStatusFail;
+ 146              		.loc 1 74 0
+ 147 0078 904B     		ldr	r3, .L47+4
+ 148 007a 0B22     		movs	r2, #11
+ 149 007c 1A70     		strb	r2, [r3]
+ 150              	.L17:
+  75:../Sources/cube/cube.c ****     }
+  76:../Sources/cube/cube.c ****     tofRange(TOFADD1, &distance);
+ 151              		.loc 1 76 0
+ 152 007e 9149     		ldr	r1, .L47+12
+ 153 0080 2920     		movs	r0, #41
+ 154 0082 FFF7FEFF 		bl	tofRange
+  77:../Sources/cube/cube.c ****     if (distance < 80)
+ 155              		.loc 1 77 0
+ 156 0086 8F4B     		ldr	r3, .L47+12
+ 157 0088 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 158 008a 4F2B     		cmp	r3, #79
+ 159 008c 00F26E81 		bhi	.L37
+  78:../Sources/cube/cube.c ****     {
+  79:../Sources/cube/cube.c ****       driveSetDistance(194);
+ 160              		.loc 1 79 0
+ 161 0090 C220     		movs	r0, #194
+ 162 0092 FFF7FEFF 		bl	driveSetDistance
+  80:../Sources/cube/cube.c ****       state = DriveDistance;
+ 163              		.loc 1 80 0
+ 164 0096 894B     		ldr	r3, .L47+4
+ 165 0098 0222     		movs	r2, #2
+ 166 009a 1A70     		strb	r2, [r3]
+  81:../Sources/cube/cube.c ****     }
+  82:../Sources/cube/cube.c **** 
+  83:../Sources/cube/cube.c ****   break;
+ 167              		.loc 1 83 0
+ 168 009c 66E1     		b	.L37
+ 169              	.L7:
+  84:../Sources/cube/cube.c **** 
+  85:../Sources/cube/cube.c ****   case DriveDistance:
+  86:../Sources/cube/cube.c ****     if (driveGetDistanceInfo() == 0)
+ 170              		.loc 1 86 0
+ 171 009e FFF7FEFF 		bl	driveGetDistanceInfo
+ 172 00a2 0346     		mov	r3, r0
+ 173 00a4 002B     		cmp	r3, #0
+ 174 00a6 40F06381 		bne	.L38
+  87:../Sources/cube/cube.c ****     {
+  88:../Sources/cube/cube.c ****       state = LoadDown;
+ 175              		.loc 1 88 0
+ 176 00aa 844B     		ldr	r3, .L47+4
+ 177 00ac 0422     		movs	r2, #4
+ 178 00ae 1A70     		strb	r2, [r3]
+  89:../Sources/cube/cube.c ****       i = 0;
+ 179              		.loc 1 89 0
+ 180 00b0 854B     		ldr	r3, .L47+16
+ 181 00b2 0022     		movs	r2, #0
+ 182 00b4 1A80     		strh	r2, [r3]	@ movhi
+  90:../Sources/cube/cube.c ****     }
+  91:../Sources/cube/cube.c ****   break;
+ 183              		.loc 1 91 0
+ 184 00b6 5BE1     		b	.L38
+ 185              	.L8:
+  92:../Sources/cube/cube.c **** 
+  93:../Sources/cube/cube.c ****   case LoadDown:
+  94:../Sources/cube/cube.c ****     //Wait 500ms
+  95:../Sources/cube/cube.c ****     tofRange(TOFADD2, &distance);
+ 186              		.loc 1 95 0
+ 187 00b8 8249     		ldr	r1, .L47+12
+ 188 00ba 3920     		movs	r0, #57
+ 189 00bc FFF7FEFF 		bl	tofRange
+  96:../Sources/cube/cube.c **** 
+  97:../Sources/cube/cube.c ****       if (i++ == TOFS_MS(400))
+ 190              		.loc 1 97 0
+ 191 00c0 814B     		ldr	r3, .L47+16
+ 192 00c2 1B88     		ldrh	r3, [r3]
+ 193 00c4 5A1C     		adds	r2, r3, #1
+ 194 00c6 91B2     		uxth	r1, r2
+ 195 00c8 7F4A     		ldr	r2, .L47+16
+ 196 00ca 1180     		strh	r1, [r2]	@ movhi
+ 197 00cc 102B     		cmp	r3, #16
+ 198 00ce 40F05181 		bne	.L39
+  98:../Sources/cube/cube.c ****       {
+  99:../Sources/cube/cube.c ****         i = 0;
+ 199              		.loc 1 99 0
+ 200 00d2 7D4B     		ldr	r3, .L47+16
+ 201 00d4 0022     		movs	r2, #0
+ 202 00d6 1A80     		strh	r2, [r3]	@ movhi
+ 100:../Sources/cube/cube.c ****         if (distance < 100)
+ 203              		.loc 1 100 0
+ 204 00d8 7A4B     		ldr	r3, .L47+12
+ 205 00da 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 206 00dc 632B     		cmp	r3, #99
+ 207 00de 0FD8     		bhi	.L21
+ 101:../Sources/cube/cube.c ****         {
+ 102:../Sources/cube/cube.c ****           state = ControlGyro;
+ 208              		.loc 1 102 0
+ 209 00e0 764B     		ldr	r3, .L47+4
+ 210 00e2 0522     		movs	r2, #5
+ 211 00e4 1A70     		strb	r2, [r3]
+ 103:../Sources/cube/cube.c ****           //accelResetData();
+ 104:../Sources/cube/cube.c ****           k = SERVO_LOAD_MIDDLE;
+ 212              		.loc 1 104 0
+ 213 00e6 794B     		ldr	r3, .L47+20
+ 214 00e8 7822     		movs	r2, #120
+ 215 00ea 1A80     		strh	r2, [r3]	@ movhi
+ 105:../Sources/cube/cube.c ****           //accelResetData();
+ 106:../Sources/cube/cube.c ****           accelRead(&accel_data);
+ 216              		.loc 1 106 0
+ 217 00ec 7848     		ldr	r0, .L47+24
+ 218 00ee FFF7FEFF 		bl	accelRead
+ 107:../Sources/cube/cube.c ****           accelXStart = accel_data.accel_x;
+ 219              		.loc 1 107 0
+ 220 00f2 774B     		ldr	r3, .L47+24
+ 221 00f4 B3F90030 		ldrsh	r3, [r3]
+ 222 00f8 DAB2     		uxtb	r2, r3
+ 223 00fa 764B     		ldr	r3, .L47+28
+ 224 00fc 1A70     		strb	r2, [r3]
+ 108:../Sources/cube/cube.c ****         }
+ 109:../Sources/cube/cube.c ****         else
+ 110:../Sources/cube/cube.c ****         {
+ 111:../Sources/cube/cube.c ****           state = DriveBack;
+ 112:../Sources/cube/cube.c ****           driveSetDistance(-300);
+ 113:../Sources/cube/cube.c ****         }
+ 114:../Sources/cube/cube.c **** 
+ 115:../Sources/cube/cube.c **** 
+ 116:../Sources/cube/cube.c ****     }
+ 117:../Sources/cube/cube.c ****   break;
+ 225              		.loc 1 117 0
+ 226 00fe 39E1     		b	.L39
+ 227              	.L21:
+ 111:../Sources/cube/cube.c ****           driveSetDistance(-300);
+ 228              		.loc 1 111 0
+ 229 0100 6E4B     		ldr	r3, .L47+4
+ 230 0102 0622     		movs	r2, #6
+ 231 0104 1A70     		strb	r2, [r3]
+ 112:../Sources/cube/cube.c ****         }
+ 232              		.loc 1 112 0
+ 233 0106 7448     		ldr	r0, .L47+32
+ 234 0108 FFF7FEFF 		bl	driveSetDistance
+ 235              		.loc 1 117 0
+ 236 010c 32E1     		b	.L39
+ 237              	.L9:
+ 118:../Sources/cube/cube.c **** 
+ 119:../Sources/cube/cube.c **** 
+ 120:../Sources/cube/cube.c **** 
+ 121:../Sources/cube/cube.c ****   case ControlGyro:
+ 122:../Sources/cube/cube.c **** 
+ 123:../Sources/cube/cube.c ****     servoSet(k);
+ 238              		.loc 1 123 0
+ 239 010e 6F4B     		ldr	r3, .L47+20
+ 240 0110 1B88     		ldrh	r3, [r3]
+ 241 0112 1BB2     		sxth	r3, r3
+ 242 0114 1846     		mov	r0, r3
+ 243 0116 FFF7FEFF 		bl	servoSet
+ 124:../Sources/cube/cube.c ****     if (j++ == TOFS_MS(500))
+ 244              		.loc 1 124 0
+ 245 011a 704B     		ldr	r3, .L47+36
+ 246 011c 1B88     		ldrh	r3, [r3]
+ 247 011e 5A1C     		adds	r2, r3, #1
+ 248 0120 91B2     		uxth	r1, r2
+ 249 0122 6E4A     		ldr	r2, .L47+36
+ 250 0124 1180     		strh	r1, [r2]	@ movhi
+ 251 0126 142B     		cmp	r3, #20
+ 252 0128 40F02681 		bne	.L40
+ 125:../Sources/cube/cube.c ****     {
+ 126:../Sources/cube/cube.c ****       j = 0;
+ 253              		.loc 1 126 0
+ 254 012c 6B4B     		ldr	r3, .L47+36
+ 255 012e 0022     		movs	r2, #0
+ 256 0130 1A80     		strh	r2, [r3]	@ movhi
+ 127:../Sources/cube/cube.c **** 
+ 128:../Sources/cube/cube.c ****       accelRead(&accel_data);
+ 257              		.loc 1 128 0
+ 258 0132 6748     		ldr	r0, .L47+24
+ 259 0134 FFF7FEFF 		bl	accelRead
+ 129:../Sources/cube/cube.c ****       if ((accel_data.accel_x - accelXStart) > 40)
+ 260              		.loc 1 129 0
+ 261 0138 654B     		ldr	r3, .L47+24
+ 262 013a B3F90030 		ldrsh	r3, [r3]
+ 263 013e 1A46     		mov	r2, r3
+ 264 0140 644B     		ldr	r3, .L47+28
+ 265 0142 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 266 0144 D31A     		subs	r3, r2, r3
+ 267 0146 282B     		cmp	r3, #40
+ 268 0148 0FDD     		ble	.L23
+ 130:../Sources/cube/cube.c ****       {
+ 131:../Sources/cube/cube.c ****         fail++;
+ 269              		.loc 1 131 0
+ 270 014a 5B4B     		ldr	r3, .L47
+ 271 014c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 272 014e 0133     		adds	r3, r3, #1
+ 273 0150 DAB2     		uxtb	r2, r3
+ 274 0152 594B     		ldr	r3, .L47
+ 275 0154 1A70     		strb	r2, [r3]
+ 132:../Sources/cube/cube.c ****         state = DriveBack;
+ 276              		.loc 1 132 0
+ 277 0156 594B     		ldr	r3, .L47+4
+ 278 0158 0622     		movs	r2, #6
+ 279 015a 1A70     		strb	r2, [r3]
+ 133:../Sources/cube/cube.c ****         servoSet(SERVO_LOAD_UP);
+ 280              		.loc 1 133 0
+ 281 015c B420     		movs	r0, #180
+ 282 015e FFF7FEFF 		bl	servoSet
+ 134:../Sources/cube/cube.c ****         driveSetDistance(-300);
+ 283              		.loc 1 134 0
+ 284 0162 5D48     		ldr	r0, .L47+32
+ 285 0164 FFF7FEFF 		bl	driveSetDistance
+ 135:../Sources/cube/cube.c ****         break;
+ 286              		.loc 1 135 0
+ 287 0168 13E1     		b	.L3
+ 288              	.L23:
+ 136:../Sources/cube/cube.c ****       }
+ 137:../Sources/cube/cube.c ****       else if (k == SERVO_LOAD_DOWN)
+ 289              		.loc 1 137 0
+ 290 016a 584B     		ldr	r3, .L47+20
+ 291 016c 1B88     		ldrh	r3, [r3]
+ 292 016e 502B     		cmp	r3, #80
+ 293 0170 09D1     		bne	.L24
+ 138:../Sources/cube/cube.c ****       {
+ 139:../Sources/cube/cube.c ****         servoSet(SERVO_LOAD_DOWN);
+ 294              		.loc 1 139 0
+ 295 0172 5020     		movs	r0, #80
+ 296 0174 FFF7FEFF 		bl	servoSet
+ 140:../Sources/cube/cube.c ****         i = 0;
+ 297              		.loc 1 140 0
+ 298 0178 534B     		ldr	r3, .L47+16
+ 299 017a 0022     		movs	r2, #0
+ 300 017c 1A80     		strh	r2, [r3]	@ movhi
+ 141:../Sources/cube/cube.c ****         state = CloseSpindle;
+ 301              		.loc 1 141 0
+ 302 017e 4F4B     		ldr	r3, .L47+4
+ 303 0180 0722     		movs	r2, #7
+ 304 0182 1A70     		strb	r2, [r3]
+ 142:../Sources/cube/cube.c ****         break;
+ 305              		.loc 1 142 0
+ 306 0184 05E1     		b	.L3
+ 307              	.L24:
+ 143:../Sources/cube/cube.c ****       }
+ 144:../Sources/cube/cube.c ****       k -= 10;
+ 308              		.loc 1 144 0
+ 309 0186 514B     		ldr	r3, .L47+20
+ 310 0188 1B88     		ldrh	r3, [r3]
+ 311 018a 0A3B     		subs	r3, r3, #10
+ 312 018c 9AB2     		uxth	r2, r3
+ 313 018e 4F4B     		ldr	r3, .L47+20
+ 314 0190 1A80     		strh	r2, [r3]	@ movhi
+ 145:../Sources/cube/cube.c ****       if (k <= SERVO_LOAD_DOWN)
+ 315              		.loc 1 145 0
+ 316 0192 4E4B     		ldr	r3, .L47+20
+ 317 0194 1B88     		ldrh	r3, [r3]
+ 318 0196 502B     		cmp	r3, #80
+ 319 0198 00F2EE80 		bhi	.L40
+ 146:../Sources/cube/cube.c ****       {
+ 147:../Sources/cube/cube.c ****         k = SERVO_LOAD_DOWN;
+ 320              		.loc 1 147 0
+ 321 019c 4B4B     		ldr	r3, .L47+20
+ 322 019e 5022     		movs	r2, #80
+ 323 01a0 1A80     		strh	r2, [r3]	@ movhi
+ 148:../Sources/cube/cube.c ****       }
+ 149:../Sources/cube/cube.c **** 
+ 150:../Sources/cube/cube.c ****     }
+ 151:../Sources/cube/cube.c **** 
+ 152:../Sources/cube/cube.c ****   break;
+ 324              		.loc 1 152 0
+ 325 01a2 E9E0     		b	.L40
+ 326              	.L11:
+ 153:../Sources/cube/cube.c **** 
+ 154:../Sources/cube/cube.c ****   case CloseSpindle:
+ 155:../Sources/cube/cube.c ****     spindleSet(50);
+ 327              		.loc 1 155 0
+ 328 01a4 3220     		movs	r0, #50
+ 329 01a6 FFF7FEFF 		bl	spindleSet
+ 156:../Sources/cube/cube.c ****     if (switchStateClose())
+ 330              		.loc 1 156 0
+ 331 01aa FFF7FEFF 		bl	switchStateClose
+ 332 01ae 0346     		mov	r3, r0
+ 333 01b0 002B     		cmp	r3, #0
+ 334 01b2 08D0     		beq	.L25
+ 157:../Sources/cube/cube.c ****     {
+ 158:../Sources/cube/cube.c ****       j = 0;
+ 335              		.loc 1 158 0
+ 336 01b4 494B     		ldr	r3, .L47+36
+ 337 01b6 0022     		movs	r2, #0
+ 338 01b8 1A80     		strh	r2, [r3]	@ movhi
+ 159:../Sources/cube/cube.c ****       spindleSet(0);
+ 339              		.loc 1 159 0
+ 340 01ba 0020     		movs	r0, #0
+ 341 01bc FFF7FEFF 		bl	spindleSet
+ 160:../Sources/cube/cube.c ****       state = LoadUp;
+ 342              		.loc 1 160 0
+ 343 01c0 3E4B     		ldr	r3, .L47+4
+ 344 01c2 0922     		movs	r2, #9
+ 345 01c4 1A70     		strb	r2, [r3]
+ 346              	.L25:
+ 161:../Sources/cube/cube.c ****     }
+ 162:../Sources/cube/cube.c **** 
+ 163:../Sources/cube/cube.c ****     if (j++ == TOFS_MS(closeTime))
+ 347              		.loc 1 163 0
+ 348 01c6 454B     		ldr	r3, .L47+36
+ 349 01c8 1B88     		ldrh	r3, [r3]
+ 350 01ca 5A1C     		adds	r2, r3, #1
+ 351 01cc 91B2     		uxth	r1, r2
+ 352 01ce 434A     		ldr	r2, .L47+36
+ 353 01d0 1180     		strh	r1, [r2]	@ movhi
+ 354 01d2 434A     		ldr	r2, .L47+40
+ 355 01d4 1288     		ldrh	r2, [r2]
+ 356 01d6 4349     		ldr	r1, .L47+44
+ 357 01d8 A1FB0212 		umull	r1, r2, r1, r2
+ 358 01dc D208     		lsrs	r2, r2, #3
+ 359 01de 92B2     		uxth	r2, r2
+ 360 01e0 9342     		cmp	r3, r2
+ 361 01e2 40F0CB80 		bne	.L41
+ 164:../Sources/cube/cube.c ****     {
+ 165:../Sources/cube/cube.c ****       j = 0;
+ 362              		.loc 1 165 0
+ 363 01e6 3D4B     		ldr	r3, .L47+36
+ 364 01e8 0022     		movs	r2, #0
+ 365 01ea 1A80     		strh	r2, [r3]	@ movhi
+ 166:../Sources/cube/cube.c ****       spindleSet(0);
+ 366              		.loc 1 166 0
+ 367 01ec 0020     		movs	r0, #0
+ 368 01ee FFF7FEFF 		bl	spindleSet
+ 167:../Sources/cube/cube.c ****       state = SendStatusFail;
+ 369              		.loc 1 167 0
+ 370 01f2 324B     		ldr	r3, .L47+4
+ 371 01f4 0B22     		movs	r2, #11
+ 372 01f6 1A70     		strb	r2, [r3]
+ 168:../Sources/cube/cube.c ****     }
+ 169:../Sources/cube/cube.c ****   break;
+ 373              		.loc 1 169 0
+ 374 01f8 C0E0     		b	.L41
+ 375              	.L13:
+ 170:../Sources/cube/cube.c **** 
+ 171:../Sources/cube/cube.c ****   case LoadUp:
+ 172:../Sources/cube/cube.c **** 
+ 173:../Sources/cube/cube.c ****     //Wait 500ms
+ 174:../Sources/cube/cube.c **** 
+ 175:../Sources/cube/cube.c ****     if (j++ == TOFS_MS(500))
+ 376              		.loc 1 175 0
+ 377 01fa 384B     		ldr	r3, .L47+36
+ 378 01fc 1B88     		ldrh	r3, [r3]
+ 379 01fe 5A1C     		adds	r2, r3, #1
+ 380 0200 91B2     		uxth	r1, r2
+ 381 0202 364A     		ldr	r2, .L47+36
+ 382 0204 1180     		strh	r1, [r2]	@ movhi
+ 383 0206 142B     		cmp	r3, #20
+ 384 0208 40F0BA80 		bne	.L42
+ 176:../Sources/cube/cube.c ****     {
+ 177:../Sources/cube/cube.c ****       j = 0;
+ 385              		.loc 1 177 0
+ 386 020c 334B     		ldr	r3, .L47+36
+ 387 020e 0022     		movs	r2, #0
+ 388 0210 1A80     		strh	r2, [r3]	@ movhi
+ 178:../Sources/cube/cube.c **** 
+ 179:../Sources/cube/cube.c ****       if (distance > 70)
+ 389              		.loc 1 179 0
+ 390 0212 2C4B     		ldr	r3, .L47+12
+ 391 0214 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 392 0216 462B     		cmp	r3, #70
+ 393 0218 06D9     		bls	.L28
+ 180:../Sources/cube/cube.c ****       {
+ 181:../Sources/cube/cube.c ****         servoSet(SERVO_LOAD_MIDDLE);
+ 394              		.loc 1 181 0
+ 395 021a 7820     		movs	r0, #120
+ 396 021c FFF7FEFF 		bl	servoSet
+ 182:../Sources/cube/cube.c ****         state = OpenSpindle;
+ 397              		.loc 1 182 0
+ 398 0220 264B     		ldr	r3, .L47+4
+ 399 0222 0822     		movs	r2, #8
+ 400 0224 1A70     		strb	r2, [r3]
+ 183:../Sources/cube/cube.c ****       }
+ 184:../Sources/cube/cube.c ****       else
+ 185:../Sources/cube/cube.c ****       {
+ 186:../Sources/cube/cube.c ****         servoSet(SERVO_LOAD_UP);
+ 187:../Sources/cube/cube.c ****         state = SendStatusOk;
+ 188:../Sources/cube/cube.c ****       }
+ 189:../Sources/cube/cube.c ****     }
+ 190:../Sources/cube/cube.c ****   break;
+ 401              		.loc 1 190 0
+ 402 0226 ABE0     		b	.L42
+ 403              	.L28:
+ 186:../Sources/cube/cube.c ****         state = SendStatusOk;
+ 404              		.loc 1 186 0
+ 405 0228 B420     		movs	r0, #180
+ 406 022a FFF7FEFF 		bl	servoSet
+ 187:../Sources/cube/cube.c ****       }
+ 407              		.loc 1 187 0
+ 408 022e 234B     		ldr	r3, .L47+4
+ 409 0230 0A22     		movs	r2, #10
+ 410 0232 1A70     		strb	r2, [r3]
+ 411              		.loc 1 190 0
+ 412 0234 A4E0     		b	.L42
+ 413              	.L12:
+ 191:../Sources/cube/cube.c **** 
+ 192:../Sources/cube/cube.c ****   case OpenSpindle:
+ 193:../Sources/cube/cube.c ****     spindleSet(-50);
+ 414              		.loc 1 193 0
+ 415 0236 6FF03100 		mvn	r0, #49
+ 416 023a FFF7FEFF 		bl	spindleSet
+ 194:../Sources/cube/cube.c ****     if (i++ == TOFS_MS(3600)||switchStateOpen())
+ 417              		.loc 1 194 0
+ 418 023e 224B     		ldr	r3, .L47+16
+ 419 0240 1B88     		ldrh	r3, [r3]
+ 420 0242 5A1C     		adds	r2, r3, #1
+ 421 0244 91B2     		uxth	r1, r2
+ 422 0246 204A     		ldr	r2, .L47+16
+ 423 0248 1180     		strh	r1, [r2]	@ movhi
+ 424 024a 902B     		cmp	r3, #144
+ 425 024c 05D0     		beq	.L29
+ 426              		.loc 1 194 0 is_stmt 0 discriminator 1
+ 427 024e FFF7FEFF 		bl	switchStateOpen
+ 428 0252 0346     		mov	r3, r0
+ 429 0254 002B     		cmp	r3, #0
+ 430 0256 00F09580 		beq	.L43
+ 431              	.L29:
+ 195:../Sources/cube/cube.c ****     {
+ 196:../Sources/cube/cube.c ****       i = 0;
+ 432              		.loc 1 196 0 is_stmt 1
+ 433 025a 1B4B     		ldr	r3, .L47+16
+ 434 025c 0022     		movs	r2, #0
+ 435 025e 1A80     		strh	r2, [r3]	@ movhi
+ 197:../Sources/cube/cube.c ****       spindleSet(0);
+ 436              		.loc 1 197 0
+ 437 0260 0020     		movs	r0, #0
+ 438 0262 FFF7FEFF 		bl	spindleSet
+ 198:../Sources/cube/cube.c ****       closeTime= 4500;
+ 439              		.loc 1 198 0
+ 440 0266 1E4B     		ldr	r3, .L47+40
+ 441 0268 41F29412 		movw	r2, #4500
+ 442 026c 1A80     		strh	r2, [r3]	@ movhi
+ 199:../Sources/cube/cube.c ****       state = LoadDown;
+ 443              		.loc 1 199 0
+ 444 026e 134B     		ldr	r3, .L47+4
+ 445 0270 0422     		movs	r2, #4
+ 446 0272 1A70     		strb	r2, [r3]
+ 200:../Sources/cube/cube.c ****     }
+ 201:../Sources/cube/cube.c ****   break;
+ 447              		.loc 1 201 0
+ 448 0274 86E0     		b	.L43
+ 449              	.L14:
+ 202:../Sources/cube/cube.c **** 
+ 203:../Sources/cube/cube.c ****   case SendStatusOk:
+ 204:../Sources/cube/cube.c ****     tofRange(TOFADD2, &distance);
+ 450              		.loc 1 204 0
+ 451 0276 1349     		ldr	r1, .L47+12
+ 452 0278 3920     		movs	r0, #57
+ 453 027a FFF7FEFF 		bl	tofRange
+ 205:../Sources/cube/cube.c ****     if (j++ == TOFS_MS(1000))
+ 454              		.loc 1 205 0
+ 455 027e 174B     		ldr	r3, .L47+36
+ 456 0280 1B88     		ldrh	r3, [r3]
+ 457 0282 5A1C     		adds	r2, r3, #1
+ 458 0284 91B2     		uxth	r1, r2
+ 459 0286 154A     		ldr	r2, .L47+36
+ 460 0288 1180     		strh	r1, [r2]	@ movhi
+ 461 028a 282B     		cmp	r3, #40
+ 462 028c 7CD1     		bne	.L44
+ 206:../Sources/cube/cube.c ****     {
+ 207:../Sources/cube/cube.c ****       j = 0;
+ 463              		.loc 1 207 0
+ 464 028e 134B     		ldr	r3, .L47+36
+ 465 0290 0022     		movs	r2, #0
+ 466 0292 1A80     		strh	r2, [r3]	@ movhi
+ 208:../Sources/cube/cube.c ****       if (distance > 30)
+ 467              		.loc 1 208 0
+ 468 0294 0B4B     		ldr	r3, .L47+12
+ 469 0296 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 470 0298 1E2B     		cmp	r3, #30
+ 471 029a 03D9     		bls	.L32
+ 209:../Sources/cube/cube.c ****       {
+ 210:../Sources/cube/cube.c ****         state = LoadDown;
+ 472              		.loc 1 210 0
+ 473 029c 074B     		ldr	r3, .L47+4
+ 474 029e 0422     		movs	r2, #4
+ 475 02a0 1A70     		strb	r2, [r3]
+ 211:../Sources/cube/cube.c ****       }
+ 212:../Sources/cube/cube.c ****       else
+ 213:../Sources/cube/cube.c ****       {
+ 214:../Sources/cube/cube.c ****         termWriteLine("cube:on");
+ 215:../Sources/cube/cube.c ****         //servoOff(); //--> Optional, falls FTM0 anders noch gebraucht wird
+ 216:../Sources/cube/cube.c ****         startPi = 0;
+ 217:../Sources/cube/cube.c ****         state = Start;
+ 218:../Sources/cube/cube.c ****       }
+ 219:../Sources/cube/cube.c **** 
+ 220:../Sources/cube/cube.c ****     }
+ 221:../Sources/cube/cube.c ****   break;
+ 476              		.loc 1 221 0
+ 477 02a2 71E0     		b	.L44
+ 478              	.L32:
+ 214:../Sources/cube/cube.c ****         //servoOff(); //--> Optional, falls FTM0 anders noch gebraucht wird
+ 479              		.loc 1 214 0
+ 480 02a4 1048     		ldr	r0, .L47+48
+ 481 02a6 FFF7FEFF 		bl	termWriteLine
+ 216:../Sources/cube/cube.c ****         state = Start;
+ 482              		.loc 1 216 0
+ 483 02aa 054B     		ldr	r3, .L47+8
+ 484 02ac 0022     		movs	r2, #0
+ 485 02ae 1A70     		strb	r2, [r3]
+ 217:../Sources/cube/cube.c ****       }
+ 486              		.loc 1 217 0
+ 487 02b0 024B     		ldr	r3, .L47+4
+ 488 02b2 0022     		movs	r2, #0
+ 489 02b4 1A70     		strb	r2, [r3]
+ 490              		.loc 1 221 0
+ 491 02b6 67E0     		b	.L44
+ 492              	.L48:
+ 493              		.align	2
+ 494              	.L47:
+ 495 02b8 00000000 		.word	fail
+ 496 02bc 00000000 		.word	state
+ 497 02c0 00000000 		.word	startPi
+ 498 02c4 00000000 		.word	distance
+ 499 02c8 00000000 		.word	i.7180
+ 500 02cc 00000000 		.word	k.7182
+ 501 02d0 00000000 		.word	accel_data
+ 502 02d4 00000000 		.word	accelXStart
+ 503 02d8 D4FEFFFF 		.word	-300
+ 504 02dc 00000000 		.word	j.7181
+ 505 02e0 00000000 		.word	closeTime
+ 506 02e4 1F85EB51 		.word	1374389535
+ 507 02e8 00000000 		.word	.LC0
+ 508              	.L15:
+ 222:../Sources/cube/cube.c **** 
+ 223:../Sources/cube/cube.c ****   case SendStatusFail:
+ 224:../Sources/cube/cube.c **** 
+ 225:../Sources/cube/cube.c ****     if (j++ == TOFS_MS(500))
+ 509              		.loc 1 225 0
+ 510 02ec 2A4B     		ldr	r3, .L49
+ 511 02ee 1B88     		ldrh	r3, [r3]
+ 512 02f0 5A1C     		adds	r2, r3, #1
+ 513 02f2 91B2     		uxth	r1, r2
+ 514 02f4 284A     		ldr	r2, .L49
+ 515 02f6 1180     		strh	r1, [r2]	@ movhi
+ 516 02f8 142B     		cmp	r3, #20
+ 517 02fa 47D1     		bne	.L45
+ 226:../Sources/cube/cube.c ****     {
+ 227:../Sources/cube/cube.c ****       j = 0;
+ 518              		.loc 1 227 0
+ 519 02fc 264B     		ldr	r3, .L49
+ 520 02fe 0022     		movs	r2, #0
+ 521 0300 1A80     		strh	r2, [r3]	@ movhi
+ 228:../Sources/cube/cube.c **** 
+ 229:../Sources/cube/cube.c ****       spindleSet(-50);
+ 522              		.loc 1 229 0
+ 523 0302 6FF03100 		mvn	r0, #49
+ 524 0306 FFF7FEFF 		bl	spindleSet
+ 230:../Sources/cube/cube.c **** 
+ 231:../Sources/cube/cube.c ****       if (i++ == 8)
+ 525              		.loc 1 231 0
+ 526 030a 244B     		ldr	r3, .L49+4
+ 527 030c 1B88     		ldrh	r3, [r3]
+ 528 030e 5A1C     		adds	r2, r3, #1
+ 529 0310 91B2     		uxth	r1, r2
+ 530 0312 224A     		ldr	r2, .L49+4
+ 531 0314 1180     		strh	r1, [r2]	@ movhi
+ 532 0316 082B     		cmp	r3, #8
+ 533 0318 38D1     		bne	.L45
+ 232:../Sources/cube/cube.c ****       {
+ 233:../Sources/cube/cube.c ****         i = 0;
+ 534              		.loc 1 233 0
+ 535 031a 204B     		ldr	r3, .L49+4
+ 536 031c 0022     		movs	r2, #0
+ 537 031e 1A80     		strh	r2, [r3]	@ movhi
+ 234:../Sources/cube/cube.c ****         servoSet(SERVO_LOAD_UP);
+ 538              		.loc 1 234 0
+ 539 0320 B420     		movs	r0, #180
+ 540 0322 FFF7FEFF 		bl	servoSet
+ 235:../Sources/cube/cube.c ****         spindleSet(0);
+ 541              		.loc 1 235 0
+ 542 0326 0020     		movs	r0, #0
+ 543 0328 FFF7FEFF 		bl	spindleSet
+ 236:../Sources/cube/cube.c ****         termWriteLine("cube:fail");
+ 544              		.loc 1 236 0
+ 545 032c 1C48     		ldr	r0, .L49+8
+ 546 032e FFF7FEFF 		bl	termWriteLine
+ 237:../Sources/cube/cube.c **** 
+ 238:../Sources/cube/cube.c ****         startPi = 0;
+ 547              		.loc 1 238 0
+ 548 0332 1C4B     		ldr	r3, .L49+12
+ 549 0334 0022     		movs	r2, #0
+ 550 0336 1A70     		strb	r2, [r3]
+ 239:../Sources/cube/cube.c ****         state = Start;
+ 551              		.loc 1 239 0
+ 552 0338 1B4B     		ldr	r3, .L49+16
+ 553 033a 0022     		movs	r2, #0
+ 554 033c 1A70     		strb	r2, [r3]
+ 240:../Sources/cube/cube.c ****       }
+ 241:../Sources/cube/cube.c ****     }
+ 242:../Sources/cube/cube.c ****   break;
+ 555              		.loc 1 242 0
+ 556 033e 25E0     		b	.L45
+ 557              	.L10:
+ 243:../Sources/cube/cube.c **** 
+ 244:../Sources/cube/cube.c ****   case DriveBack:
+ 245:../Sources/cube/cube.c **** 
+ 246:../Sources/cube/cube.c **** 
+ 247:../Sources/cube/cube.c ****     if (driveGetDistanceInfo() == 0)
+ 558              		.loc 1 247 0
+ 559 0340 FFF7FEFF 		bl	driveGetDistanceInfo
+ 560 0344 0346     		mov	r3, r0
+ 561 0346 002B     		cmp	r3, #0
+ 562 0348 22D1     		bne	.L46
+ 248:../Sources/cube/cube.c ****     {
+ 249:../Sources/cube/cube.c ****       if (i++ == TOFS_MS(500))
+ 563              		.loc 1 249 0
+ 564 034a 144B     		ldr	r3, .L49+4
+ 565 034c 1B88     		ldrh	r3, [r3]
+ 566 034e 5A1C     		adds	r2, r3, #1
+ 567 0350 91B2     		uxth	r1, r2
+ 568 0352 124A     		ldr	r2, .L49+4
+ 569 0354 1180     		strh	r1, [r2]	@ movhi
+ 570 0356 142B     		cmp	r3, #20
+ 571 0358 1AD1     		bne	.L46
+ 250:../Sources/cube/cube.c ****       {
+ 251:../Sources/cube/cube.c ****         i = 0;
+ 572              		.loc 1 251 0
+ 573 035a 104B     		ldr	r3, .L49+4
+ 574 035c 0022     		movs	r2, #0
+ 575 035e 1A80     		strh	r2, [r3]	@ movhi
+ 252:../Sources/cube/cube.c ****         state = DriveToCube;
+ 576              		.loc 1 252 0
+ 577 0360 114B     		ldr	r3, .L49+16
+ 578 0362 0122     		movs	r2, #1
+ 579 0364 1A70     		strb	r2, [r3]
+ 253:../Sources/cube/cube.c ****       }
+ 254:../Sources/cube/cube.c ****     }
+ 255:../Sources/cube/cube.c **** 
+ 256:../Sources/cube/cube.c ****   break;
+ 580              		.loc 1 256 0
+ 581 0366 13E0     		b	.L46
+ 582              	.L36:
+  68:../Sources/cube/cube.c **** 
+ 583              		.loc 1 68 0
+ 584 0368 00BF     		nop
+ 585 036a 12E0     		b	.L35
+ 586              	.L37:
+  83:../Sources/cube/cube.c **** 
+ 587              		.loc 1 83 0
+ 588 036c 00BF     		nop
+ 589 036e 10E0     		b	.L35
+ 590              	.L38:
+  91:../Sources/cube/cube.c **** 
+ 591              		.loc 1 91 0
+ 592 0370 00BF     		nop
+ 593 0372 0EE0     		b	.L35
+ 594              	.L39:
+ 117:../Sources/cube/cube.c **** 
+ 595              		.loc 1 117 0
+ 596 0374 00BF     		nop
+ 597 0376 0CE0     		b	.L35
+ 598              	.L40:
+ 152:../Sources/cube/cube.c **** 
+ 599              		.loc 1 152 0
+ 600 0378 00BF     		nop
+ 601 037a 0AE0     		b	.L35
+ 602              	.L41:
+ 169:../Sources/cube/cube.c **** 
+ 603              		.loc 1 169 0
+ 604 037c 00BF     		nop
+ 605 037e 08E0     		b	.L35
+ 606              	.L42:
+ 190:../Sources/cube/cube.c **** 
+ 607              		.loc 1 190 0
+ 608 0380 00BF     		nop
+ 609 0382 06E0     		b	.L35
+ 610              	.L43:
+ 201:../Sources/cube/cube.c **** 
+ 611              		.loc 1 201 0
+ 612 0384 00BF     		nop
+ 613 0386 04E0     		b	.L35
+ 614              	.L44:
+ 221:../Sources/cube/cube.c **** 
+ 615              		.loc 1 221 0
+ 616 0388 00BF     		nop
+ 617 038a 02E0     		b	.L35
+ 618              	.L45:
+ 242:../Sources/cube/cube.c **** 
+ 619              		.loc 1 242 0
+ 620 038c 00BF     		nop
+ 621 038e 00E0     		b	.L35
+ 622              	.L46:
+ 623              		.loc 1 256 0
+ 624 0390 00BF     		nop
+ 625              	.L3:
+ 626              	.L35:
+ 257:../Sources/cube/cube.c ****   }
+ 258:../Sources/cube/cube.c **** }
+ 627              		.loc 1 258 0
+ 628 0392 00BF     		nop
+ 629 0394 80BD     		pop	{r7, pc}
+ 630              	.L50:
+ 631 0396 00BF     		.align	2
+ 632              	.L49:
+ 633 0398 00000000 		.word	j.7181
+ 634 039c 00000000 		.word	i.7180
+ 635 03a0 08000000 		.word	.LC1
+ 636 03a4 00000000 		.word	startPi
+ 637 03a8 00000000 		.word	state
+ 638              		.cfi_endproc
+ 639              	.LFE125:
+ 641              		.section	.rodata
+ 642 0012 0000     		.align	2
+ 643              	.LC2:
+ 644 0014 68656C70 		.ascii	"help\000"
+ 644      00
+ 645 0019 000000   		.align	2
+ 646              	.LC3:
+ 647 001c 6D6F746F 		.ascii	"motor (motor) commands:\000"
+ 647      7220286D 
+ 647      6F746F72 
+ 647      2920636F 
+ 647      6D6D616E 
+ 648              		.align	2
+ 649              	.LC4:
+ 650 0034 20206865 		.ascii	"  help\000"
+ 650      6C7000
+ 651 003b 00       		.align	2
+ 652              	.LC5:
+ 653 003c 20207365 		.ascii	"  set [-100..120]\000"
+ 653      74205B2D 
+ 653      3130302E 
+ 653      2E313230 
+ 653      5D00
+ 654 004e 0000     		.align	2
+ 655              	.LC6:
+ 656 0050 20207374 		.ascii	"  status\000"
+ 656      61747573 
+ 656      00
+ 657 0059 000000   		.align	2
+ 658              	.LC7:
+ 659 005c 73746172 		.ascii	"start\000"
+ 659      7400
+ 660 0062 0000     		.align	2
+ 661              	.LC8:
+ 662 0064 6B7000   		.ascii	"kp\000"
+ 663 0067 00       		.align	2
+ 664              	.LC9:
+ 665 0068 73657400 		.ascii	"set\000"
+ 666              		.section	.text.cubeParseCommand,"ax",%progbits
+ 667              		.align	1
+ 668              		.global	cubeParseCommand
+ 669              		.syntax unified
+ 670              		.thumb
+ 671              		.thumb_func
+ 672              		.fpu fpv4-sp-d16
+ 674              	cubeParseCommand:
+ 675              	.LFB126:
+ 259:../Sources/cube/cube.c **** 
+ 260:../Sources/cube/cube.c **** tError cubeParseCommand(const unsigned char *cmd)
+ 261:../Sources/cube/cube.c **** {
+ 676              		.loc 1 261 0
+ 677              		.cfi_startproc
+ 678              		@ args = 0, pretend = 0, frame = 16
+ 679              		@ frame_needed = 1, uses_anonymous_args = 0
+ 680 0000 80B5     		push	{r7, lr}
+ 681              		.cfi_def_cfa_offset 8
+ 682              		.cfi_offset 7, -8
+ 683              		.cfi_offset 14, -4
+ 684 0002 84B0     		sub	sp, sp, #16
+ 685              		.cfi_def_cfa_offset 24
+ 686 0004 00AF     		add	r7, sp, #0
+ 687              		.cfi_def_cfa_register 7
+ 688 0006 7860     		str	r0, [r7, #4]
+ 262:../Sources/cube/cube.c ****   tError result = EC_INVALID_ARG;
+ 689              		.loc 1 262 0
+ 690 0008 0323     		movs	r3, #3
+ 691 000a FB73     		strb	r3, [r7, #15]
+ 263:../Sources/cube/cube.c ****   if (strcmp(cmd, "help") == 0)
+ 692              		.loc 1 263 0
+ 693 000c 7B68     		ldr	r3, [r7, #4]
+ 694 000e 2E49     		ldr	r1, .L59
+ 695 0010 1846     		mov	r0, r3
+ 696 0012 FFF7FEFF 		bl	strcmp
+ 697 0016 0346     		mov	r3, r0
+ 698 0018 002B     		cmp	r3, #0
+ 699 001a 0ED1     		bne	.L52
+ 264:../Sources/cube/cube.c ****   {
+ 265:../Sources/cube/cube.c ****     termWriteLine("motor (motor) commands:");
+ 700              		.loc 1 265 0
+ 701 001c 2B48     		ldr	r0, .L59+4
+ 702 001e FFF7FEFF 		bl	termWriteLine
+ 266:../Sources/cube/cube.c ****     termWriteLine("  help");
+ 703              		.loc 1 266 0
+ 704 0022 2B48     		ldr	r0, .L59+8
+ 705 0024 FFF7FEFF 		bl	termWriteLine
+ 267:../Sources/cube/cube.c ****     termWriteLine("  set [-100..120]");
+ 706              		.loc 1 267 0
+ 707 0028 2A48     		ldr	r0, .L59+12
+ 708 002a FFF7FEFF 		bl	termWriteLine
+ 268:../Sources/cube/cube.c ****     termWriteLine("  status");
+ 709              		.loc 1 268 0
+ 710 002e 2A48     		ldr	r0, .L59+16
+ 711 0030 FFF7FEFF 		bl	termWriteLine
+ 269:../Sources/cube/cube.c ****     result = EC_SUCCESS;
+ 712              		.loc 1 269 0
+ 713 0034 0023     		movs	r3, #0
+ 714 0036 FB73     		strb	r3, [r7, #15]
+ 715 0038 41E0     		b	.L53
+ 716              	.L52:
+ 270:../Sources/cube/cube.c ****   }
+ 271:../Sources/cube/cube.c ****   else if (strcmp(cmd, "start") == 0)
+ 717              		.loc 1 271 0
+ 718 003a 7B68     		ldr	r3, [r7, #4]
+ 719 003c 2749     		ldr	r1, .L59+20
+ 720 003e 1846     		mov	r0, r3
+ 721 0040 FFF7FEFF 		bl	strcmp
+ 722 0044 0346     		mov	r3, r0
+ 723 0046 002B     		cmp	r3, #0
+ 724 0048 05D1     		bne	.L54
+ 272:../Sources/cube/cube.c ****   {
+ 273:../Sources/cube/cube.c ****     startPi = 1;
+ 725              		.loc 1 273 0
+ 726 004a 254B     		ldr	r3, .L59+24
+ 727 004c 0122     		movs	r2, #1
+ 728 004e 1A70     		strb	r2, [r3]
+ 274:../Sources/cube/cube.c ****     result = EC_SUCCESS;
+ 729              		.loc 1 274 0
+ 730 0050 0023     		movs	r3, #0
+ 731 0052 FB73     		strb	r3, [r7, #15]
+ 732 0054 33E0     		b	.L53
+ 733              	.L54:
+ 275:../Sources/cube/cube.c ****   }
+ 276:../Sources/cube/cube.c **** 
+ 277:../Sources/cube/cube.c ****   else if (strncmp(cmd, "kp", sizeof("kp") - 1) == 0)
+ 734              		.loc 1 277 0
+ 735 0056 7B68     		ldr	r3, [r7, #4]
+ 736 0058 0222     		movs	r2, #2
+ 737 005a 2249     		ldr	r1, .L59+28
+ 738 005c 1846     		mov	r0, r3
+ 739 005e FFF7FEFF 		bl	strncmp
+ 740 0062 0346     		mov	r3, r0
+ 741 0064 002B     		cmp	r3, #0
+ 742 0066 10D1     		bne	.L55
+ 743              	.LBB2:
+ 278:../Sources/cube/cube.c ****   {
+ 279:../Sources/cube/cube.c ****     cmd += sizeof("kp");
+ 744              		.loc 1 279 0
+ 745 0068 7B68     		ldr	r3, [r7, #4]
+ 746 006a 0333     		adds	r3, r3, #3
+ 747 006c 7B60     		str	r3, [r7, #4]
+ 280:../Sources/cube/cube.c ****     int16_t v;
+ 281:../Sources/cube/cube.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 748              		.loc 1 281 0
+ 749 006e 07F10C02 		add	r2, r7, #12
+ 750 0072 3B1D     		adds	r3, r7, #4
+ 751 0074 1146     		mov	r1, r2
+ 752 0076 1846     		mov	r0, r3
+ 753 0078 FFF7FEFF 		bl	utilScanDecimal16s
+ 754 007c 0346     		mov	r3, r0
+ 755 007e FB73     		strb	r3, [r7, #15]
+ 282:../Sources/cube/cube.c ****     if (result != EC_SUCCESS) return result;
+ 756              		.loc 1 282 0
+ 757 0080 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 758 0082 002B     		cmp	r3, #0
+ 759 0084 1BD0     		beq	.L53
+ 760              		.loc 1 282 0 is_stmt 0 discriminator 1
+ 761 0086 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 762 0088 1AE0     		b	.L57
+ 763              	.L55:
+ 764              	.LBE2:
+ 283:../Sources/cube/cube.c ****   }
+ 284:../Sources/cube/cube.c **** 
+ 285:../Sources/cube/cube.c ****   else if (strncmp(cmd, "set", sizeof("set") - 1) == 0)
+ 765              		.loc 1 285 0 is_stmt 1
+ 766 008a 7B68     		ldr	r3, [r7, #4]
+ 767 008c 0322     		movs	r2, #3
+ 768 008e 1649     		ldr	r1, .L59+32
+ 769 0090 1846     		mov	r0, r3
+ 770 0092 FFF7FEFF 		bl	strncmp
+ 771 0096 0346     		mov	r3, r0
+ 772 0098 002B     		cmp	r3, #0
+ 773 009a 10D1     		bne	.L53
+ 774              	.LBB3:
+ 286:../Sources/cube/cube.c ****   {
+ 287:../Sources/cube/cube.c ****     cmd += sizeof("set");
+ 775              		.loc 1 287 0
+ 776 009c 7B68     		ldr	r3, [r7, #4]
+ 777 009e 0433     		adds	r3, r3, #4
+ 778 00a0 7B60     		str	r3, [r7, #4]
+ 288:../Sources/cube/cube.c ****     int16_t v;
+ 289:../Sources/cube/cube.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 779              		.loc 1 289 0
+ 780 00a2 07F10A02 		add	r2, r7, #10
+ 781 00a6 3B1D     		adds	r3, r7, #4
+ 782 00a8 1146     		mov	r1, r2
+ 783 00aa 1846     		mov	r0, r3
+ 784 00ac FFF7FEFF 		bl	utilScanDecimal16s
+ 785 00b0 0346     		mov	r3, r0
+ 786 00b2 FB73     		strb	r3, [r7, #15]
+ 290:../Sources/cube/cube.c ****     if (result != EC_SUCCESS) return result;
+ 787              		.loc 1 290 0
+ 788 00b4 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 789 00b6 002B     		cmp	r3, #0
+ 790 00b8 01D0     		beq	.L53
+ 791              		.loc 1 290 0 is_stmt 0 discriminator 1
+ 792 00ba FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 793 00bc 00E0     		b	.L57
+ 794              	.L53:
+ 795              	.LBE3:
+ 291:../Sources/cube/cube.c ****   }
+ 292:../Sources/cube/cube.c ****   return result;
+ 796              		.loc 1 292 0 is_stmt 1
+ 797 00be FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 798              	.L57:
+ 293:../Sources/cube/cube.c **** }
+ 799              		.loc 1 293 0
+ 800 00c0 1846     		mov	r0, r3
+ 801 00c2 1037     		adds	r7, r7, #16
+ 802              		.cfi_def_cfa_offset 8
+ 803 00c4 BD46     		mov	sp, r7
+ 804              		.cfi_def_cfa_register 13
+ 805              		@ sp needed
+ 806 00c6 80BD     		pop	{r7, pc}
+ 807              	.L60:
+ 808              		.align	2
+ 809              	.L59:
+ 810 00c8 14000000 		.word	.LC2
+ 811 00cc 1C000000 		.word	.LC3
+ 812 00d0 34000000 		.word	.LC4
+ 813 00d4 3C000000 		.word	.LC5
+ 814 00d8 50000000 		.word	.LC6
+ 815 00dc 5C000000 		.word	.LC7
+ 816 00e0 00000000 		.word	startPi
+ 817 00e4 64000000 		.word	.LC8
+ 818 00e8 68000000 		.word	.LC9
+ 819              		.cfi_endproc
+ 820              	.LFE126:
+ 822              		.section	.rodata
+ 823              		.align	2
+ 824              	.LC10:
+ 825 006c 68656C70 		.ascii	"help, set\000"
+ 825      2C207365 
+ 825      7400
+ 826 0076 0000     		.align	2
+ 827              	.LC11:
+ 828 0078 63756265 		.ascii	"cube\000"
+ 828      00
+ 829              		.section	.text.cubeInit,"ax",%progbits
+ 830              		.align	1
+ 831              		.global	cubeInit
+ 832              		.syntax unified
+ 833              		.thumb
+ 834              		.thumb_func
+ 835              		.fpu fpv4-sp-d16
+ 837              	cubeInit:
+ 838              	.LFB127:
+ 294:../Sources/cube/cube.c **** 
+ 295:../Sources/cube/cube.c **** void cubeInit(void)
+ 296:../Sources/cube/cube.c **** {
+ 839              		.loc 1 296 0
+ 840              		.cfi_startproc
+ 841              		@ args = 0, pretend = 0, frame = 0
+ 842              		@ frame_needed = 1, uses_anonymous_args = 0
+ 843 0000 80B5     		push	{r7, lr}
+ 844              		.cfi_def_cfa_offset 8
+ 845              		.cfi_offset 7, -8
+ 846              		.cfi_offset 14, -4
+ 847 0002 00AF     		add	r7, sp, #0
+ 848              		.cfi_def_cfa_register 7
+ 297:../Sources/cube/cube.c **** 
+ 298:../Sources/cube/cube.c **** // register terminal command line handler
+ 299:../Sources/cube/cube.c ****   termRegisterCommandLineHandler(&clh, "cube", "help, set", cubeParseCommand);
+ 849              		.loc 1 299 0
+ 850 0004 034B     		ldr	r3, .L62
+ 851 0006 044A     		ldr	r2, .L62+4
+ 852 0008 0449     		ldr	r1, .L62+8
+ 853 000a 0548     		ldr	r0, .L62+12
+ 854 000c FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 300:../Sources/cube/cube.c **** }
+ 855              		.loc 1 300 0
+ 856 0010 00BF     		nop
+ 857 0012 80BD     		pop	{r7, pc}
+ 858              	.L63:
+ 859              		.align	2
+ 860              	.L62:
+ 861 0014 00000000 		.word	cubeParseCommand
+ 862 0018 6C000000 		.word	.LC10
+ 863 001c 78000000 		.word	.LC11
+ 864 0020 00000000 		.word	clh
+ 865              		.cfi_endproc
+ 866              	.LFE127:
+ 868              		.section	.bss.i.7180,"aw",%nobits
+ 869              		.align	1
+ 872              	i.7180:
+ 873 0000 0000     		.space	2
+ 874              		.section	.bss.k.7182,"aw",%nobits
+ 875              		.align	1
+ 878              	k.7182:
+ 879 0000 0000     		.space	2
+ 880              		.section	.bss.j.7181,"aw",%nobits
+ 881              		.align	1
+ 884              	j.7181:
+ 885 0000 0000     		.space	2
+ 886              		.text
+ 887              	.Letext0:
+ 888              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 889              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 890              		.file 4 "../Includes/core_cm4.h"
+ 891              		.file 5 "../Includes/system_MK22F51212.h"
+ 892              		.file 6 "../Includes/platform.h"
+ 893              		.file 7 "../Sources/com/term.h"
+ 894              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 895              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 896              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 897              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 898              		.file 12 "C:\\PRG_G\\wsp_pren\\TrainControl1\\Sources\\sensors/accel.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 cube.c
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:26     .bss.state:00000000 state
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:27     .bss.state:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:31     .bss.startPi:00000000 startPi
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:32     .bss.startPi:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:37     .bss.distance:00000000 distance
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:38     .bss.distance:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:43     .bss.distance1:00000000 distance1
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:44     .bss.distance1:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:49     .bss.accelXStart:00000000 accelXStart
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:50     .bss.accelXStart:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:55     .bss.fail:00000000 fail
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:56     .bss.fail:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:62     .data.closeTime:00000000 closeTime
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:59     .data.closeTime:00000000 $d
+                            *COM*:00000006 accel_data
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:66     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:73     .text.cubeStateMachine:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:80     .text.cubeStateMachine:00000000 cubeStateMachine
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:112    .text.cubeStateMachine:00000024 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:124    .text.cubeStateMachine:00000054 $t
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:495    .text.cubeStateMachine:000002b8 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:872    .bss.i.7180:00000000 i.7180
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:878    .bss.k.7182:00000000 k.7182
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:884    .bss.j.7181:00000000 j.7181
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:510    .text.cubeStateMachine:000002ec $t
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:633    .text.cubeStateMachine:00000398 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:667    .text.cubeParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:674    .text.cubeParseCommand:00000000 cubeParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:810    .text.cubeParseCommand:000000c8 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:830    .text.cubeInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:837    .text.cubeInit:00000000 cubeInit
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:861    .text.cubeInit:00000014 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:869    .bss.i.7180:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:875    .bss.k.7182:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccH2fRrA.s:881    .bss.j.7181:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.tof.h.15.c52dd967ff4566f0850c274a8f02f219
+                           .group:00000000 wm4.drive.h.9.b7ae840a7169f82a3ba596e7b70991e7
+                           .group:00000000 wm4.encoder.h.9.49f8bdf86a745b6412cf7741af60fe56
+                           .group:00000000 wm4.spindle.h.9.a7b8f3c706fa7d67d54d32efbbfe7184
+                           .group:00000000 wm4.servo.h.11.8ade999649361508e48147a13552f2fb
+                           .group:00000000 wm4.accel.h.14.19b5318ecce9016dbc420442e49f848c
+
+UNDEFINED SYMBOLS
+driveSetDistance
+driveGetDistanceInfo
+tofRange
+accelRead
+servoSet
+spindleSet
+switchStateClose
+switchStateOpen
+termWriteLine
+strcmp
+strncmp
+utilScanDecimal16s
+termRegisterCommandLineHandler

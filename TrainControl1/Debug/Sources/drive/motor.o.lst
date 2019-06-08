@@ -1,0 +1,908 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"motor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.newvalue,"aw",%nobits
+  20              	newvalue:
+  21 0000 00       		.space	1
+  22              		.section	.bss.clh,"aw",%nobits
+  23              		.align	2
+  26              	clh:
+  27 0000 00000000 		.space	56
+  27      00000000 
+  27      00000000 
+  27      00000000 
+  27      00000000 
+  28              		.comm	valueMotor,2,2
+  29              		.section	.text.motorIncrementPwm,"ax",%progbits
+  30              		.align	1
+  31              		.global	motorIncrementPwm
+  32              		.syntax unified
+  33              		.thumb
+  34              		.thumb_func
+  35              		.fpu fpv4-sp-d16
+  37              	motorIncrementPwm:
+  38              	.LFB125:
+  39              		.file 1 "../Sources/drive/motor.c"
+   1:../Sources/drive/motor.c **** /**
+   2:../Sources/drive/motor.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/drive/motor.c ****  *                                                                    \n
+   4:../Sources/drive/motor.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/drive/motor.c ****  *
+   6:../Sources/drive/motor.c ****  * \brief         maxon motor driver
+   7:../Sources/drive/motor.c ****  * \file
+   8:../Sources/drive/motor.c ****  * \author        Severin Ryser
+   9:../Sources/drive/motor.c ****  * \date          21.03.2019
+  10:../Sources/drive/motor.c ****  *
+  11:../Sources/drive/motor.c ****  *--------------------------------------------------------------------
+  12:../Sources/drive/motor.c ****  */
+  13:../Sources/drive/motor.c **** 
+  14:../Sources/drive/motor.c **** #include "platform.h"
+  15:../Sources/drive/motor.c **** #include "ftm3.h"
+  16:../Sources/drive/motor.c **** #include "term.h"
+  17:../Sources/drive/motor.c **** #include "util.h"
+  18:../Sources/drive/motor.c **** #include "string.h"
+  19:../Sources/drive/motor.c **** #include "motor.h"
+  20:../Sources/drive/motor.c **** 
+  21:../Sources/drive/motor.c **** static int8_t newvalue;
+  22:../Sources/drive/motor.c **** 
+  23:../Sources/drive/motor.c **** 
+  24:../Sources/drive/motor.c **** #define TOFS_MS(x)   ((uint16_t)(((FTM3_CLOCK / 1000) * x) / (FTM3_MODULO + 1)))
+  25:../Sources/drive/motor.c **** //switch pin configuration from GPIO to FTM-Mode
+  26:../Sources/drive/motor.c **** #define MOTOR_IN1_PWM()           (PORTD_PCR0 = PORT_PCR_MUX(4))  // PTD0[4]: FTM3_CH3
+  27:../Sources/drive/motor.c **** #define MOTOR_IN1_GPIO()          (PORTD_PCR0 = PORT_PCR_MUX(1))  // PTD0[1]: GPIO
+  28:../Sources/drive/motor.c **** #define MOTOR_IN2_PWM()           (PORTD_PCR1 = PORT_PCR_MUX(4))  // PTE5[6]: FTM3_CH3
+  29:../Sources/drive/motor.c **** #define MOTOR_IN2_GPIO()          (PORTD_PCR1 = PORT_PCR_MUX(1))  // PTE5[1]: GPIO
+  30:../Sources/drive/motor.c **** 
+  31:../Sources/drive/motor.c **** static tCommandLineHandler clh;       // terminal command line handler
+  32:../Sources/drive/motor.c **** int16_t valueMotor;
+  33:../Sources/drive/motor.c **** 
+  34:../Sources/drive/motor.c **** 
+  35:../Sources/drive/motor.c **** /**
+  36:../Sources/drive/motor.c ****  * Increments or decrements the PWM value oft the right wheel
+  37:../Sources/drive/motor.c ****  * @param[in] value
+  38:../Sources/drive/motor.c ****  *   a positive or negative value to add
+  39:../Sources/drive/motor.c ****  */
+  40:../Sources/drive/motor.c **** void motorIncrementPwm(int16_t value)
+  41:../Sources/drive/motor.c **** {
+  40              		.loc 1 41 0
+  41              		.cfi_startproc
+  42              		@ args = 0, pretend = 0, frame = 16
+  43              		@ frame_needed = 1, uses_anonymous_args = 0
+  44 0000 80B5     		push	{r7, lr}
+  45              		.cfi_def_cfa_offset 8
+  46              		.cfi_offset 7, -8
+  47              		.cfi_offset 14, -4
+  48 0002 84B0     		sub	sp, sp, #16
+  49              		.cfi_def_cfa_offset 24
+  50 0004 00AF     		add	r7, sp, #0
+  51              		.cfi_def_cfa_register 7
+  52 0006 0346     		mov	r3, r0
+  53 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  42:../Sources/drive/motor.c ****   int32_t v = valueMotor + value;
+  54              		.loc 1 42 0
+  55 000a 0F4B     		ldr	r3, .L4
+  56 000c B3F90030 		ldrsh	r3, [r3]
+  57 0010 1A46     		mov	r2, r3
+  58 0012 B7F90630 		ldrsh	r3, [r7, #6]
+  59 0016 1344     		add	r3, r3, r2
+  60 0018 FB60     		str	r3, [r7, #12]
+  43:../Sources/drive/motor.c ****   if (v > MOTOR_MAX_VALUE) v = MOTOR_MAX_VALUE;
+  61              		.loc 1 43 0
+  62 001a FB68     		ldr	r3, [r7, #12]
+  63 001c 42F21072 		movw	r2, #10000
+  64 0020 9342     		cmp	r3, r2
+  65 0022 02DD     		ble	.L2
+  66              		.loc 1 43 0 is_stmt 0 discriminator 1
+  67 0024 42F21073 		movw	r3, #10000
+  68 0028 FB60     		str	r3, [r7, #12]
+  69              	.L2:
+  44:../Sources/drive/motor.c ****   if (v < -MOTOR_MAX_VALUE) v = -MOTOR_MAX_VALUE;
+  70              		.loc 1 44 0 is_stmt 1
+  71 002a FB68     		ldr	r3, [r7, #12]
+  72 002c 074A     		ldr	r2, .L4+4
+  73 002e 9342     		cmp	r3, r2
+  74 0030 01DA     		bge	.L3
+  75              		.loc 1 44 0 is_stmt 0 discriminator 1
+  76 0032 064B     		ldr	r3, .L4+4
+  77 0034 FB60     		str	r3, [r7, #12]
+  78              	.L3:
+  45:../Sources/drive/motor.c ****   motorSetPwm((int16_t)v);
+  79              		.loc 1 45 0 is_stmt 1
+  80 0036 FB68     		ldr	r3, [r7, #12]
+  81 0038 1BB2     		sxth	r3, r3
+  82 003a 1846     		mov	r0, r3
+  83 003c FFF7FEFF 		bl	motorSetPwm
+  46:../Sources/drive/motor.c **** }
+  84              		.loc 1 46 0
+  85 0040 00BF     		nop
+  86 0042 1037     		adds	r7, r7, #16
+  87              		.cfi_def_cfa_offset 8
+  88 0044 BD46     		mov	sp, r7
+  89              		.cfi_def_cfa_register 13
+  90              		@ sp needed
+  91 0046 80BD     		pop	{r7, pc}
+  92              	.L5:
+  93              		.align	2
+  94              	.L4:
+  95 0048 00000000 		.word	valueMotor
+  96 004c F0D8FFFF 		.word	-10000
+  97              		.cfi_endproc
+  98              	.LFE125:
+ 100              		.section	.text.FTM3CH2_IRQHandler,"ax",%progbits
+ 101              		.align	1
+ 102              		.global	FTM3CH2_IRQHandler
+ 103              		.syntax unified
+ 104              		.thumb
+ 105              		.thumb_func
+ 106              		.fpu fpv4-sp-d16
+ 108              	FTM3CH2_IRQHandler:
+ 109              	.LFB126:
+  47:../Sources/drive/motor.c **** 
+  48:../Sources/drive/motor.c **** void FTM3CH2_IRQHandler(void)
+  49:../Sources/drive/motor.c **** {
+ 110              		.loc 1 49 0
+ 111              		.cfi_startproc
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 1, uses_anonymous_args = 0
+ 114 0000 80B5     		push	{r7, lr}
+ 115              		.cfi_def_cfa_offset 8
+ 116              		.cfi_offset 7, -8
+ 117              		.cfi_offset 14, -4
+ 118 0002 00AF     		add	r7, sp, #0
+ 119              		.cfi_def_cfa_register 7
+  50:../Sources/drive/motor.c ****   FTM3_C2SC &= ~FTM_CnSC_CHF_MASK;  // clear timer channel flag
+ 120              		.loc 1 50 0
+ 121 0004 254A     		ldr	r2, .L11
+ 122 0006 254B     		ldr	r3, .L11
+ 123 0008 DB69     		ldr	r3, [r3, #28]
+ 124 000a 23F08003 		bic	r3, r3, #128
+ 125 000e D361     		str	r3, [r2, #28]
+  51:../Sources/drive/motor.c **** 
+  52:../Sources/drive/motor.c ****   static uint16_t cnt_timer; // count the number of TOF's
+  53:../Sources/drive/motor.c ****   static int16_t cnt_value;
+  54:../Sources/drive/motor.c ****   cnt_timer++;
+ 126              		.loc 1 54 0
+ 127 0010 234B     		ldr	r3, .L11+4
+ 128 0012 1B88     		ldrh	r3, [r3]
+ 129 0014 0133     		adds	r3, r3, #1
+ 130 0016 9AB2     		uxth	r2, r3
+ 131 0018 214B     		ldr	r3, .L11+4
+ 132 001a 1A80     		strh	r2, [r3]	@ movhi
+  55:../Sources/drive/motor.c **** 
+  56:../Sources/drive/motor.c ****         if (cnt_timer >= TOFS_MS(50)) // check if number of TOF's is equal or greater 250ms
+ 133              		.loc 1 56 0
+ 134 001c 204B     		ldr	r3, .L11+4
+ 135 001e 1B88     		ldrh	r3, [r3]
+ 136 0020 B3F5517F 		cmp	r3, #836
+ 137 0024 38D9     		bls	.L10
+  57:../Sources/drive/motor.c ****         {
+  58:../Sources/drive/motor.c **** 
+  59:../Sources/drive/motor.c ****           if(cnt_value<newvalue)
+ 138              		.loc 1 59 0
+ 139 0026 1F4B     		ldr	r3, .L11+8
+ 140 0028 93F90030 		ldrsb	r3, [r3]
+ 141 002c 1AB2     		sxth	r2, r3
+ 142 002e 1E4B     		ldr	r3, .L11+12
+ 143 0030 B3F90030 		ldrsh	r3, [r3]
+ 144 0034 9A42     		cmp	r2, r3
+ 145 0036 0FDD     		ble	.L8
+  60:../Sources/drive/motor.c ****           {
+  61:../Sources/drive/motor.c ****             cnt_value++;
+ 146              		.loc 1 61 0
+ 147 0038 1B4B     		ldr	r3, .L11+12
+ 148 003a B3F90030 		ldrsh	r3, [r3]
+ 149 003e 9BB2     		uxth	r3, r3
+ 150 0040 0133     		adds	r3, r3, #1
+ 151 0042 9BB2     		uxth	r3, r3
+ 152 0044 1AB2     		sxth	r2, r3
+ 153 0046 184B     		ldr	r3, .L11+12
+ 154 0048 1A80     		strh	r2, [r3]	@ movhi
+  62:../Sources/drive/motor.c ****             motorIncrementPwm(10);
+ 155              		.loc 1 62 0
+ 156 004a 0A20     		movs	r0, #10
+ 157 004c FFF7FEFF 		bl	motorIncrementPwm
+  63:../Sources/drive/motor.c ****             cnt_timer = 0;
+ 158              		.loc 1 63 0
+ 159 0050 134B     		ldr	r3, .L11+4
+ 160 0052 0022     		movs	r2, #0
+ 161 0054 1A80     		strh	r2, [r3]	@ movhi
+  64:../Sources/drive/motor.c ****           }
+  65:../Sources/drive/motor.c ****           else if(cnt_value>newvalue)
+  66:../Sources/drive/motor.c ****           {
+  67:../Sources/drive/motor.c ****             cnt_value--;
+  68:../Sources/drive/motor.c ****             motorIncrementPwm(-10);
+  69:../Sources/drive/motor.c ****             cnt_timer = 0;
+  70:../Sources/drive/motor.c **** 
+  71:../Sources/drive/motor.c ****           }
+  72:../Sources/drive/motor.c ****           else{
+  73:../Sources/drive/motor.c ****             FTM3_C2SC = 0;
+  74:../Sources/drive/motor.c ****             //cnt_value = 0;
+  75:../Sources/drive/motor.c ****             cnt_timer = 0;
+  76:../Sources/drive/motor.c ****           }
+  77:../Sources/drive/motor.c **** 
+  78:../Sources/drive/motor.c ****         }
+  79:../Sources/drive/motor.c **** 
+  80:../Sources/drive/motor.c **** }
+ 162              		.loc 1 80 0
+ 163 0056 1FE0     		b	.L10
+ 164              	.L8:
+  65:../Sources/drive/motor.c ****           {
+ 165              		.loc 1 65 0
+ 166 0058 124B     		ldr	r3, .L11+8
+ 167 005a 93F90030 		ldrsb	r3, [r3]
+ 168 005e 1AB2     		sxth	r2, r3
+ 169 0060 114B     		ldr	r3, .L11+12
+ 170 0062 B3F90030 		ldrsh	r3, [r3]
+ 171 0066 9A42     		cmp	r2, r3
+ 172 0068 10DA     		bge	.L9
+  67:../Sources/drive/motor.c ****             motorIncrementPwm(-10);
+ 173              		.loc 1 67 0
+ 174 006a 0F4B     		ldr	r3, .L11+12
+ 175 006c B3F90030 		ldrsh	r3, [r3]
+ 176 0070 9BB2     		uxth	r3, r3
+ 177 0072 013B     		subs	r3, r3, #1
+ 178 0074 9BB2     		uxth	r3, r3
+ 179 0076 1AB2     		sxth	r2, r3
+ 180 0078 0B4B     		ldr	r3, .L11+12
+ 181 007a 1A80     		strh	r2, [r3]	@ movhi
+  68:../Sources/drive/motor.c ****             cnt_timer = 0;
+ 182              		.loc 1 68 0
+ 183 007c 6FF00900 		mvn	r0, #9
+ 184 0080 FFF7FEFF 		bl	motorIncrementPwm
+  69:../Sources/drive/motor.c **** 
+ 185              		.loc 1 69 0
+ 186 0084 064B     		ldr	r3, .L11+4
+ 187 0086 0022     		movs	r2, #0
+ 188 0088 1A80     		strh	r2, [r3]	@ movhi
+ 189              		.loc 1 80 0
+ 190 008a 05E0     		b	.L10
+ 191              	.L9:
+  73:../Sources/drive/motor.c ****             //cnt_value = 0;
+ 192              		.loc 1 73 0
+ 193 008c 034B     		ldr	r3, .L11
+ 194 008e 0022     		movs	r2, #0
+ 195 0090 DA61     		str	r2, [r3, #28]
+  75:../Sources/drive/motor.c ****           }
+ 196              		.loc 1 75 0
+ 197 0092 034B     		ldr	r3, .L11+4
+ 198 0094 0022     		movs	r2, #0
+ 199 0096 1A80     		strh	r2, [r3]	@ movhi
+ 200              	.L10:
+ 201              		.loc 1 80 0
+ 202 0098 00BF     		nop
+ 203 009a 80BD     		pop	{r7, pc}
+ 204              	.L12:
+ 205              		.align	2
+ 206              	.L11:
+ 207 009c 00600240 		.word	1073897472
+ 208 00a0 00000000 		.word	cnt_timer.7092
+ 209 00a4 00000000 		.word	newvalue
+ 210 00a8 00000000 		.word	cnt_value.7093
+ 211              		.cfi_endproc
+ 212              	.LFE126:
+ 214              		.section	.text.motorRamp,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	motorRamp
+ 217              		.syntax unified
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.fpu fpv4-sp-d16
+ 222              	motorRamp:
+ 223              	.LFB127:
+  81:../Sources/drive/motor.c **** void motorRamp(int16_t value)
+  82:../Sources/drive/motor.c **** {
+ 224              		.loc 1 82 0
+ 225              		.cfi_startproc
+ 226              		@ args = 0, pretend = 0, frame = 8
+ 227              		@ frame_needed = 1, uses_anonymous_args = 0
+ 228              		@ link register save eliminated.
+ 229 0000 80B4     		push	{r7}
+ 230              		.cfi_def_cfa_offset 4
+ 231              		.cfi_offset 7, -4
+ 232 0002 83B0     		sub	sp, sp, #12
+ 233              		.cfi_def_cfa_offset 16
+ 234 0004 00AF     		add	r7, sp, #0
+ 235              		.cfi_def_cfa_register 7
+ 236 0006 0346     		mov	r3, r0
+ 237 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  83:../Sources/drive/motor.c ****   newvalue = value;
+ 238              		.loc 1 83 0
+ 239 000a FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 240 000c 5AB2     		sxtb	r2, r3
+ 241 000e 074B     		ldr	r3, .L14
+ 242 0010 1A70     		strb	r2, [r3]
+  84:../Sources/drive/motor.c ****   FTM3_C2SC = (FTM_CnSC_MSB(1)|FTM_CnSC_MSA(0)) | (FTM_CnSC_ELSB(0)|FTM_CnSC_ELSA(1)) | (FTM_CnSC_C
+ 243              		.loc 1 84 0
+ 244 0012 074B     		ldr	r3, .L14+4
+ 245 0014 6422     		movs	r2, #100
+ 246 0016 DA61     		str	r2, [r3, #28]
+  85:../Sources/drive/motor.c **** 
+  86:../Sources/drive/motor.c ****   FTM3_C2V = FTM3_MODULO;// FTM3_CNT + tmrRampTicks;
+ 247              		.loc 1 86 0
+ 248 0018 054B     		ldr	r3, .L14+4
+ 249 001a 40F6FF52 		movw	r2, #3583
+ 250 001e 1A62     		str	r2, [r3, #32]
+  87:../Sources/drive/motor.c **** 
+  88:../Sources/drive/motor.c **** }
+ 251              		.loc 1 88 0
+ 252 0020 00BF     		nop
+ 253 0022 0C37     		adds	r7, r7, #12
+ 254              		.cfi_def_cfa_offset 4
+ 255 0024 BD46     		mov	sp, r7
+ 256              		.cfi_def_cfa_register 13
+ 257              		@ sp needed
+ 258 0026 5DF8047B 		ldr	r7, [sp], #4
+ 259              		.cfi_restore 7
+ 260              		.cfi_def_cfa_offset 0
+ 261 002a 7047     		bx	lr
+ 262              	.L15:
+ 263              		.align	2
+ 264              	.L14:
+ 265 002c 00000000 		.word	newvalue
+ 266 0030 00600240 		.word	1073897472
+ 267              		.cfi_endproc
+ 268              	.LFE127:
+ 270              		.section	.text.motorSetPwm,"ax",%progbits
+ 271              		.align	1
+ 272              		.global	motorSetPwm
+ 273              		.syntax unified
+ 274              		.thumb
+ 275              		.thumb_func
+ 276              		.fpu fpv4-sp-d16
+ 278              	motorSetPwm:
+ 279              	.LFB128:
+  89:../Sources/drive/motor.c **** 
+  90:../Sources/drive/motor.c **** 
+  91:../Sources/drive/motor.c **** /**
+  92:../Sources/drive/motor.c ****  * Sets the PWM value of the right wheel
+  93:../Sources/drive/motor.c ****  *
+  94:../Sources/drive/motor.c ****  * @param[in] value
+  95:../Sources/drive/motor.c ****  *   the value between -MOTOR_MAX_VALUE..0..+MOTOR_MAX_VALUE
+  96:../Sources/drive/motor.c ****  *   A value of '0' stops the wheel.
+  97:../Sources/drive/motor.c ****  */
+  98:../Sources/drive/motor.c **** void motorSetPwm(int16_t value)
+  99:../Sources/drive/motor.c **** {
+ 280              		.loc 1 99 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 16
+ 283              		@ frame_needed = 1, uses_anonymous_args = 0
+ 284              		@ link register save eliminated.
+ 285 0000 80B4     		push	{r7}
+ 286              		.cfi_def_cfa_offset 4
+ 287              		.cfi_offset 7, -4
+ 288 0002 85B0     		sub	sp, sp, #20
+ 289              		.cfi_def_cfa_offset 24
+ 290 0004 00AF     		add	r7, sp, #0
+ 291              		.cfi_def_cfa_register 7
+ 292 0006 0346     		mov	r3, r0
+ 293 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 100:../Sources/drive/motor.c ****   if (value > MOTOR_MAX_VALUE) value = MOTOR_MAX_VALUE;
+ 294              		.loc 1 100 0
+ 295 000a B7F90630 		ldrsh	r3, [r7, #6]
+ 296 000e 42F21072 		movw	r2, #10000
+ 297 0012 9342     		cmp	r3, r2
+ 298 0014 02DD     		ble	.L17
+ 299              		.loc 1 100 0 is_stmt 0 discriminator 1
+ 300 0016 42F21073 		movw	r3, #10000
+ 301 001a FB80     		strh	r3, [r7, #6]	@ movhi
+ 302              	.L17:
+ 101:../Sources/drive/motor.c ****   if (value < -MOTOR_MAX_VALUE) value = -MOTOR_MAX_VALUE;
+ 303              		.loc 1 101 0 is_stmt 1
+ 304 001c B7F90630 		ldrsh	r3, [r7, #6]
+ 305 0020 254A     		ldr	r2, .L22
+ 306 0022 9342     		cmp	r3, r2
+ 307 0024 02DA     		bge	.L18
+ 308              		.loc 1 101 0 is_stmt 0 discriminator 1
+ 309 0026 4DF6F003 		movw	r3, #55536
+ 310 002a FB80     		strh	r3, [r7, #6]	@ movhi
+ 311              	.L18:
+ 102:../Sources/drive/motor.c ****   valueMotor = value;
+ 312              		.loc 1 102 0 is_stmt 1
+ 313 002c 234A     		ldr	r2, .L22+4
+ 314 002e FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 315 0030 1380     		strh	r3, [r2]	@ movhi
+ 103:../Sources/drive/motor.c **** 
+ 104:../Sources/drive/motor.c ****   if (value < 0)
+ 316              		.loc 1 104 0
+ 317 0032 B7F90630 		ldrsh	r3, [r7, #6]
+ 318 0036 002B     		cmp	r3, #0
+ 319 0038 0CDA     		bge	.L19
+ 105:../Sources/drive/motor.c ****   {
+ 106:../Sources/drive/motor.c ****     // drive backward
+ 107:../Sources/drive/motor.c ****     value = -value;         // value has to be a positive channel value!
+ 320              		.loc 1 107 0
+ 321 003a FB88     		ldrh	r3, [r7, #6]
+ 322 003c 5B42     		negs	r3, r3
+ 323 003e 9BB2     		uxth	r3, r3
+ 324 0040 FB80     		strh	r3, [r7, #6]	@ movhi
+ 108:../Sources/drive/motor.c ****     MOTOR_IN1_GPIO();
+ 325              		.loc 1 108 0
+ 326 0042 1F4B     		ldr	r3, .L22+8
+ 327 0044 4FF48072 		mov	r2, #256
+ 328 0048 1A60     		str	r2, [r3]
+ 109:../Sources/drive/motor.c ****     MOTOR_IN2_PWM();
+ 329              		.loc 1 109 0
+ 330 004a 1D4B     		ldr	r3, .L22+8
+ 331 004c 4FF48062 		mov	r2, #1024
+ 332 0050 5A60     		str	r2, [r3, #4]
+ 333 0052 14E0     		b	.L20
+ 334              	.L19:
+ 110:../Sources/drive/motor.c **** 
+ 111:../Sources/drive/motor.c **** 
+ 112:../Sources/drive/motor.c ****   }
+ 113:../Sources/drive/motor.c ****   else if (value > 0)
+ 335              		.loc 1 113 0
+ 336 0054 B7F90630 		ldrsh	r3, [r7, #6]
+ 337 0058 002B     		cmp	r3, #0
+ 338 005a 08DD     		ble	.L21
+ 114:../Sources/drive/motor.c ****   {
+ 115:../Sources/drive/motor.c ****     // drive forward
+ 116:../Sources/drive/motor.c **** 
+ 117:../Sources/drive/motor.c ****     MOTOR_IN1_PWM();        // set IN1 as timer Pin (pwm signal)
+ 339              		.loc 1 117 0
+ 340 005c 184B     		ldr	r3, .L22+8
+ 341 005e 4FF48062 		mov	r2, #1024
+ 342 0062 1A60     		str	r2, [r3]
+ 118:../Sources/drive/motor.c ****     MOTOR_IN2_GPIO();       // set IN2 as GPIO Pin (high-level)
+ 343              		.loc 1 118 0
+ 344 0064 164B     		ldr	r3, .L22+8
+ 345 0066 4FF48072 		mov	r2, #256
+ 346 006a 5A60     		str	r2, [r3, #4]
+ 347 006c 07E0     		b	.L20
+ 348              	.L21:
+ 119:../Sources/drive/motor.c **** 
+ 120:../Sources/drive/motor.c ****   }
+ 121:../Sources/drive/motor.c ****   else
+ 122:../Sources/drive/motor.c ****   {
+ 123:../Sources/drive/motor.c ****     // stop
+ 124:../Sources/drive/motor.c ****     MOTOR_IN1_GPIO();
+ 349              		.loc 1 124 0
+ 350 006e 144B     		ldr	r3, .L22+8
+ 351 0070 4FF48072 		mov	r2, #256
+ 352 0074 1A60     		str	r2, [r3]
+ 125:../Sources/drive/motor.c ****     MOTOR_IN2_GPIO();
+ 353              		.loc 1 125 0
+ 354 0076 124B     		ldr	r3, .L22+8
+ 355 0078 4FF48072 		mov	r2, #256
+ 356 007c 5A60     		str	r2, [r3, #4]
+ 357              	.L20:
+ 126:../Sources/drive/motor.c ****   }
+ 127:../Sources/drive/motor.c ****   int16_t v = (uint16_t)(((FTM3_MODULO + 1) * (MOTOR_MAX_VALUE-(uint32_t)value)) / MOTOR_MAX_VALUE)
+ 358              		.loc 1 127 0
+ 359 007e B7F90620 		ldrsh	r2, [r7, #6]
+ 360 0082 1346     		mov	r3, r2
+ 361 0084 D200     		lsls	r2, r2, #3
+ 362 0086 9B1A     		subs	r3, r3, r2
+ 363 0088 5B02     		lsls	r3, r3, #9
+ 364 008a 03F10873 		add	r3, r3, #35651584
+ 365 008e 03F53833 		add	r3, r3, #188416
+ 366 0092 0C4A     		ldr	r2, .L22+12
+ 367 0094 A2FB0323 		umull	r2, r3, r2, r3
+ 368 0098 5B0B     		lsrs	r3, r3, #13
+ 369 009a FB81     		strh	r3, [r7, #14]	@ movhi
+ 128:../Sources/drive/motor.c ****   //int16_t v = (uint16_t)(((FTM3_MODULO + 1) * ((uint32_t)value)) / MOTOR_MAX_VALUE);
+ 129:../Sources/drive/motor.c ****   FTM3_C0V = v;
+ 370              		.loc 1 129 0
+ 371 009c 0A4A     		ldr	r2, .L22+16
+ 372 009e B7F90E30 		ldrsh	r3, [r7, #14]
+ 373 00a2 1361     		str	r3, [r2, #16]
+ 130:../Sources/drive/motor.c ****   FTM3_C1V = v;
+ 374              		.loc 1 130 0
+ 375 00a4 084A     		ldr	r2, .L22+16
+ 376 00a6 B7F90E30 		ldrsh	r3, [r7, #14]
+ 377 00aa 9361     		str	r3, [r2, #24]
+ 131:../Sources/drive/motor.c **** }
+ 378              		.loc 1 131 0
+ 379 00ac 00BF     		nop
+ 380 00ae 1437     		adds	r7, r7, #20
+ 381              		.cfi_def_cfa_offset 4
+ 382 00b0 BD46     		mov	sp, r7
+ 383              		.cfi_def_cfa_register 13
+ 384              		@ sp needed
+ 385 00b2 5DF8047B 		ldr	r7, [sp], #4
+ 386              		.cfi_restore 7
+ 387              		.cfi_def_cfa_offset 0
+ 388 00b6 7047     		bx	lr
+ 389              	.L23:
+ 390              		.align	2
+ 391              	.L22:
+ 392 00b8 F0D8FFFF 		.word	-10000
+ 393 00bc 00000000 		.word	valueMotor
+ 394 00c0 00C00440 		.word	1074053120
+ 395 00c4 5917B7D1 		.word	-776530087
+ 396 00c8 00600240 		.word	1073897472
+ 397              		.cfi_endproc
+ 398              	.LFE128:
+ 400              		.section	.rodata
+ 401              		.align	2
+ 402              	.LC0:
+ 403 0000 68656C70 		.ascii	"help\000"
+ 403      00
+ 404 0005 000000   		.align	2
+ 405              	.LC1:
+ 406 0008 6D6F746F 		.ascii	"motor (motor) commands:\000"
+ 406      7220286D 
+ 406      6F746F72 
+ 406      2920636F 
+ 406      6D6D616E 
+ 407              		.align	2
+ 408              	.LC2:
+ 409 0020 20206865 		.ascii	"  help\000"
+ 409      6C7000
+ 410 0027 00       		.align	2
+ 411              	.LC3:
+ 412 0028 20207365 		.ascii	"  set [-100..120]\000"
+ 412      74205B2D 
+ 412      3130302E 
+ 412      2E313230 
+ 412      5D00
+ 413 003a 0000     		.align	2
+ 414              	.LC4:
+ 415 003c 20207374 		.ascii	"  status\000"
+ 415      61747573 
+ 415      00
+ 416 0045 000000   		.align	2
+ 417              	.LC5:
+ 418 0048 73657400 		.ascii	"set\000"
+ 419              		.section	.text.motorParseCommand,"ax",%progbits
+ 420              		.align	1
+ 421              		.global	motorParseCommand
+ 422              		.syntax unified
+ 423              		.thumb
+ 424              		.thumb_func
+ 425              		.fpu fpv4-sp-d16
+ 427              	motorParseCommand:
+ 428              	.LFB129:
+ 132:../Sources/drive/motor.c **** 
+ 133:../Sources/drive/motor.c **** 
+ 134:../Sources/drive/motor.c **** 
+ 135:../Sources/drive/motor.c **** /**
+ 136:../Sources/drive/motor.c ****  * Command line parser for this file.
+ 137:../Sources/drive/motor.c ****  * This code is complete and works.
+ 138:../Sources/drive/motor.c ****  *
+ 139:../Sources/drive/motor.c ****  * @param[in] cmd
+ 140:../Sources/drive/motor.c ****  *   the command to parse
+ 141:../Sources/drive/motor.c ****  */
+ 142:../Sources/drive/motor.c **** tError motorParseCommand(const unsigned char *cmd)
+ 143:../Sources/drive/motor.c **** {
+ 429              		.loc 1 143 0
+ 430              		.cfi_startproc
+ 431              		@ args = 0, pretend = 0, frame = 16
+ 432              		@ frame_needed = 1, uses_anonymous_args = 0
+ 433 0000 80B5     		push	{r7, lr}
+ 434              		.cfi_def_cfa_offset 8
+ 435              		.cfi_offset 7, -8
+ 436              		.cfi_offset 14, -4
+ 437 0002 84B0     		sub	sp, sp, #16
+ 438              		.cfi_def_cfa_offset 24
+ 439 0004 00AF     		add	r7, sp, #0
+ 440              		.cfi_def_cfa_register 7
+ 441 0006 7860     		str	r0, [r7, #4]
+ 144:../Sources/drive/motor.c ****   tError result = EC_INVALID_ARG;
+ 442              		.loc 1 144 0
+ 443 0008 0323     		movs	r3, #3
+ 444 000a FB73     		strb	r3, [r7, #15]
+ 145:../Sources/drive/motor.c ****   if (strcmp(cmd, "help") == 0)
+ 445              		.loc 1 145 0
+ 446 000c 7B68     		ldr	r3, [r7, #4]
+ 447 000e 2349     		ldr	r1, .L29
+ 448 0010 1846     		mov	r0, r3
+ 449 0012 FFF7FEFF 		bl	strcmp
+ 450 0016 0346     		mov	r3, r0
+ 451 0018 002B     		cmp	r3, #0
+ 452 001a 0ED1     		bne	.L25
+ 146:../Sources/drive/motor.c ****   {
+ 147:../Sources/drive/motor.c ****     termWriteLine("motor (motor) commands:");
+ 453              		.loc 1 147 0
+ 454 001c 2048     		ldr	r0, .L29+4
+ 455 001e FFF7FEFF 		bl	termWriteLine
+ 148:../Sources/drive/motor.c ****     termWriteLine("  help");
+ 456              		.loc 1 148 0
+ 457 0022 2048     		ldr	r0, .L29+8
+ 458 0024 FFF7FEFF 		bl	termWriteLine
+ 149:../Sources/drive/motor.c ****     termWriteLine("  set [-100..120]");
+ 459              		.loc 1 149 0
+ 460 0028 1F48     		ldr	r0, .L29+12
+ 461 002a FFF7FEFF 		bl	termWriteLine
+ 150:../Sources/drive/motor.c ****     termWriteLine("  status");
+ 462              		.loc 1 150 0
+ 463 002e 1F48     		ldr	r0, .L29+16
+ 464 0030 FFF7FEFF 		bl	termWriteLine
+ 151:../Sources/drive/motor.c ****     result = EC_SUCCESS;
+ 465              		.loc 1 151 0
+ 466 0034 0023     		movs	r3, #0
+ 467 0036 FB73     		strb	r3, [r7, #15]
+ 468 0038 2BE0     		b	.L26
+ 469              	.L25:
+ 152:../Sources/drive/motor.c ****   }
+ 153:../Sources/drive/motor.c **** 
+ 154:../Sources/drive/motor.c ****   else if (strncmp(cmd, "set", sizeof("set")-1) == 0)
+ 470              		.loc 1 154 0
+ 471 003a 7B68     		ldr	r3, [r7, #4]
+ 472 003c 0322     		movs	r2, #3
+ 473 003e 1C49     		ldr	r1, .L29+20
+ 474 0040 1846     		mov	r0, r3
+ 475 0042 FFF7FEFF 		bl	strncmp
+ 476 0046 0346     		mov	r3, r0
+ 477 0048 002B     		cmp	r3, #0
+ 478 004a 22D1     		bne	.L26
+ 479              	.LBB2:
+ 155:../Sources/drive/motor.c ****   {
+ 156:../Sources/drive/motor.c ****     cmd += sizeof("set");
+ 480              		.loc 1 156 0
+ 481 004c 7B68     		ldr	r3, [r7, #4]
+ 482 004e 0433     		adds	r3, r3, #4
+ 483 0050 7B60     		str	r3, [r7, #4]
+ 157:../Sources/drive/motor.c ****     int16_t v;
+ 158:../Sources/drive/motor.c ****     result = utilScanDecimal16s(&cmd, &v);
+ 484              		.loc 1 158 0
+ 485 0052 07F10C02 		add	r2, r7, #12
+ 486 0056 3B1D     		adds	r3, r7, #4
+ 487 0058 1146     		mov	r1, r2
+ 488 005a 1846     		mov	r0, r3
+ 489 005c FFF7FEFF 		bl	utilScanDecimal16s
+ 490 0060 0346     		mov	r3, r0
+ 491 0062 FB73     		strb	r3, [r7, #15]
+ 159:../Sources/drive/motor.c ****     if (result != EC_SUCCESS) return result;
+ 492              		.loc 1 159 0
+ 493 0064 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 494 0066 002B     		cmp	r3, #0
+ 495 0068 01D0     		beq	.L27
+ 496              		.loc 1 159 0 is_stmt 0 discriminator 1
+ 497 006a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 498 006c 12E0     		b	.L28
+ 499              	.L27:
+ 160:../Sources/drive/motor.c **** 
+ 161:../Sources/drive/motor.c ****     motorSetPwm((int16_t)((MOTOR_MAX_VALUE * v) / 120));
+ 500              		.loc 1 161 0 is_stmt 1
+ 501 006e B7F90C30 		ldrsh	r3, [r7, #12]
+ 502 0072 1A46     		mov	r2, r3
+ 503 0074 42F21073 		movw	r3, #10000
+ 504 0078 03FB02F3 		mul	r3, r3, r2
+ 505 007c 0D4A     		ldr	r2, .L29+24
+ 506 007e 82FB0312 		smull	r1, r2, r2, r3
+ 507 0082 1A44     		add	r2, r2, r3
+ 508 0084 9211     		asrs	r2, r2, #6
+ 509 0086 DB17     		asrs	r3, r3, #31
+ 510 0088 D31A     		subs	r3, r2, r3
+ 511 008a 1BB2     		sxth	r3, r3
+ 512 008c 1846     		mov	r0, r3
+ 513 008e FFF7FEFF 		bl	motorSetPwm
+ 514              	.L26:
+ 515              	.LBE2:
+ 162:../Sources/drive/motor.c ****   }
+ 163:../Sources/drive/motor.c ****   return result;
+ 516              		.loc 1 163 0
+ 517 0092 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 518              	.L28:
+ 164:../Sources/drive/motor.c **** }
+ 519              		.loc 1 164 0
+ 520 0094 1846     		mov	r0, r3
+ 521 0096 1037     		adds	r7, r7, #16
+ 522              		.cfi_def_cfa_offset 8
+ 523 0098 BD46     		mov	sp, r7
+ 524              		.cfi_def_cfa_register 13
+ 525              		@ sp needed
+ 526 009a 80BD     		pop	{r7, pc}
+ 527              	.L30:
+ 528              		.align	2
+ 529              	.L29:
+ 530 009c 00000000 		.word	.LC0
+ 531 00a0 08000000 		.word	.LC1
+ 532 00a4 20000000 		.word	.LC2
+ 533 00a8 28000000 		.word	.LC3
+ 534 00ac 3C000000 		.word	.LC4
+ 535 00b0 48000000 		.word	.LC5
+ 536 00b4 89888888 		.word	-2004318071
+ 537              		.cfi_endproc
+ 538              	.LFE129:
+ 540              		.section	.rodata
+ 541              		.align	2
+ 542              	.LC6:
+ 543 004c 68656C70 		.ascii	"help, set\000"
+ 543      2C207365 
+ 543      7400
+ 544 0056 0000     		.align	2
+ 545              	.LC7:
+ 546 0058 6D6F746F 		.ascii	"motor\000"
+ 546      7200
+ 547              		.section	.text.motorInit,"ax",%progbits
+ 548              		.align	1
+ 549              		.global	motorInit
+ 550              		.syntax unified
+ 551              		.thumb
+ 552              		.thumb_func
+ 553              		.fpu fpv4-sp-d16
+ 555              	motorInit:
+ 556              	.LFB130:
+ 165:../Sources/drive/motor.c **** 
+ 166:../Sources/drive/motor.c **** 
+ 167:../Sources/drive/motor.c **** 
+ 168:../Sources/drive/motor.c **** /**
+ 169:../Sources/drive/motor.c ****  * Initializes the motor driver:
+ 170:../Sources/drive/motor.c ****  * - Motor: PTD0, FTM3_CH0, Mux:4
+ 171:../Sources/drive/motor.c ****  * - Motor: PTD1, FTM3_CH1, Mux:4
+ 172:../Sources/drive/motor.c ****  */
+ 173:../Sources/drive/motor.c **** void motorInit(void)
+ 174:../Sources/drive/motor.c **** {
+ 557              		.loc 1 174 0
+ 558              		.cfi_startproc
+ 559              		@ args = 0, pretend = 0, frame = 0
+ 560              		@ frame_needed = 1, uses_anonymous_args = 0
+ 561 0000 80B5     		push	{r7, lr}
+ 562              		.cfi_def_cfa_offset 8
+ 563              		.cfi_offset 7, -8
+ 564              		.cfi_offset 14, -4
+ 565 0002 00AF     		add	r7, sp, #0
+ 566              		.cfi_def_cfa_register 7
+ 175:../Sources/drive/motor.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+ 176:../Sources/drive/motor.c ****   GPIOD_PDDR |= 1<<0 | 1<<1;               // configure PTD0 & PTD1 as output
+ 567              		.loc 1 176 0
+ 568 0004 104A     		ldr	r2, .L32
+ 569 0006 104B     		ldr	r3, .L32
+ 570 0008 5B69     		ldr	r3, [r3, #20]
+ 571 000a 43F00303 		orr	r3, r3, #3
+ 572 000e 5361     		str	r3, [r2, #20]
+ 177:../Sources/drive/motor.c **** 
+ 178:../Sources/drive/motor.c ****   // _todo ML#9.06 set the pin value of all of the 4 pins to '1'
+ 179:../Sources/drive/motor.c ****   GPIOD_PSOR |= 1<<0 | 1<<1 ;               // set PTD0 & PTD1 = 1
+ 573              		.loc 1 179 0
+ 574 0010 0D4A     		ldr	r2, .L32
+ 575 0012 0D4B     		ldr	r3, .L32
+ 576 0014 5B68     		ldr	r3, [r3, #4]
+ 577 0016 43F00303 		orr	r3, r3, #3
+ 578 001a 5360     		str	r3, [r2, #4]
+ 180:../Sources/drive/motor.c **** 
+ 181:../Sources/drive/motor.c **** 
+ 182:../Sources/drive/motor.c ****   // configures the pin muxing of all of the 4 pins as GPIO-Pin.
+ 183:../Sources/drive/motor.c ****   // the output level will be '1' because of the configuration above.
+ 184:../Sources/drive/motor.c ****   MOTOR_IN1_GPIO();
+ 579              		.loc 1 184 0
+ 580 001c 0B4B     		ldr	r3, .L32+4
+ 581 001e 4FF48072 		mov	r2, #256
+ 582 0022 1A60     		str	r2, [r3]
+ 185:../Sources/drive/motor.c ****   MOTOR_IN2_GPIO();
+ 583              		.loc 1 185 0
+ 584 0024 094B     		ldr	r3, .L32+4
+ 585 0026 4FF48072 		mov	r2, #256
+ 586 002a 5A60     		str	r2, [r3, #4]
+ 186:../Sources/drive/motor.c **** 
+ 187:../Sources/drive/motor.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+ 188:../Sources/drive/motor.c ****   FTM3_C0SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 587              		.loc 1 188 0
+ 588 002c 084B     		ldr	r3, .L32+8
+ 589 002e 2822     		movs	r2, #40
+ 590 0030 DA60     		str	r2, [r3, #12]
+ 189:../Sources/drive/motor.c ****   FTM3_C1SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 591              		.loc 1 189 0
+ 592 0032 074B     		ldr	r3, .L32+8
+ 593 0034 2822     		movs	r2, #40
+ 594 0036 5A61     		str	r2, [r3, #20]
+ 190:../Sources/drive/motor.c **** 
+ 191:../Sources/drive/motor.c **** 
+ 192:../Sources/drive/motor.c ****   // register terminal command line handler
+ 193:../Sources/drive/motor.c ****   termRegisterCommandLineHandler(&clh, "motor", "help, set", motorParseCommand);
+ 595              		.loc 1 193 0
+ 596 0038 064B     		ldr	r3, .L32+12
+ 597 003a 074A     		ldr	r2, .L32+16
+ 598 003c 0749     		ldr	r1, .L32+20
+ 599 003e 0848     		ldr	r0, .L32+24
+ 600 0040 FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 194:../Sources/drive/motor.c **** }
+ 601              		.loc 1 194 0
+ 602 0044 00BF     		nop
+ 603 0046 80BD     		pop	{r7, pc}
+ 604              	.L33:
+ 605              		.align	2
+ 606              	.L32:
+ 607 0048 C0F00F40 		.word	1074786496
+ 608 004c 00C00440 		.word	1074053120
+ 609 0050 00600240 		.word	1073897472
+ 610 0054 00000000 		.word	motorParseCommand
+ 611 0058 4C000000 		.word	.LC6
+ 612 005c 58000000 		.word	.LC7
+ 613 0060 00000000 		.word	clh
+ 614              		.cfi_endproc
+ 615              	.LFE130:
+ 617              		.section	.bss.cnt_timer.7092,"aw",%nobits
+ 618              		.align	1
+ 621              	cnt_timer.7092:
+ 622 0000 0000     		.space	2
+ 623              		.section	.bss.cnt_value.7093,"aw",%nobits
+ 624              		.align	1
+ 627              	cnt_value.7093:
+ 628 0000 0000     		.space	2
+ 629              		.text
+ 630              	.Letext0:
+ 631              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 632              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 633              		.file 4 "../Includes/core_cm4.h"
+ 634              		.file 5 "../Includes/system_MK22F51212.h"
+ 635              		.file 6 "../Includes/MK22F51212.h"
+ 636              		.file 7 "../Includes/platform.h"
+ 637              		.file 8 "../Sources/com/term.h"
+ 638              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 639              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+ 640              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-ea
+ 641              		.file 12 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\includ
+DEFINED SYMBOLS
+                            *ABS*:00000000 motor.c
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:20     .bss.newvalue:00000000 newvalue
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:21     .bss.newvalue:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:23     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:26     .bss.clh:00000000 clh
+                            *COM*:00000002 valueMotor
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:30     .text.motorIncrementPwm:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:37     .text.motorIncrementPwm:00000000 motorIncrementPwm
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:278    .text.motorSetPwm:00000000 motorSetPwm
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:95     .text.motorIncrementPwm:00000048 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:101    .text.FTM3CH2_IRQHandler:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:108    .text.FTM3CH2_IRQHandler:00000000 FTM3CH2_IRQHandler
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:207    .text.FTM3CH2_IRQHandler:0000009c $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:621    .bss.cnt_timer.7092:00000000 cnt_timer.7092
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:627    .bss.cnt_value.7093:00000000 cnt_value.7093
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:215    .text.motorRamp:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:222    .text.motorRamp:00000000 motorRamp
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:265    .text.motorRamp:0000002c $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:271    .text.motorSetPwm:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:392    .text.motorSetPwm:000000b8 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:401    .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:420    .text.motorParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:427    .text.motorParseCommand:00000000 motorParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:530    .text.motorParseCommand:0000009c $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:548    .text.motorInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:555    .text.motorInit:00000000 motorInit
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:607    .text.motorInit:00000048 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:618    .bss.cnt_timer.7092:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccwbyMvb.s:624    .bss.cnt_value.7093:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.ftm3.h.17.78fdab8adbab5d4a41cd9539cf0db10a
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.newlib.h.8.5f2124c7e712be65f83b91ff86a0b1c1
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.motor.h.15.68048d459e17ff350ed964e39850d12a
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+strncmp
+utilScanDecimal16s
+termRegisterCommandLineHandler

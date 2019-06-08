@@ -1,0 +1,668 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"servo.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.clh,"aw",%nobits
+  18              		.align	2
+  21              	clh:
+  22 0000 00000000 		.space	56
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  22      00000000 
+  23              		.section	.text.servoSet,"ax",%progbits
+  24              		.align	1
+  25              		.global	servoSet
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	servoSet:
+  32              	.LFB125:
+  33              		.file 1 "../Sources/utils/servo.c"
+   1:../Sources/utils/servo.c **** /*
+   2:../Sources/utils/servo.c ****  * servo.c
+   3:../Sources/utils/servo.c ****  *
+   4:../Sources/utils/servo.c ****  *  Created on: 13.03.2019
+   5:../Sources/utils/servo.c ****  *      Author: Blub
+   6:../Sources/utils/servo.c ****  */
+   7:../Sources/utils/servo.c **** #include <string.h>
+   8:../Sources/utils/servo.c **** #include "platform.h"
+   9:../Sources/utils/servo.c **** #include "servo.h"
+  10:../Sources/utils/servo.c **** #include "ftm1.h"
+  11:../Sources/utils/servo.c **** #include "term.h"
+  12:../Sources/utils/servo.c **** #include "util.h"
+  13:../Sources/utils/servo.c **** 
+  14:../Sources/utils/servo.c **** 
+  15:../Sources/utils/servo.c **** 
+  16:../Sources/utils/servo.c **** static tCommandLineHandler clh;
+  17:../Sources/utils/servo.c **** 
+  18:../Sources/utils/servo.c **** 
+  19:../Sources/utils/servo.c **** void servoSet(int8_t value)
+  20:../Sources/utils/servo.c **** {
+  34              		.loc 1 20 0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 16
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              		.cfi_def_cfa_offset 4
+  41              		.cfi_offset 7, -4
+  42 0002 85B0     		sub	sp, sp, #20
+  43              		.cfi_def_cfa_offset 24
+  44 0004 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+  46 0006 0346     		mov	r3, r0
+  47 0008 FB71     		strb	r3, [r7, #7]
+  21:../Sources/utils/servo.c ****   if (value > SERVO_MAX_VALUE) value = SERVO_MAX_VALUE;
+  22:../Sources/utils/servo.c **** 
+  23:../Sources/utils/servo.c ****   int16_t v = (uint16_t)(((FTM1_MODULO + 1) * ((uint32_t)value)) / SERVO_MAX_VALUE);
+  48              		.loc 1 23 0
+  49 000a 97F90730 		ldrsb	r3, [r7, #7]
+  50 000e 41F28832 		movw	r2, #5000
+  51 0012 02FB03F3 		mul	r3, r2, r3
+  52 0016 074A     		ldr	r2, .L2
+  53 0018 A2FB0323 		umull	r2, r3, r2, r3
+  54 001c DB09     		lsrs	r3, r3, #7
+  55 001e FB81     		strh	r3, [r7, #14]	@ movhi
+  24:../Sources/utils/servo.c ****   FTM1_C0V = v;
+  56              		.loc 1 24 0
+  57 0020 054A     		ldr	r2, .L2+4
+  58 0022 B7F90E30 		ldrsh	r3, [r7, #14]
+  59 0026 1361     		str	r3, [r2, #16]
+  25:../Sources/utils/servo.c **** }
+  60              		.loc 1 25 0
+  61 0028 00BF     		nop
+  62 002a 1437     		adds	r7, r7, #20
+  63              		.cfi_def_cfa_offset 4
+  64 002c BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+  66              		@ sp needed
+  67 002e 5DF8047B 		ldr	r7, [sp], #4
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 0032 7047     		bx	lr
+  71              	.L3:
+  72              		.align	2
+  73              	.L2:
+  74 0034 81808080 		.word	-2139062143
+  75 0038 00900340 		.word	1073975296
+  76              		.cfi_endproc
+  77              	.LFE125:
+  79              		.section	.rodata
+  80              		.align	2
+  81              	.LC0:
+  82 0000 68656C70 		.ascii	"help\000"
+  82      00
+  83 0005 000000   		.align	2
+  84              	.LC1:
+  85 0008 20736572 		.ascii	" servo commands:\000"
+  85      766F2063 
+  85      6F6D6D61 
+  85      6E64733A 
+  85      00
+  86 0019 000000   		.align	2
+  87              	.LC2:
+  88 001c 20207365 		.ascii	"  servo 1  => 0.6ms\000"
+  88      72766F20 
+  88      3120203D 
+  88      3E20302E 
+  88      366D7300 
+  89              		.align	2
+  90              	.LC3:
+  91 0030 20207365 		.ascii	"  servo 2  => 0.8ms\000"
+  91      72766F20 
+  91      3220203D 
+  91      3E20302E 
+  91      386D7300 
+  92              		.align	2
+  93              	.LC4:
+  94 0044 20207365 		.ascii	"  servo 3  => 1.0ms\000"
+  94      72766F20 
+  94      3320203D 
+  94      3E20312E 
+  94      306D7300 
+  95              		.align	2
+  96              	.LC5:
+  97 0058 20207365 		.ascii	"  servo 4  => 1.2ms\000"
+  97      72766F20 
+  97      3420203D 
+  97      3E20312E 
+  97      326D7300 
+  98              		.align	2
+  99              	.LC6:
+ 100 006c 20207365 		.ascii	"  servo 5  => 1.4ms\000"
+ 100      72766F20 
+ 100      3520203D 
+ 100      3E20312E 
+ 100      346D7300 
+ 101              		.align	2
+ 102              	.LC7:
+ 103 0080 20207365 		.ascii	"  servo 6  => 1.6ms\000"
+ 103      72766F20 
+ 103      3620203D 
+ 103      3E20312E 
+ 103      366D7300 
+ 104              		.align	2
+ 105              	.LC8:
+ 106 0094 20207365 		.ascii	"  servo 7  => 1.8ms\000"
+ 106      72766F20 
+ 106      3720203D 
+ 106      3E20312E 
+ 106      386D7300 
+ 107              		.align	2
+ 108              	.LC9:
+ 109 00a8 20207365 		.ascii	"  servo 8  => 2.0ms\000"
+ 109      72766F20 
+ 109      3820203D 
+ 109      3E20322E 
+ 109      306D7300 
+ 110              		.align	2
+ 111              	.LC10:
+ 112 00bc 20207365 		.ascii	"  servo 9  => 2.2ms\000"
+ 112      72766F20 
+ 112      3920203D 
+ 112      3E20322E 
+ 112      326D7300 
+ 113              		.align	2
+ 114              	.LC11:
+ 115 00d0 3100     		.ascii	"1\000"
+ 116 00d2 0000     		.align	2
+ 117              	.LC12:
+ 118 00d4 3200     		.ascii	"2\000"
+ 119 00d6 0000     		.align	2
+ 120              	.LC13:
+ 121 00d8 3300     		.ascii	"3\000"
+ 122 00da 0000     		.align	2
+ 123              	.LC14:
+ 124 00dc 3400     		.ascii	"4\000"
+ 125 00de 0000     		.align	2
+ 126              	.LC15:
+ 127 00e0 3500     		.ascii	"5\000"
+ 128 00e2 0000     		.align	2
+ 129              	.LC16:
+ 130 00e4 3600     		.ascii	"6\000"
+ 131 00e6 0000     		.align	2
+ 132              	.LC17:
+ 133 00e8 3700     		.ascii	"7\000"
+ 134 00ea 0000     		.align	2
+ 135              	.LC18:
+ 136 00ec 3800     		.ascii	"8\000"
+ 137 00ee 0000     		.align	2
+ 138              	.LC19:
+ 139 00f0 3900     		.ascii	"9\000"
+ 140              		.section	.text.servoParseCommand,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	servoParseCommand
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 146              		.fpu fpv4-sp-d16
+ 148              	servoParseCommand:
+ 149              	.LFB126:
+  26:../Sources/utils/servo.c **** 
+  27:../Sources/utils/servo.c **** #define CheckCommand(buf, command)   (strncmp(buf, command, sizeof(command)-1) == 0)
+  28:../Sources/utils/servo.c **** /**
+  29:../Sources/utils/servo.c ****  * This function parses one command line, executes the command and returns the status
+  30:../Sources/utils/servo.c ****  *
+  31:../Sources/utils/servo.c ****  * @param[in] cmd
+  32:../Sources/utils/servo.c ****  *   the null terminated string to parse
+  33:../Sources/utils/servo.c ****  * @returns
+  34:../Sources/utils/servo.c ****  *   EC_SUCCESS if there was a valid command
+  35:../Sources/utils/servo.c ****  *   EC_INVALID_CMD if the command was unknown or invalid
+  36:../Sources/utils/servo.c ****  */
+  37:../Sources/utils/servo.c **** tError servoParseCommand(const unsigned char *cmd)
+  38:../Sources/utils/servo.c **** {
+ 150              		.loc 1 38 0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 16
+ 153              		@ frame_needed = 1, uses_anonymous_args = 0
+ 154 0000 80B5     		push	{r7, lr}
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 7, -8
+ 157              		.cfi_offset 14, -4
+ 158 0002 84B0     		sub	sp, sp, #16
+ 159              		.cfi_def_cfa_offset 24
+ 160 0004 00AF     		add	r7, sp, #0
+ 161              		.cfi_def_cfa_register 7
+ 162 0006 7860     		str	r0, [r7, #4]
+  39:../Sources/utils/servo.c ****   tError result = EC_INVALID_ARG;
+ 163              		.loc 1 39 0
+ 164 0008 0323     		movs	r3, #3
+ 165 000a FB73     		strb	r3, [r7, #15]
+  40:../Sources/utils/servo.c ****   if (strcmp(cmd, "help") == 0)
+ 166              		.loc 1 40 0
+ 167 000c 4B49     		ldr	r1, .L16
+ 168 000e 7868     		ldr	r0, [r7, #4]
+ 169 0010 FFF7FEFF 		bl	strcmp
+ 170 0014 0346     		mov	r3, r0
+ 171 0016 002B     		cmp	r3, #0
+ 172 0018 20D1     		bne	.L5
+  41:../Sources/utils/servo.c ****   {
+  42:../Sources/utils/servo.c ****     termWriteLine(" servo commands:");
+ 173              		.loc 1 42 0
+ 174 001a 4948     		ldr	r0, .L16+4
+ 175 001c FFF7FEFF 		bl	termWriteLine
+  43:../Sources/utils/servo.c ****     termWriteLine("  servo 1  => 0.6ms");
+ 176              		.loc 1 43 0
+ 177 0020 4848     		ldr	r0, .L16+8
+ 178 0022 FFF7FEFF 		bl	termWriteLine
+  44:../Sources/utils/servo.c ****     termWriteLine("  servo 2  => 0.8ms");
+ 179              		.loc 1 44 0
+ 180 0026 4848     		ldr	r0, .L16+12
+ 181 0028 FFF7FEFF 		bl	termWriteLine
+  45:../Sources/utils/servo.c ****     termWriteLine("  servo 3  => 1.0ms");
+ 182              		.loc 1 45 0
+ 183 002c 4748     		ldr	r0, .L16+16
+ 184 002e FFF7FEFF 		bl	termWriteLine
+  46:../Sources/utils/servo.c ****     termWriteLine("  servo 4  => 1.2ms");
+ 185              		.loc 1 46 0
+ 186 0032 4748     		ldr	r0, .L16+20
+ 187 0034 FFF7FEFF 		bl	termWriteLine
+  47:../Sources/utils/servo.c ****     termWriteLine("  servo 5  => 1.4ms");
+ 188              		.loc 1 47 0
+ 189 0038 4648     		ldr	r0, .L16+24
+ 190 003a FFF7FEFF 		bl	termWriteLine
+  48:../Sources/utils/servo.c ****     termWriteLine("  servo 6  => 1.6ms");
+ 191              		.loc 1 48 0
+ 192 003e 4648     		ldr	r0, .L16+28
+ 193 0040 FFF7FEFF 		bl	termWriteLine
+  49:../Sources/utils/servo.c ****     termWriteLine("  servo 7  => 1.8ms");
+ 194              		.loc 1 49 0
+ 195 0044 4548     		ldr	r0, .L16+32
+ 196 0046 FFF7FEFF 		bl	termWriteLine
+  50:../Sources/utils/servo.c ****     termWriteLine("  servo 8  => 2.0ms");
+ 197              		.loc 1 50 0
+ 198 004a 4548     		ldr	r0, .L16+36
+ 199 004c FFF7FEFF 		bl	termWriteLine
+  51:../Sources/utils/servo.c ****     termWriteLine("  servo 9  => 2.2ms");
+ 200              		.loc 1 51 0
+ 201 0050 4448     		ldr	r0, .L16+40
+ 202 0052 FFF7FEFF 		bl	termWriteLine
+  52:../Sources/utils/servo.c **** 
+  53:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 203              		.loc 1 53 0
+ 204 0056 0023     		movs	r3, #0
+ 205 0058 FB73     		strb	r3, [r7, #15]
+ 206 005a 6AE0     		b	.L6
+ 207              	.L5:
+  54:../Sources/utils/servo.c ****   }
+  55:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "1"))
+ 208              		.loc 1 55 0
+ 209 005c 7B68     		ldr	r3, [r7, #4]
+ 210 005e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 211 0060 414B     		ldr	r3, .L16+44
+ 212 0062 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 213 0064 9A42     		cmp	r2, r3
+ 214 0066 05D1     		bne	.L7
+  56:../Sources/utils/servo.c ****   {
+  57:../Sources/utils/servo.c ****     servoSet(6);
+ 215              		.loc 1 57 0
+ 216 0068 0620     		movs	r0, #6
+ 217 006a FFF7FEFF 		bl	servoSet
+  58:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 218              		.loc 1 58 0
+ 219 006e 0023     		movs	r3, #0
+ 220 0070 FB73     		strb	r3, [r7, #15]
+ 221 0072 5EE0     		b	.L6
+ 222              	.L7:
+  59:../Sources/utils/servo.c ****   }
+  60:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "2"))
+ 223              		.loc 1 60 0
+ 224 0074 7B68     		ldr	r3, [r7, #4]
+ 225 0076 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 226 0078 3C4B     		ldr	r3, .L16+48
+ 227 007a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 228 007c 9A42     		cmp	r2, r3
+ 229 007e 05D1     		bne	.L8
+  61:../Sources/utils/servo.c ****   {
+  62:../Sources/utils/servo.c ****     servoSet(10);
+ 230              		.loc 1 62 0
+ 231 0080 0A20     		movs	r0, #10
+ 232 0082 FFF7FEFF 		bl	servoSet
+  63:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 233              		.loc 1 63 0
+ 234 0086 0023     		movs	r3, #0
+ 235 0088 FB73     		strb	r3, [r7, #15]
+ 236 008a 52E0     		b	.L6
+ 237              	.L8:
+  64:../Sources/utils/servo.c ****   }
+  65:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "3"))
+ 238              		.loc 1 65 0
+ 239 008c 7B68     		ldr	r3, [r7, #4]
+ 240 008e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 241 0090 374B     		ldr	r3, .L16+52
+ 242 0092 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 243 0094 9A42     		cmp	r2, r3
+ 244 0096 05D1     		bne	.L9
+  66:../Sources/utils/servo.c ****   {
+  67:../Sources/utils/servo.c ****     servoSet(12);
+ 245              		.loc 1 67 0
+ 246 0098 0C20     		movs	r0, #12
+ 247 009a FFF7FEFF 		bl	servoSet
+  68:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 248              		.loc 1 68 0
+ 249 009e 0023     		movs	r3, #0
+ 250 00a0 FB73     		strb	r3, [r7, #15]
+ 251 00a2 46E0     		b	.L6
+ 252              	.L9:
+  69:../Sources/utils/servo.c ****   }
+  70:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "4"))
+ 253              		.loc 1 70 0
+ 254 00a4 7B68     		ldr	r3, [r7, #4]
+ 255 00a6 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 256 00a8 324B     		ldr	r3, .L16+56
+ 257 00aa 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 258 00ac 9A42     		cmp	r2, r3
+ 259 00ae 05D1     		bne	.L10
+  71:../Sources/utils/servo.c ****   {
+  72:../Sources/utils/servo.c ****     servoSet(15);
+ 260              		.loc 1 72 0
+ 261 00b0 0F20     		movs	r0, #15
+ 262 00b2 FFF7FEFF 		bl	servoSet
+  73:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 263              		.loc 1 73 0
+ 264 00b6 0023     		movs	r3, #0
+ 265 00b8 FB73     		strb	r3, [r7, #15]
+ 266 00ba 3AE0     		b	.L6
+ 267              	.L10:
+  74:../Sources/utils/servo.c ****   }
+  75:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "5"))
+ 268              		.loc 1 75 0
+ 269 00bc 7B68     		ldr	r3, [r7, #4]
+ 270 00be 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 271 00c0 2D4B     		ldr	r3, .L16+60
+ 272 00c2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 273 00c4 9A42     		cmp	r2, r3
+ 274 00c6 05D1     		bne	.L11
+  76:../Sources/utils/servo.c ****   {
+  77:../Sources/utils/servo.c ****     servoSet(18);
+ 275              		.loc 1 77 0
+ 276 00c8 1220     		movs	r0, #18
+ 277 00ca FFF7FEFF 		bl	servoSet
+  78:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 278              		.loc 1 78 0
+ 279 00ce 0023     		movs	r3, #0
+ 280 00d0 FB73     		strb	r3, [r7, #15]
+ 281 00d2 2EE0     		b	.L6
+ 282              	.L11:
+  79:../Sources/utils/servo.c ****   }
+  80:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "6"))
+ 283              		.loc 1 80 0
+ 284 00d4 7B68     		ldr	r3, [r7, #4]
+ 285 00d6 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 286 00d8 284B     		ldr	r3, .L16+64
+ 287 00da 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 288 00dc 9A42     		cmp	r2, r3
+ 289 00de 05D1     		bne	.L12
+  81:../Sources/utils/servo.c ****   {
+  82:../Sources/utils/servo.c ****     servoSet(20);
+ 290              		.loc 1 82 0
+ 291 00e0 1420     		movs	r0, #20
+ 292 00e2 FFF7FEFF 		bl	servoSet
+  83:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 293              		.loc 1 83 0
+ 294 00e6 0023     		movs	r3, #0
+ 295 00e8 FB73     		strb	r3, [r7, #15]
+ 296 00ea 22E0     		b	.L6
+ 297              	.L12:
+  84:../Sources/utils/servo.c ****   }
+  85:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "7"))
+ 298              		.loc 1 85 0
+ 299 00ec 7B68     		ldr	r3, [r7, #4]
+ 300 00ee 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 301 00f0 234B     		ldr	r3, .L16+68
+ 302 00f2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 303 00f4 9A42     		cmp	r2, r3
+ 304 00f6 05D1     		bne	.L13
+  86:../Sources/utils/servo.c ****   {
+  87:../Sources/utils/servo.c ****     servoSet(23);
+ 305              		.loc 1 87 0
+ 306 00f8 1720     		movs	r0, #23
+ 307 00fa FFF7FEFF 		bl	servoSet
+  88:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 308              		.loc 1 88 0
+ 309 00fe 0023     		movs	r3, #0
+ 310 0100 FB73     		strb	r3, [r7, #15]
+ 311 0102 16E0     		b	.L6
+ 312              	.L13:
+  89:../Sources/utils/servo.c ****   }
+  90:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "8"))
+ 313              		.loc 1 90 0
+ 314 0104 7B68     		ldr	r3, [r7, #4]
+ 315 0106 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 316 0108 1E4B     		ldr	r3, .L16+72
+ 317 010a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 318 010c 9A42     		cmp	r2, r3
+ 319 010e 05D1     		bne	.L14
+  91:../Sources/utils/servo.c ****   {
+  92:../Sources/utils/servo.c ****     servoSet(26);
+ 320              		.loc 1 92 0
+ 321 0110 1A20     		movs	r0, #26
+ 322 0112 FFF7FEFF 		bl	servoSet
+  93:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 323              		.loc 1 93 0
+ 324 0116 0023     		movs	r3, #0
+ 325 0118 FB73     		strb	r3, [r7, #15]
+ 326 011a 0AE0     		b	.L6
+ 327              	.L14:
+  94:../Sources/utils/servo.c ****   }
+  95:../Sources/utils/servo.c ****   else if (CheckCommand(cmd, "9"))
+ 328              		.loc 1 95 0
+ 329 011c 7B68     		ldr	r3, [r7, #4]
+ 330 011e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 331 0120 194B     		ldr	r3, .L16+76
+ 332 0122 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 333 0124 9A42     		cmp	r2, r3
+ 334 0126 04D1     		bne	.L6
+  96:../Sources/utils/servo.c ****   {
+  97:../Sources/utils/servo.c ****     servoSet(28);
+ 335              		.loc 1 97 0
+ 336 0128 1C20     		movs	r0, #28
+ 337 012a FFF7FEFF 		bl	servoSet
+  98:../Sources/utils/servo.c ****     result = EC_SUCCESS;
+ 338              		.loc 1 98 0
+ 339 012e 0023     		movs	r3, #0
+ 340 0130 FB73     		strb	r3, [r7, #15]
+ 341              	.L6:
+  99:../Sources/utils/servo.c ****   }
+ 100:../Sources/utils/servo.c **** 
+ 101:../Sources/utils/servo.c ****   return result;
+ 342              		.loc 1 101 0
+ 343 0132 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 102:../Sources/utils/servo.c **** }
+ 344              		.loc 1 102 0
+ 345 0134 1846     		mov	r0, r3
+ 346 0136 1037     		adds	r7, r7, #16
+ 347              		.cfi_def_cfa_offset 8
+ 348 0138 BD46     		mov	sp, r7
+ 349              		.cfi_def_cfa_register 13
+ 350              		@ sp needed
+ 351 013a 80BD     		pop	{r7, pc}
+ 352              	.L17:
+ 353              		.align	2
+ 354              	.L16:
+ 355 013c 00000000 		.word	.LC0
+ 356 0140 08000000 		.word	.LC1
+ 357 0144 1C000000 		.word	.LC2
+ 358 0148 30000000 		.word	.LC3
+ 359 014c 44000000 		.word	.LC4
+ 360 0150 58000000 		.word	.LC5
+ 361 0154 6C000000 		.word	.LC6
+ 362 0158 80000000 		.word	.LC7
+ 363 015c 94000000 		.word	.LC8
+ 364 0160 A8000000 		.word	.LC9
+ 365 0164 BC000000 		.word	.LC10
+ 366 0168 D0000000 		.word	.LC11
+ 367 016c D4000000 		.word	.LC12
+ 368 0170 D8000000 		.word	.LC13
+ 369 0174 DC000000 		.word	.LC14
+ 370 0178 E0000000 		.word	.LC15
+ 371 017c E4000000 		.word	.LC16
+ 372 0180 E8000000 		.word	.LC17
+ 373 0184 EC000000 		.word	.LC18
+ 374 0188 F0000000 		.word	.LC19
+ 375              		.cfi_endproc
+ 376              	.LFE126:
+ 378              		.section	.rodata
+ 379 00f2 0000     		.align	2
+ 380              	.LC20:
+ 381 00f4 312C2032 		.ascii	"1, 2, 3, 4, 5, 6, 7, 8, 9\000"
+ 381      2C20332C 
+ 381      20342C20 
+ 381      352C2036 
+ 381      2C20372C 
+ 382 010e 0000     		.align	2
+ 383              	.LC21:
+ 384 0110 73657276 		.ascii	"servo\000"
+ 384      6F00
+ 385              		.section	.text.servoInit,"ax",%progbits
+ 386              		.align	1
+ 387              		.global	servoInit
+ 388              		.syntax unified
+ 389              		.thumb
+ 390              		.thumb_func
+ 391              		.fpu fpv4-sp-d16
+ 393              	servoInit:
+ 394              	.LFB127:
+ 103:../Sources/utils/servo.c **** 
+ 104:../Sources/utils/servo.c **** 
+ 105:../Sources/utils/servo.c **** void servoInit(void)
+ 106:../Sources/utils/servo.c **** {
+ 395              		.loc 1 106 0
+ 396              		.cfi_startproc
+ 397              		@ args = 0, pretend = 0, frame = 0
+ 398              		@ frame_needed = 1, uses_anonymous_args = 0
+ 399 0000 80B5     		push	{r7, lr}
+ 400              		.cfi_def_cfa_offset 8
+ 401              		.cfi_offset 7, -8
+ 402              		.cfi_offset 14, -4
+ 403 0002 00AF     		add	r7, sp, #0
+ 404              		.cfi_def_cfa_register 7
+ 107:../Sources/utils/servo.c ****   // _todo ML#9.05 Configure the pin direction of the 4 pins as output.
+ 108:../Sources/utils/servo.c ****   GPIOA_PDDR |= 1<<12;               // configure PTA12
+ 405              		.loc 1 108 0
+ 406 0004 0C4A     		ldr	r2, .L19
+ 407 0006 0C4B     		ldr	r3, .L19
+ 408 0008 5B69     		ldr	r3, [r3, #20]
+ 409 000a 43F48053 		orr	r3, r3, #4096
+ 410 000e 5361     		str	r3, [r2, #20]
+ 109:../Sources/utils/servo.c **** 
+ 110:../Sources/utils/servo.c **** 
+ 111:../Sources/utils/servo.c ****   PORTA_PCR12 = PORT_PCR_MUX(3);
+ 411              		.loc 1 111 0
+ 412 0010 0A4B     		ldr	r3, .L19+4
+ 413 0012 4FF44072 		mov	r2, #768
+ 414 0016 1A63     		str	r2, [r3, #48]
+ 112:../Sources/utils/servo.c **** 
+ 113:../Sources/utils/servo.c ****   // _todo ML#9.07 configure both channels as edge aligned PWM with low-true pulses
+ 114:../Sources/utils/servo.c ****   FTM1_C0SC = FTM_CnSC_MSx(2) | FTM_CnSC_ELSx(2);
+ 415              		.loc 1 114 0
+ 416 0018 094B     		ldr	r3, .L19+8
+ 417 001a 2822     		movs	r2, #40
+ 418 001c DA60     		str	r2, [r3, #12]
+ 115:../Sources/utils/servo.c ****   FTM1_C0V = 1000;
+ 419              		.loc 1 115 0
+ 420 001e 084B     		ldr	r3, .L19+8
+ 421 0020 4FF47A72 		mov	r2, #1000
+ 422 0024 1A61     		str	r2, [r3, #16]
+ 116:../Sources/utils/servo.c **** 
+ 117:../Sources/utils/servo.c ****   // register terminal command line handler
+ 118:../Sources/utils/servo.c ****     termRegisterCommandLineHandler(&clh, "servo", "1, 2, 3, 4, 5, 6, 7, 8, 9", servoParseCommand);
+ 423              		.loc 1 118 0
+ 424 0026 074B     		ldr	r3, .L19+12
+ 425 0028 074A     		ldr	r2, .L19+16
+ 426 002a 0849     		ldr	r1, .L19+20
+ 427 002c 0848     		ldr	r0, .L19+24
+ 428 002e FFF7FEFF 		bl	termRegisterCommandLineHandler
+ 119:../Sources/utils/servo.c **** }
+ 429              		.loc 1 119 0
+ 430 0032 00BF     		nop
+ 431 0034 80BD     		pop	{r7, pc}
+ 432              	.L20:
+ 433 0036 00BF     		.align	2
+ 434              	.L19:
+ 435 0038 00F00F40 		.word	1074786304
+ 436 003c 00900440 		.word	1074040832
+ 437 0040 00900340 		.word	1073975296
+ 438 0044 00000000 		.word	servoParseCommand
+ 439 0048 F4000000 		.word	.LC20
+ 440 004c 10010000 		.word	.LC21
+ 441 0050 00000000 		.word	clh
+ 442              		.cfi_endproc
+ 443              	.LFE127:
+ 445              		.text
+ 446              	.Letext0:
+ 447              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 448              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 449              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 450              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\lib\\gcc\\arm-none-eab
+ 451              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 452              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 453              		.file 8 "../Includes/core_cm4.h"
+ 454              		.file 9 "../Includes/system_MK22F51212.h"
+ 455              		.file 10 "../Includes/MK22F51212.h"
+ 456              		.file 11 "../Includes/platform.h"
+ 457              		.file 12 "../Sources/com/term.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 servo.c
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:18     .bss.clh:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:21     .bss.clh:00000000 clh
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:24     .text.servoSet:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:31     .text.servoSet:00000000 servoSet
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:74     .text.servoSet:00000034 $d
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:80     .rodata:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:141    .text.servoParseCommand:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:148    .text.servoParseCommand:00000000 servoParseCommand
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:355    .text.servoParseCommand:0000013c $d
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:386    .text.servoInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:393    .text.servoInit:00000000 servoInit
+C:\Users\Blub\AppData\Local\Temp\ccPdoPIa.s:435    .text.servoInit:00000038 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.newlib.h.21.59901f4bf241ab46c63694665baa7297
+                           .group:00000000 wm4.features.h.22.0e8d07d991f6850e8439e4b604e8e02e
+                           .group:00000000 wm4.config.h.219.65a553ab5bef5482f0d7880b0d33015e
+                           .group:00000000 wm4._ansi.h.23.9f8fcfa20193763fcf364fb91705c94b
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4._types.h.125.5cf8a495f1f7ef36777ad868a1e32068
+                           .group:00000000 wm4.stddef.h.161.5349cb105733e8777bfb0cf53c4e3f34
+                           .group:00000000 wm4._types.h.183.c226d164ceca1f2ecb9ae9360c54a098
+                           .group:00000000 wm4.reent.h.17.23b059516345f8f5abfa01ddc379570f
+                           .group:00000000 wm4.cdefs.h.47.776a25dae4205bae6cce27d545bc475b
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.161.19e15733342b50ead2919490b095303e
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.f74e607392e0b505ace5d00108430fa1
+                           .group:00000000 wm4.servo.h.11.1dcb30254430f1dab7fabba17e937619
+                           .group:00000000 wm4.ftm1.h.17.e807dd908ac53afc576b6764b7735bb8
+
+UNDEFINED SYMBOLS
+strcmp
+termWriteLine
+termRegisterCommandLineHandler

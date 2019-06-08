@@ -1,0 +1,586 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.ProcessTest,"ax",%progbits
+  18              		.align	1
+  19              		.global	ProcessTest
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	ProcessTest:
+  26              	.LFB125:
+  27              		.file 1 "../Sources/main.c"
+   1:../Sources/main.c **** /*
+   2:../Sources/main.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/main.c ****  *                        Pren Team 29                                \n
+   4:../Sources/main.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/main.c ****  *
+   6:../Sources/main.c ****  * \brief         Test 10
+   7:../Sources/main.c ****  * \file
+   8:../Sources/main.c ****  * \author        Severin Ryser
+   9:../Sources/main.c ****  * \date         10.04.19
+  10:../Sources/main.c ****  *--------------------------------------------------------------------\n
+  11:../Sources/main.c ****  */
+  12:../Sources/main.c **** 
+  13:../Sources/main.c **** #include "platform.h"
+  14:../Sources/main.c **** #include "util.h"
+  15:../Sources/main.c **** 
+  16:../Sources/main.c **** #include "ftm0.h"
+  17:../Sources/main.c **** #include "ftm1quad.h"
+  18:../Sources/main.c **** #include "ftm2.h"
+  19:../Sources/main.c **** #include "ftm3.h"
+  20:../Sources/main.c **** #include "adc.h"
+  21:../Sources/main.c **** 
+  22:../Sources/main.c **** #include "uart.h"
+  23:../Sources/main.c **** #include "i2c.h"
+  24:../Sources/main.c **** #include "term.h"
+  25:../Sources/main.c **** 
+  26:../Sources/main.c **** #include "tof.h"
+  27:../Sources/main.c **** #include "accel.h"
+  28:../Sources/main.c **** #include "encoder.h"
+  29:../Sources/main.c **** #include "beep.h"
+  30:../Sources/main.c **** #include "switch.h"
+  31:../Sources/main.c **** 
+  32:../Sources/main.c **** #include "servo.h"
+  33:../Sources/main.c **** #include "motor.h"
+  34:../Sources/main.c **** #include "spindle.h"
+  35:../Sources/main.c **** 
+  36:../Sources/main.c **** #include "drive.h"
+  37:../Sources/main.c **** #include "cube.h"
+  38:../Sources/main.c **** 
+  39:../Sources/main.c **** #include "test.h"
+  40:../Sources/main.c **** 
+  41:../Sources/main.c **** // calulates the nr of TOF count for a given number of milliseconds
+  42:../Sources/main.c **** #define TOFS_MS(x)   ((uint16_t)(((FTM3_CLOCK / 1000) * x) / (FTM3_MODULO + 1)))
+  43:../Sources/main.c **** 
+  44:../Sources/main.c **** void ProcessTest(void)
+  45:../Sources/main.c **** {
+  28              		.loc 1 45 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  46:../Sources/main.c ****   static uint16_t i;
+  47:../Sources/main.c ****   if (i++ == TOFS_MS(50))
+  38              		.loc 1 47 0
+  39 0004 084B     		ldr	r3, .L4
+  40 0006 1B88     		ldrh	r3, [r3]
+  41 0008 5A1C     		adds	r2, r3, #1
+  42 000a 91B2     		uxth	r1, r2
+  43 000c 064A     		ldr	r2, .L4
+  44 000e 1180     		strh	r1, [r2]	@ movhi
+  45 0010 40F24532 		movw	r2, #837
+  46 0014 9342     		cmp	r3, r2
+  47 0016 04D1     		bne	.L3
+  48              	.LBB2:
+  48:../Sources/main.c ****   {             // run pid worker every 25ms
+  49:../Sources/main.c ****     i = 0;
+  49              		.loc 1 49 0
+  50 0018 034B     		ldr	r3, .L4
+  51 001a 0022     		movs	r2, #0
+  52 001c 1A80     		strh	r2, [r3]	@ movhi
+  50:../Sources/main.c ****     testStateMachine();
+  53              		.loc 1 50 0
+  54 001e FFF7FEFF 		bl	testStateMachine
+  55              	.L3:
+  56              	.LBE2:
+  51:../Sources/main.c ****   }
+  52:../Sources/main.c **** 
+  53:../Sources/main.c **** }
+  57              		.loc 1 53 0
+  58 0022 00BF     		nop
+  59 0024 80BD     		pop	{r7, pc}
+  60              	.L5:
+  61 0026 00BF     		.align	2
+  62              	.L4:
+  63 0028 00000000 		.word	i.6983
+  64              		.cfi_endproc
+  65              	.LFE125:
+  67              		.section	.text.ProcessCube,"ax",%progbits
+  68              		.align	1
+  69              		.global	ProcessCube
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  73              		.fpu fpv4-sp-d16
+  75              	ProcessCube:
+  76              	.LFB126:
+  54:../Sources/main.c **** 
+  55:../Sources/main.c **** void ProcessCube(void)
+  56:../Sources/main.c **** {
+  77              		.loc 1 56 0
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 0
+  80              		@ frame_needed = 1, uses_anonymous_args = 0
+  81 0000 80B5     		push	{r7, lr}
+  82              		.cfi_def_cfa_offset 8
+  83              		.cfi_offset 7, -8
+  84              		.cfi_offset 14, -4
+  85 0002 00AF     		add	r7, sp, #0
+  86              		.cfi_def_cfa_register 7
+  57:../Sources/main.c ****   static uint16_t i;
+  58:../Sources/main.c ****   if (i++ == TOFS_MS(25))
+  87              		.loc 1 58 0
+  88 0004 074B     		ldr	r3, .L9
+  89 0006 1B88     		ldrh	r3, [r3]
+  90 0008 5A1C     		adds	r2, r3, #1
+  91 000a 91B2     		uxth	r1, r2
+  92 000c 054A     		ldr	r2, .L9
+  93 000e 1180     		strh	r1, [r2]	@ movhi
+  94 0010 B3F5D17F 		cmp	r3, #418
+  95 0014 04D1     		bne	.L8
+  59:../Sources/main.c ****   {             // run pid worker every 25ms
+  60:../Sources/main.c ****     i = 0;
+  96              		.loc 1 60 0
+  97 0016 034B     		ldr	r3, .L9
+  98 0018 0022     		movs	r2, #0
+  99 001a 1A80     		strh	r2, [r3]	@ movhi
+  61:../Sources/main.c ****     cubeStateMachine();
+ 100              		.loc 1 61 0
+ 101 001c FFF7FEFF 		bl	cubeStateMachine
+ 102              	.L8:
+  62:../Sources/main.c ****   }
+  63:../Sources/main.c **** }
+ 103              		.loc 1 63 0
+ 104 0020 00BF     		nop
+ 105 0022 80BD     		pop	{r7, pc}
+ 106              	.L10:
+ 107              		.align	2
+ 108              	.L9:
+ 109 0024 00000000 		.word	i.6989
+ 110              		.cfi_endproc
+ 111              	.LFE126:
+ 113              		.section	.text.ProcessDrive,"ax",%progbits
+ 114              		.align	1
+ 115              		.global	ProcessDrive
+ 116              		.syntax unified
+ 117              		.thumb
+ 118              		.thumb_func
+ 119              		.fpu fpv4-sp-d16
+ 121              	ProcessDrive:
+ 122              	.LFB127:
+  64:../Sources/main.c **** 
+  65:../Sources/main.c **** void ProcessDrive(void)
+  66:../Sources/main.c **** {
+ 123              		.loc 1 66 0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 0
+ 126              		@ frame_needed = 1, uses_anonymous_args = 0
+ 127 0000 80B5     		push	{r7, lr}
+ 128              		.cfi_def_cfa_offset 8
+ 129              		.cfi_offset 7, -8
+ 130              		.cfi_offset 14, -4
+ 131 0002 00AF     		add	r7, sp, #0
+ 132              		.cfi_def_cfa_register 7
+  67:../Sources/main.c ****   static uint16_t i;
+  68:../Sources/main.c ****   if (i++ == TOFS_MS(20))
+ 133              		.loc 1 68 0
+ 134 0004 074B     		ldr	r3, .L14
+ 135 0006 1B88     		ldrh	r3, [r3]
+ 136 0008 5A1C     		adds	r2, r3, #1
+ 137 000a 91B2     		uxth	r1, r2
+ 138 000c 054A     		ldr	r2, .L14
+ 139 000e 1180     		strh	r1, [r2]	@ movhi
+ 140 0010 B3F5A77F 		cmp	r3, #334
+ 141 0014 04D1     		bne	.L13
+  69:../Sources/main.c ****   {             // run pid worker every 25ms
+  70:../Sources/main.c ****     i = 0;
+ 142              		.loc 1 70 0
+ 143 0016 034B     		ldr	r3, .L14
+ 144 0018 0022     		movs	r2, #0
+ 145 001a 1A80     		strh	r2, [r3]	@ movhi
+  71:../Sources/main.c **** 
+  72:../Sources/main.c ****     driveToWork();
+ 146              		.loc 1 72 0
+ 147 001c FFF7FEFF 		bl	driveToWork
+ 148              	.L13:
+  73:../Sources/main.c **** 
+  74:../Sources/main.c **** //    termWriteNum32s(FTM1_CNT);
+  75:../Sources/main.c **** //    termWriteLine("  1 ticks");
+  76:../Sources/main.c ****   }
+  77:../Sources/main.c **** }
+ 149              		.loc 1 77 0
+ 150 0020 00BF     		nop
+ 151 0022 80BD     		pop	{r7, pc}
+ 152              	.L15:
+ 153              		.align	2
+ 154              	.L14:
+ 155 0024 00000000 		.word	i.6993
+ 156              		.cfi_endproc
+ 157              	.LFE127:
+ 159              		.section	.text.main,"ax",%progbits
+ 160              		.align	1
+ 161              		.global	main
+ 162              		.syntax unified
+ 163              		.thumb
+ 164              		.thumb_func
+ 165              		.fpu fpv4-sp-d16
+ 167              	main:
+ 168              	.LFB128:
+  78:../Sources/main.c **** 
+  79:../Sources/main.c **** void main(void)
+  80:../Sources/main.c **** {
+ 169              		.loc 1 80 0
+ 170              		.cfi_startproc
+ 171              		@ args = 0, pretend = 0, frame = 8
+ 172              		@ frame_needed = 1, uses_anonymous_args = 0
+ 173 0000 80B5     		push	{r7, lr}
+ 174              		.cfi_def_cfa_offset 8
+ 175              		.cfi_offset 7, -8
+ 176              		.cfi_offset 14, -4
+ 177 0002 82B0     		sub	sp, sp, #8
+ 178              		.cfi_def_cfa_offset 16
+ 179 0004 00AF     		add	r7, sp, #0
+ 180              		.cfi_def_cfa_register 7
+  81:../Sources/main.c ****   uint8_t test = 0;
+ 181              		.loc 1 81 0
+ 182 0006 0023     		movs	r3, #0
+ 183 0008 7B71     		strb	r3, [r7, #5]
+  82:../Sources/main.c ****   uint8_t work = 1;
+ 184              		.loc 1 82 0
+ 185 000a 0123     		movs	r3, #1
+ 186 000c 3B71     		strb	r3, [r7, #4]
+  83:../Sources/main.c ****   tError result = EC_I2C_NO_ANSWER;
+ 187              		.loc 1 83 0
+ 188 000e 0523     		movs	r3, #5
+ 189 0010 FB70     		strb	r3, [r7, #3]
+  84:../Sources/main.c ****   uint16_t count;
+  85:../Sources/main.c **** 
+  86:../Sources/main.c ****   ftm0Init();
+ 190              		.loc 1 86 0
+ 191 0012 FFF7FEFF 		bl	ftm0Init
+  87:../Sources/main.c ****   ftm1quadInit();
+ 192              		.loc 1 87 0
+ 193 0016 FFF7FEFF 		bl	ftm1quadInit
+  88:../Sources/main.c ****   ftm2Init();
+ 194              		.loc 1 88 0
+ 195 001a FFF7FEFF 		bl	ftm2Init
+  89:../Sources/main.c ****   ftm3Init();
+ 196              		.loc 1 89 0
+ 197 001e FFF7FEFF 		bl	ftm3Init
+  90:../Sources/main.c **** 
+  91:../Sources/main.c ****   termInit(TERMINAL_BAUDRATE);
+ 198              		.loc 1 91 0
+ 199 0022 4FF41650 		mov	r0, #9600
+ 200 0026 FFF7FEFF 		bl	termInit
+  92:../Sources/main.c ****   i2cInit();
+ 201              		.loc 1 92 0
+ 202 002a FFF7FEFF 		bl	i2cInit
+  93:../Sources/main.c **** 
+  94:../Sources/main.c ****   tofInit();
+ 203              		.loc 1 94 0
+ 204 002e FFF7FEFF 		bl	tofInit
+  95:../Sources/main.c ****   accelInit();
+ 205              		.loc 1 95 0
+ 206 0032 FFF7FEFF 		bl	accelInit
+  96:../Sources/main.c ****   encoderInit();
+ 207              		.loc 1 96 0
+ 208 0036 FFF7FEFF 		bl	encoderInit
+  97:../Sources/main.c ****   beepInit();
+ 209              		.loc 1 97 0
+ 210 003a FFF7FEFF 		bl	beepInit
+  98:../Sources/main.c ****   switchInit();
+ 211              		.loc 1 98 0
+ 212 003e FFF7FEFF 		bl	switchInit
+  99:../Sources/main.c **** 
+ 100:../Sources/main.c ****   servoInit();
+ 213              		.loc 1 100 0
+ 214 0042 FFF7FEFF 		bl	servoInit
+ 101:../Sources/main.c ****   spindleInit();
+ 215              		.loc 1 101 0
+ 216 0046 FFF7FEFF 		bl	spindleInit
+ 102:../Sources/main.c ****   motorInit();
+ 217              		.loc 1 102 0
+ 218 004a FFF7FEFF 		bl	motorInit
+ 103:../Sources/main.c **** 
+ 104:../Sources/main.c ****   driveInit();
+ 219              		.loc 1 104 0
+ 220 004e FFF7FEFF 		bl	driveInit
+ 105:../Sources/main.c ****   cubeInit();
+ 221              		.loc 1 105 0
+ 222 0052 FFF7FEFF 		bl	cubeInit
+ 106:../Sources/main.c **** 
+ 107:../Sources/main.c ****   testInit();
+ 223              		.loc 1 107 0
+ 224 0056 FFF7FEFF 		bl	testInit
+ 108:../Sources/main.c **** 
+ 109:../Sources/main.c ****   GPIOC_PDDR |= 1 << 2; // Set port direction of the blue Led on tinyK22 as output
+ 225              		.loc 1 109 0
+ 226 005a 214A     		ldr	r2, .L21
+ 227 005c 204B     		ldr	r3, .L21
+ 228 005e 5B69     		ldr	r3, [r3, #20]
+ 229 0060 43F00403 		orr	r3, r3, #4
+ 230 0064 5361     		str	r3, [r2, #20]
+ 110:../Sources/main.c ****   PORTC_PCR2 = PORT_PCR_MUX(1);    // configure port mux of the blue led to GPIO
+ 231              		.loc 1 110 0
+ 232 0066 1F4B     		ldr	r3, .L21+4
+ 233 0068 4FF48072 		mov	r2, #256
+ 234 006c 9A60     		str	r2, [r3, #8]
+ 111:../Sources/main.c **** 
+ 112:../Sources/main.c ****   GPIOD_PDDR |= 1 << 3;             // Test-Pin
+ 235              		.loc 1 112 0
+ 236 006e 1E4A     		ldr	r2, .L21+8
+ 237 0070 1D4B     		ldr	r3, .L21+8
+ 238 0072 5B69     		ldr	r3, [r3, #20]
+ 239 0074 43F00803 		orr	r3, r3, #8
+ 240 0078 5361     		str	r3, [r2, #20]
+ 113:../Sources/main.c ****   PORTD_PCR3 = PORT_PCR_MUX(1);    // For Toggle Pin ->   GPIOD_PTOR = (1 << 3);
+ 241              		.loc 1 113 0
+ 242 007a 1C4B     		ldr	r3, .L21+12
+ 243 007c 4FF48072 		mov	r2, #256
+ 244 0080 DA60     		str	r2, [r3, #12]
+ 114:../Sources/main.c **** 
+ 115:../Sources/main.c **** 
+ 116:../Sources/main.c ****   while(test)
+ 245              		.loc 1 116 0
+ 246 0082 01E0     		b	.L17
+ 247              	.L18:
+ 117:../Sources/main.c ****   {
+ 118:../Sources/main.c ****     ProcessTest();
+ 248              		.loc 1 118 0
+ 249 0084 FFF7FEFF 		bl	ProcessTest
+ 250              	.L17:
+ 116:../Sources/main.c ****   {
+ 251              		.loc 1 116 0
+ 252 0088 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 253 008a 002B     		cmp	r3, #0
+ 254 008c FAD1     		bne	.L18
+ 119:../Sources/main.c ****   }
+ 120:../Sources/main.c **** 
+ 121:../Sources/main.c **** 
+ 122:../Sources/main.c ****   while (work)
+ 255              		.loc 1 122 0
+ 256 008e 20E0     		b	.L19
+ 257              	.L20:
+ 123:../Sources/main.c ****   {
+ 124:../Sources/main.c ****     termDoWork();                     //listen UART-Com
+ 258              		.loc 1 124 0
+ 259 0090 FFF7FEFF 		bl	termDoWork
+ 125:../Sources/main.c **** 
+ 126:../Sources/main.c ****     if (FTM3_SC & FTM_SC_TOF_MASK)    // check for timer overflow
+ 260              		.loc 1 126 0
+ 261 0094 164B     		ldr	r3, .L21+16
+ 262 0096 1B68     		ldr	r3, [r3]
+ 263 0098 03F08003 		and	r3, r3, #128
+ 264 009c 002B     		cmp	r3, #0
+ 265 009e 18D0     		beq	.L19
+ 127:../Sources/main.c ****     {
+ 128:../Sources/main.c ****       FTM3_SC &= ~FTM_SC_TOF_MASK;    // overflow occurred => clear TOF flag
+ 266              		.loc 1 128 0
+ 267 00a0 134A     		ldr	r2, .L21+16
+ 268 00a2 134B     		ldr	r3, .L21+16
+ 269 00a4 1B68     		ldr	r3, [r3]
+ 270 00a6 23F08003 		bic	r3, r3, #128
+ 271 00aa 1360     		str	r3, [r2]
+ 129:../Sources/main.c ****       ProcessDrive();
+ 272              		.loc 1 129 0
+ 273 00ac FFF7FEFF 		bl	ProcessDrive
+ 130:../Sources/main.c ****       ProcessCube();
+ 274              		.loc 1 130 0
+ 275 00b0 FFF7FEFF 		bl	ProcessCube
+ 131:../Sources/main.c **** 
+ 132:../Sources/main.c ****       if (count++ >= TOFS_MS(200)) // check if number of TOF's is equal or greater 250ms
+ 276              		.loc 1 132 0
+ 277 00b4 FB88     		ldrh	r3, [r7, #6]
+ 278 00b6 5A1C     		adds	r2, r3, #1
+ 279 00b8 FA80     		strh	r2, [r7, #6]	@ movhi
+ 280 00ba 40F61352 		movw	r2, #3347
+ 281 00be 9342     		cmp	r3, r2
+ 282 00c0 07D9     		bls	.L19
+ 133:../Sources/main.c ****       {
+ 134:../Sources/main.c ****         count = 0;                    // restart counter to wait again 250ms
+ 283              		.loc 1 134 0
+ 284 00c2 0023     		movs	r3, #0
+ 285 00c4 FB80     		strh	r3, [r7, #6]	@ movhi
+ 135:../Sources/main.c ****         GPIOC_PTOR |= (1 << 2);         // toggle PTC2 (blue led) on the tinyK22
+ 286              		.loc 1 135 0
+ 287 00c6 064A     		ldr	r2, .L21
+ 288 00c8 054B     		ldr	r3, .L21
+ 289 00ca DB68     		ldr	r3, [r3, #12]
+ 290 00cc 43F00403 		orr	r3, r3, #4
+ 291 00d0 D360     		str	r3, [r2, #12]
+ 292              	.L19:
+ 122:../Sources/main.c ****   {
+ 293              		.loc 1 122 0
+ 294 00d2 3B79     		ldrb	r3, [r7, #4]	@ zero_extendqisi2
+ 295 00d4 002B     		cmp	r3, #0
+ 296 00d6 DBD1     		bne	.L20
+ 136:../Sources/main.c **** 
+ 137:../Sources/main.c **** //        tofRange(TOFADD1, &distance);
+ 138:../Sources/main.c **** //        termWriteNum16s(distance);
+ 139:../Sources/main.c **** //        termWriteChar('\n');
+ 140:../Sources/main.c **** 
+ 141:../Sources/main.c **** //Accelerometer TEST----------------------------------
+ 142:../Sources/main.c **** //        accelRead(&accel_data);
+ 143:../Sources/main.c **** //        termWriteNum16s(accel_data.accel_x);
+ 144:../Sources/main.c **** //        termWriteChar(',');
+ 145:../Sources/main.c **** //        termWriteNum16s(accel_data.accel_y);
+ 146:../Sources/main.c **** //        termWriteChar(',');
+ 147:../Sources/main.c **** //        termWriteNum16s(accel_data.accel_z);
+ 148:../Sources/main.c **** //        termWriteChar('\n');
+ 149:../Sources/main.c **** 
+ 150:../Sources/main.c **** //Test Switch-------------------------------------------------
+ 151:../Sources/main.c **** //                termWriteNum16s(switchStateOpen());
+ 152:../Sources/main.c **** //                termWriteLine(" Ticks");
+ 153:../Sources/main.c **** 
+ 154:../Sources/main.c **** //Encoder Counter---------------------------------------------
+ 155:../Sources/main.c **** //        termWriteNum16s(encodergetTicks());
+ 156:../Sources/main.c **** //        termWriteLine(" Ticks");
+ 157:../Sources/main.c **** //        termWriteNum16s(encodergetRPS());
+ 158:../Sources/main.c **** //        termWriteLine(" rps");
+ 159:../Sources/main.c **** //        termWriteNum16s(encodergetRPM());
+ 160:../Sources/main.c **** //        termWriteLine(" rpm");
+ 161:../Sources/main.c **** //        termWriteNum16s(encodergetSpeedmmps());
+ 162:../Sources/main.c **** //        termWriteLine(" mm/s --> 10ms");
+ 163:../Sources/main.c **** //        termWriteNum16s(encodergetSpeedmmps100ms());
+ 164:../Sources/main.c **** //        termWriteLine(" mm/s --> 100ms");
+ 165:../Sources/main.c **** //        termWriteNum16s(encodergetSpeedmmpsavg());
+ 166:../Sources/main.c **** //        termWriteLine(" mm/s --> avg100ms");
+ 167:../Sources/main.c **** //        termWriteChar('\n');
+ 168:../Sources/main.c **** 
+ 169:../Sources/main.c **** //Accelerometer TEST----------------------------------
+ 170:../Sources/main.c **** //          SensReadAccel(&accel_data);
+ 171:../Sources/main.c **** //
+ 172:../Sources/main.c **** //          termWriteNum16s(accel_data.accel_x);
+ 173:../Sources/main.c **** //          termWriteChar('\n');
+ 174:../Sources/main.c **** //          termWriteNum16s(accel_data.accel_y);
+ 175:../Sources/main.c **** //          termWriteChar('\n');
+ 176:../Sources/main.c **** //          termWriteNum16s(accel_data.accel_z);
+ 177:../Sources/main.c **** //          termWriteChar('\n');
+ 178:../Sources/main.c **** //          termWriteChar('\n');
+ 179:../Sources/main.c ****       }
+ 180:../Sources/main.c **** 
+ 181:../Sources/main.c ****     }
+ 182:../Sources/main.c ****   }
+ 183:../Sources/main.c **** }
+ 297              		.loc 1 183 0
+ 298 00d8 00BF     		nop
+ 299 00da 0837     		adds	r7, r7, #8
+ 300              		.cfi_def_cfa_offset 8
+ 301 00dc BD46     		mov	sp, r7
+ 302              		.cfi_def_cfa_register 13
+ 303              		@ sp needed
+ 304 00de 80BD     		pop	{r7, pc}
+ 305              	.L22:
+ 306              		.align	2
+ 307              	.L21:
+ 308 00e0 80F00F40 		.word	1074786432
+ 309 00e4 00B00440 		.word	1074049024
+ 310 00e8 C0F00F40 		.word	1074786496
+ 311 00ec 00C00440 		.word	1074053120
+ 312 00f0 00600240 		.word	1073897472
+ 313              		.cfi_endproc
+ 314              	.LFE128:
+ 316              		.section	.bss.i.6983,"aw",%nobits
+ 317              		.align	1
+ 320              	i.6983:
+ 321 0000 0000     		.space	2
+ 322              		.section	.bss.i.6989,"aw",%nobits
+ 323              		.align	1
+ 326              	i.6989:
+ 327 0000 0000     		.space	2
+ 328              		.section	.bss.i.6993,"aw",%nobits
+ 329              		.align	1
+ 332              	i.6993:
+ 333 0000 0000     		.space	2
+ 334              		.text
+ 335              	.Letext0:
+ 336              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 337              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 338              		.file 4 "../Includes/core_cm4.h"
+ 339              		.file 5 "../Includes/system_MK22F51212.h"
+ 340              		.file 6 "../Includes/MK22F51212.h"
+ 341              		.file 7 "../Includes/platform.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:18     .text.ProcessTest:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:25     .text.ProcessTest:00000000 ProcessTest
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:63     .text.ProcessTest:00000028 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:320    .bss.i.6983:00000000 i.6983
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:68     .text.ProcessCube:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:75     .text.ProcessCube:00000000 ProcessCube
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:109    .text.ProcessCube:00000024 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:326    .bss.i.6989:00000000 i.6989
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:114    .text.ProcessDrive:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:121    .text.ProcessDrive:00000000 ProcessDrive
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:155    .text.ProcessDrive:00000024 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:332    .bss.i.6993:00000000 i.6993
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:160    .text.main:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:167    .text.main:00000000 main
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:308    .text.main:000000e0 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:317    .bss.i.6983:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:323    .bss.i.6989:00000000 $d
+C:\Users\Blub\AppData\Local\Temp\ccGglbPc.s:329    .bss.i.6993:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.50ac36c902b95111cd960a53a2ea1ddf
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+                           .group:00000000 wm4.ftm0.h.17.cec3e0a8843af04be56280b53fe960ea
+                           .group:00000000 wm4.ftm1quad.h.17.a83a46b7127ada5dc24fa72f1da2c591
+                           .group:00000000 wm4.ftm2.h.17.285696c64f7c3d95896b2129ab859030
+                           .group:00000000 wm4.ftm3.h.17.78fdab8adbab5d4a41cd9539cf0db10a
+                           .group:00000000 wm4.adc.h.17.71b6e89417f6845c08a3ffa07854b038
+                           .group:00000000 wm4.uart.h.20.bc12b72a70305b4e40bc10b02a9fc1fa
+                           .group:00000000 wm4.tof.h.15.c52dd967ff4566f0850c274a8f02f219
+                           .group:00000000 wm4.accel.h.14.19b5318ecce9016dbc420442e49f848c
+                           .group:00000000 wm4.encoder.h.9.49f8bdf86a745b6412cf7741af60fe56
+                           .group:00000000 wm4.servo.h.11.8ade999649361508e48147a13552f2fb
+                           .group:00000000 wm4.motor.h.15.68048d459e17ff350ed964e39850d12a
+                           .group:00000000 wm4.spindle.h.9.a7b8f3c706fa7d67d54d32efbbfe7184
+                           .group:00000000 wm4.drive.h.9.b7ae840a7169f82a3ba596e7b70991e7
+
+UNDEFINED SYMBOLS
+testStateMachine
+cubeStateMachine
+driveToWork
+ftm0Init
+ftm1quadInit
+ftm2Init
+ftm3Init
+termInit
+i2cInit
+tofInit
+accelInit
+encoderInit
+beepInit
+switchInit
+servoInit
+spindleInit
+motorInit
+driveInit
+cubeInit
+testInit
+termDoWork

@@ -1,0 +1,383 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"LSM6DS3.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.SensReadRawAccel,"ax",%progbits
+  18              		.align	1
+  19              		.global	SensReadRawAccel
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	SensReadRawAccel:
+  26              	.LFB125:
+  27              		.file 1 "../Sources/utils/LSM6DS3.c"
+   1:../Sources/utils/LSM6DS3.c **** /**
+   2:../Sources/utils/LSM6DS3.c ****  *--------------------------------------------------------------------\n
+   3:../Sources/utils/LSM6DS3.c ****  *          HSLU T&A Hochschule Luzern Technik+Architektur            \n
+   4:../Sources/utils/LSM6DS3.c ****  *--------------------------------------------------------------------\n
+   5:../Sources/utils/LSM6DS3.c ****  *
+   6:../Sources/utils/LSM6DS3.c ****  * \brief         Driver for the color sensor TCS34725
+   7:../Sources/utils/LSM6DS3.c ****  * \file
+   8:../Sources/utils/LSM6DS3.c ****  * \author        Christian Jost, christian.jost@hslu.ch
+   9:../Sources/utils/LSM6DS3.c ****  * \date          24.04.20018
+  10:../Sources/utils/LSM6DS3.c ****  *
+  11:../Sources/utils/LSM6DS3.c ****  * $Id: colSens.c 116 2018-05-11 14:30:59Z zajost $
+  12:../Sources/utils/LSM6DS3.c ****  *
+  13:../Sources/utils/LSM6DS3.c ****  *--------------------------------------------------------------------
+  14:../Sources/utils/LSM6DS3.c ****  */
+  15:../Sources/utils/LSM6DS3.c **** 
+  16:../Sources/utils/LSM6DS3.c **** #include "platform.h"
+  17:../Sources/utils/LSM6DS3.c **** #include "LSM6DS3.h"
+  18:../Sources/utils/LSM6DS3.c **** #include "i2c.h"
+  19:../Sources/utils/LSM6DS3.c **** #include "util.h"
+  20:../Sources/utils/LSM6DS3.c **** 
+  21:../Sources/utils/LSM6DS3.c **** #define I2C_ACCELSENS_ADR                 0x6B
+  22:../Sources/utils/LSM6DS3.c **** 
+  23:../Sources/utils/LSM6DS3.c **** 
+  24:../Sources/utils/LSM6DS3.c **** // LSM6DS3 register definitions
+  25:../Sources/utils/LSM6DS3.c **** 
+  26:../Sources/utils/LSM6DS3.c **** #define FIFO_CTRL1                     0x06
+  27:../Sources/utils/LSM6DS3.c **** #define FIFO_CTRL2                     0x07
+  28:../Sources/utils/LSM6DS3.c **** #define FIFO_CTRL3                     0x08
+  29:../Sources/utils/LSM6DS3.c **** #define FIFO_CTRL4                     0x09
+  30:../Sources/utils/LSM6DS3.c **** #define FIFO_CTRL5                     0x0A
+  31:../Sources/utils/LSM6DS3.c **** 
+  32:../Sources/utils/LSM6DS3.c **** #define CTRL1_XL                       0x10
+  33:../Sources/utils/LSM6DS3.c **** #define CTRL2_G                        0x11
+  34:../Sources/utils/LSM6DS3.c **** #define CTRL3_C                        0x12
+  35:../Sources/utils/LSM6DS3.c **** #define CTRL4_C                        0x13
+  36:../Sources/utils/LSM6DS3.c **** #define CTRL5_C                        0x14
+  37:../Sources/utils/LSM6DS3.c **** #define CTRL6_C                        0x15
+  38:../Sources/utils/LSM6DS3.c **** #define CTRL7_G                        0x16
+  39:../Sources/utils/LSM6DS3.c **** #define CTRL8_XL                       0x17
+  40:../Sources/utils/LSM6DS3.c **** #define CTRL9_XL                       0x18
+  41:../Sources/utils/LSM6DS3.c **** #define CTRL10_C                       0x19
+  42:../Sources/utils/LSM6DS3.c **** 
+  43:../Sources/utils/LSM6DS3.c **** #define WHO_AM_I                       0x0F
+  44:../Sources/utils/LSM6DS3.c **** 
+  45:../Sources/utils/LSM6DS3.c **** 
+  46:../Sources/utils/LSM6DS3.c **** 
+  47:../Sources/utils/LSM6DS3.c **** 
+  48:../Sources/utils/LSM6DS3.c **** 
+  49:../Sources/utils/LSM6DS3.c **** /**
+  50:../Sources/utils/LSM6DS3.c ****  * Reads the raw color data from the color sensor.
+  51:../Sources/utils/LSM6DS3.c ****  *
+  52:../Sources/utils/LSM6DS3.c ****  * @param[out] col
+  53:../Sources/utils/LSM6DS3.c ****  *   a pointer to a tRegColor struct which will contains the color read out of the sensor
+  54:../Sources/utils/LSM6DS3.c ****  * @return
+  55:../Sources/utils/LSM6DS3.c ****  *   the error code or EC_SUCCESS if no error has occurred
+  56:../Sources/utils/LSM6DS3.c ****  */
+  57:../Sources/utils/LSM6DS3.c **** tError SensReadRawAccel(tSensAccel *data)
+  58:../Sources/utils/LSM6DS3.c **** {
+  28              		.loc 1 58 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 16
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 84B0     		sub	sp, sp, #16
+  37              		.cfi_def_cfa_offset 24
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  40 0006 7860     		str	r0, [r7, #4]
+  59:../Sources/utils/LSM6DS3.c ****   tError result;
+  60:../Sources/utils/LSM6DS3.c **** 
+  61:../Sources/utils/LSM6DS3.c ****   // _todo ML#10.09 Implement the function colSensReadRawColor(...)
+  62:../Sources/utils/LSM6DS3.c ****   uint8_t cmd = 0x28;
+  41              		.loc 1 62 0
+  42 0008 2823     		movs	r3, #40
+  43 000a FB73     		strb	r3, [r7, #15]
+  63:../Sources/utils/LSM6DS3.c ****   result = i2cReadCmdData(I2C_ACCELSENS_ADR, cmd, data->data, sizeof(tSensAccel));
+  44              		.loc 1 63 0
+  45 000c 7A68     		ldr	r2, [r7, #4]
+  46 000e F97B     		ldrb	r1, [r7, #15]	@ zero_extendqisi2
+  47 0010 0623     		movs	r3, #6
+  48 0012 6B20     		movs	r0, #107
+  49 0014 FFF7FEFF 		bl	i2cReadCmdData
+  50 0018 0346     		mov	r3, r0
+  51 001a BB73     		strb	r3, [r7, #14]
+  64:../Sources/utils/LSM6DS3.c **** 
+  65:../Sources/utils/LSM6DS3.c ****   return result;
+  52              		.loc 1 65 0
+  53 001c BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+  66:../Sources/utils/LSM6DS3.c **** }
+  54              		.loc 1 66 0
+  55 001e 1846     		mov	r0, r3
+  56 0020 1037     		adds	r7, r7, #16
+  57              		.cfi_def_cfa_offset 8
+  58 0022 BD46     		mov	sp, r7
+  59              		.cfi_def_cfa_register 13
+  60              		@ sp needed
+  61 0024 80BD     		pop	{r7, pc}
+  62              		.cfi_endproc
+  63              	.LFE125:
+  65              		.section	.text.SensReadAccel,"ax",%progbits
+  66              		.align	1
+  67              		.global	SensReadAccel
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  71              		.fpu fpv4-sp-d16
+  73              	SensReadAccel:
+  74              	.LFB126:
+  67:../Sources/utils/LSM6DS3.c **** tError SensReadAccel(tSensAccel *data)
+  68:../Sources/utils/LSM6DS3.c **** {
+  75              		.loc 1 68 0
+  76              		.cfi_startproc
+  77              		@ args = 0, pretend = 0, frame = 16
+  78              		@ frame_needed = 1, uses_anonymous_args = 0
+  79 0000 80B5     		push	{r7, lr}
+  80              		.cfi_def_cfa_offset 8
+  81              		.cfi_offset 7, -8
+  82              		.cfi_offset 14, -4
+  83 0002 84B0     		sub	sp, sp, #16
+  84              		.cfi_def_cfa_offset 24
+  85 0004 00AF     		add	r7, sp, #0
+  86              		.cfi_def_cfa_register 7
+  87 0006 7860     		str	r0, [r7, #4]
+  69:../Sources/utils/LSM6DS3.c ****   tError result;
+  70:../Sources/utils/LSM6DS3.c ****   tSensAccel accel_raw_data;
+  71:../Sources/utils/LSM6DS3.c ****   SensReadRawAccel(&accel_raw_data);
+  88              		.loc 1 71 0
+  89 0008 07F10803 		add	r3, r7, #8
+  90 000c 1846     		mov	r0, r3
+  91 000e FFF7FEFF 		bl	SensReadRawAccel
+  72:../Sources/utils/LSM6DS3.c **** 
+  73:../Sources/utils/LSM6DS3.c ****   if(accel_raw_data.accel_x>0x7FFF)
+  92              		.loc 1 73 0
+  93 0012 3B89     		ldrh	r3, [r7, #8]
+  94 0014 1BB2     		sxth	r3, r3
+  95 0016 002B     		cmp	r3, #0
+  96 0018 03DA     		bge	.L4
+  74:../Sources/utils/LSM6DS3.c ****   {
+  75:../Sources/utils/LSM6DS3.c ****    data->accel_x = (-1)*(~(accel_raw_data.accel_x -1));
+  97              		.loc 1 75 0
+  98 001a 3A89     		ldrh	r2, [r7, #8]
+  99 001c 7B68     		ldr	r3, [r7, #4]
+ 100 001e 1A80     		strh	r2, [r3]	@ movhi
+ 101 0020 02E0     		b	.L5
+ 102              	.L4:
+  76:../Sources/utils/LSM6DS3.c ****   }
+  77:../Sources/utils/LSM6DS3.c ****   else
+  78:../Sources/utils/LSM6DS3.c ****   {
+  79:../Sources/utils/LSM6DS3.c ****     data->accel_x = accel_raw_data.accel_x;
+ 103              		.loc 1 79 0
+ 104 0022 3A89     		ldrh	r2, [r7, #8]
+ 105 0024 7B68     		ldr	r3, [r7, #4]
+ 106 0026 1A80     		strh	r2, [r3]	@ movhi
+ 107              	.L5:
+  80:../Sources/utils/LSM6DS3.c ****   }
+  81:../Sources/utils/LSM6DS3.c ****   if(accel_raw_data.accel_y>0x7FFF)
+ 108              		.loc 1 81 0
+ 109 0028 7B89     		ldrh	r3, [r7, #10]
+ 110 002a 1BB2     		sxth	r3, r3
+ 111 002c 002B     		cmp	r3, #0
+ 112 002e 03DA     		bge	.L6
+  82:../Sources/utils/LSM6DS3.c ****   {
+  83:../Sources/utils/LSM6DS3.c ****     data->accel_y = (-1)*(~(accel_raw_data.accel_y -1));
+ 113              		.loc 1 83 0
+ 114 0030 7A89     		ldrh	r2, [r7, #10]
+ 115 0032 7B68     		ldr	r3, [r7, #4]
+ 116 0034 5A80     		strh	r2, [r3, #2]	@ movhi
+ 117 0036 02E0     		b	.L7
+ 118              	.L6:
+  84:../Sources/utils/LSM6DS3.c ****   }
+  85:../Sources/utils/LSM6DS3.c ****   else
+  86:../Sources/utils/LSM6DS3.c ****   {
+  87:../Sources/utils/LSM6DS3.c ****     data->accel_y = accel_raw_data.accel_y;
+ 119              		.loc 1 87 0
+ 120 0038 7A89     		ldrh	r2, [r7, #10]
+ 121 003a 7B68     		ldr	r3, [r7, #4]
+ 122 003c 5A80     		strh	r2, [r3, #2]	@ movhi
+ 123              	.L7:
+  88:../Sources/utils/LSM6DS3.c ****   }
+  89:../Sources/utils/LSM6DS3.c ****   if(accel_raw_data.accel_z>0x7FFF)
+ 124              		.loc 1 89 0
+ 125 003e BB89     		ldrh	r3, [r7, #12]
+ 126 0040 1BB2     		sxth	r3, r3
+ 127 0042 002B     		cmp	r3, #0
+ 128 0044 03DA     		bge	.L8
+  90:../Sources/utils/LSM6DS3.c ****   {
+  91:../Sources/utils/LSM6DS3.c ****     data->accel_z = (-1)*(~(accel_raw_data.accel_z -1));
+ 129              		.loc 1 91 0
+ 130 0046 BA89     		ldrh	r2, [r7, #12]
+ 131 0048 7B68     		ldr	r3, [r7, #4]
+ 132 004a 9A80     		strh	r2, [r3, #4]	@ movhi
+ 133 004c 02E0     		b	.L9
+ 134              	.L8:
+  92:../Sources/utils/LSM6DS3.c ****   }
+  93:../Sources/utils/LSM6DS3.c ****   else
+  94:../Sources/utils/LSM6DS3.c ****   {
+  95:../Sources/utils/LSM6DS3.c ****     data->accel_z = accel_raw_data.accel_z;
+ 135              		.loc 1 95 0
+ 136 004e BA89     		ldrh	r2, [r7, #12]
+ 137 0050 7B68     		ldr	r3, [r7, #4]
+ 138 0052 9A80     		strh	r2, [r3, #4]	@ movhi
+ 139              	.L9:
+  96:../Sources/utils/LSM6DS3.c ****   }
+  97:../Sources/utils/LSM6DS3.c ****   return EC_SUCCESS;
+ 140              		.loc 1 97 0
+ 141 0054 0023     		movs	r3, #0
+  98:../Sources/utils/LSM6DS3.c **** }
+ 142              		.loc 1 98 0
+ 143 0056 1846     		mov	r0, r3
+ 144 0058 1037     		adds	r7, r7, #16
+ 145              		.cfi_def_cfa_offset 8
+ 146 005a BD46     		mov	sp, r7
+ 147              		.cfi_def_cfa_register 13
+ 148              		@ sp needed
+ 149 005c 80BD     		pop	{r7, pc}
+ 150              		.cfi_endproc
+ 151              	.LFE126:
+ 153              		.section	.text.SensInit,"ax",%progbits
+ 154              		.align	1
+ 155              		.global	SensInit
+ 156              		.syntax unified
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.fpu fpv4-sp-d16
+ 161              	SensInit:
+ 162              	.LFB127:
+  99:../Sources/utils/LSM6DS3.c **** 
+ 100:../Sources/utils/LSM6DS3.c **** 
+ 101:../Sources/utils/LSM6DS3.c **** 
+ 102:../Sources/utils/LSM6DS3.c **** tError SensInit(void)
+ 103:../Sources/utils/LSM6DS3.c **** {
+ 163              		.loc 1 103 0
+ 164              		.cfi_startproc
+ 165              		@ args = 0, pretend = 0, frame = 8
+ 166              		@ frame_needed = 1, uses_anonymous_args = 0
+ 167 0000 80B5     		push	{r7, lr}
+ 168              		.cfi_def_cfa_offset 8
+ 169              		.cfi_offset 7, -8
+ 170              		.cfi_offset 14, -4
+ 171 0002 82B0     		sub	sp, sp, #8
+ 172              		.cfi_def_cfa_offset 16
+ 173 0004 00AF     		add	r7, sp, #0
+ 174              		.cfi_def_cfa_register 7
+ 104:../Sources/utils/LSM6DS3.c ****   tError result;
+ 105:../Sources/utils/LSM6DS3.c ****   //Who am I
+ 106:../Sources/utils/LSM6DS3.c ****   uint8_t cmd = WHO_AM_I;
+ 175              		.loc 1 106 0
+ 176 0006 0F23     		movs	r3, #15
+ 177 0008 FB71     		strb	r3, [r7, #7]
+ 107:../Sources/utils/LSM6DS3.c ****       uint8_t data;
+ 108:../Sources/utils/LSM6DS3.c ****       result = i2cReadCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 178              		.loc 1 108 0
+ 179 000a 7A1D     		adds	r2, r7, #5
+ 180 000c F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+ 181 000e 0123     		movs	r3, #1
+ 182 0010 6B20     		movs	r0, #107
+ 183 0012 FFF7FEFF 		bl	i2cReadCmdData
+ 184 0016 0346     		mov	r3, r0
+ 185 0018 BB71     		strb	r3, [r7, #6]
+ 109:../Sources/utils/LSM6DS3.c ****   if(data == 0x69)
+ 186              		.loc 1 109 0
+ 187 001a 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 188 001c 692B     		cmp	r3, #105
+ 189 001e 0DD1     		bne	.L12
+ 110:../Sources/utils/LSM6DS3.c ****   {
+ 111:../Sources/utils/LSM6DS3.c ****   //Accelerometer enable
+ 112:../Sources/utils/LSM6DS3.c ****     cmd = CTRL1_XL;
+ 190              		.loc 1 112 0
+ 191 0020 1023     		movs	r3, #16
+ 192 0022 FB71     		strb	r3, [r7, #7]
+ 113:../Sources/utils/LSM6DS3.c ****     data = 0x40;
+ 193              		.loc 1 113 0
+ 194 0024 4023     		movs	r3, #64
+ 195 0026 7B71     		strb	r3, [r7, #5]
+ 114:../Sources/utils/LSM6DS3.c ****     result = i2cWriteCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 196              		.loc 1 114 0
+ 197 0028 7A1D     		adds	r2, r7, #5
+ 198 002a F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+ 199 002c 0123     		movs	r3, #1
+ 200 002e 6B20     		movs	r0, #107
+ 201 0030 FFF7FEFF 		bl	i2cWriteCmdData
+ 202 0034 0346     		mov	r3, r0
+ 203 0036 BB71     		strb	r3, [r7, #6]
+ 115:../Sources/utils/LSM6DS3.c ****   //Accelerometer power mode
+ 116:../Sources/utils/LSM6DS3.c **** //  cmd = CTRL6_C;
+ 117:../Sources/utils/LSM6DS3.c **** //  data = 0x10;
+ 118:../Sources/utils/LSM6DS3.c **** //  result = i2cWriteCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 119:../Sources/utils/LSM6DS3.c ****   //Continous
+ 120:../Sources/utils/LSM6DS3.c **** //  cmd = FIFO_CTRL5;
+ 121:../Sources/utils/LSM6DS3.c **** //  data = 0x06;
+ 122:../Sources/utils/LSM6DS3.c **** //  result = i2cWriteCmdData(I2C_ACCELSENS_ADR, cmd, &data, sizeof(data));
+ 123:../Sources/utils/LSM6DS3.c ****   //utilWaitUs(3000); // Wait >2.4ms after PON=1 (Datasheet p22)
+ 124:../Sources/utils/LSM6DS3.c ****   return EC_SUCCESS;
+ 204              		.loc 1 124 0
+ 205 0038 0023     		movs	r3, #0
+ 206 003a 00E0     		b	.L14
+ 207              	.L12:
+ 125:../Sources/utils/LSM6DS3.c ****   }
+ 126:../Sources/utils/LSM6DS3.c **** 
+ 127:../Sources/utils/LSM6DS3.c **** 
+ 128:../Sources/utils/LSM6DS3.c ****   return EC_FAILED;
+ 208              		.loc 1 128 0
+ 209 003c 0123     		movs	r3, #1
+ 210              	.L14:
+ 129:../Sources/utils/LSM6DS3.c **** 
+ 130:../Sources/utils/LSM6DS3.c **** }
+ 211              		.loc 1 130 0 discriminator 1
+ 212 003e 1846     		mov	r0, r3
+ 213 0040 0837     		adds	r7, r7, #8
+ 214              		.cfi_def_cfa_offset 8
+ 215 0042 BD46     		mov	sp, r7
+ 216              		.cfi_def_cfa_register 13
+ 217              		@ sp needed
+ 218 0044 80BD     		pop	{r7, pc}
+ 219              		.cfi_endproc
+ 220              	.LFE127:
+ 222              		.text
+ 223              	.Letext0:
+ 224              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 225              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\6 2017-q2-update\\arm-none-eabi\\include
+ 226              		.file 4 "../Includes/core_cm4.h"
+ 227              		.file 5 "../Includes/system_MK22F51212.h"
+ 228              		.file 6 "../Includes/platform.h"
+ 229              		.file 7 "../Sources/utils/LSM6DS3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 LSM6DS3.c
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:18     .text.SensReadRawAccel:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:25     .text.SensReadRawAccel:00000000 SensReadRawAccel
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:66     .text.SensReadAccel:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:73     .text.SensReadAccel:00000000 SensReadAccel
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:154    .text.SensInit:00000000 $t
+C:\Users\Blub\AppData\Local\Temp\ccRNoCrO.s:161    .text.SensInit:00000000 SensInit
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.0.a6d4f739a788c67292a3ea0a48d10bd5
+                           .group:00000000 wm4.MK22F51212.h.96.792c303daa596f91c029224edd7c60aa
+                           .group:00000000 wm4._newlib_version.h.4.3572908597b70d672d181fc7fc501c19
+                           .group:00000000 wm4.features.h.33.cf97d4c9a045ebab6d282f6356e11363
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.cce27fed8484c08a33f522034c30d2b5
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.MK22F51212.h.109.eeee73bf5f54e3f06177795004b95e22
+                           .group:00000000 wm4.core_cm4.h.43.f75e2f71b2e33f7a3db429cd8b0cae9e
+                           .group:00000000 wm4.core_cmInstr.h.39.addda81f1f3453ba31dd54fc5b6fcee8
+                           .group:00000000 wm4.core_cmSimd.h.43.c355993beb49ccd10586af5b1cfe5aee
+                           .group:00000000 wm4.core_cm4.h.201.a59e218d30e39d114c8962bbad645c74
+                           .group:00000000 wm4.system_MK22F51212.h.94.09b5fd63c227fb82ca8c370fba9e2334
+                           .group:00000000 wm4.MK22F51212.h.369.5a9c5aa32d240e03ff494f1c769cfadf
+                           .group:00000000 wm4.platform.h.20.f74e607392e0b505ace5d00108430fa1
+                           .group:00000000 wm4.stddef.h.39.99b5021e28f91cdb161c889e07266673
+
+UNDEFINED SYMBOLS
+i2cReadCmdData
+i2cWriteCmdData
